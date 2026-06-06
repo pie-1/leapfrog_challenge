@@ -26,7 +26,7 @@ export const useTaskStore = create((set) => ({
       return true;
     } catch (error) {
       console.error("Failed to add task:", error.response?.data || error.message);
-      alert("Failed to create task. Check console.");
+      alert("Failed to create task!");
       return false;
     }
   },
@@ -41,7 +41,7 @@ export const useTaskStore = create((set) => ({
       }));
       return true;
     } catch (error) {
-      console.error("Failed to update task:", error.response?.data || error.message);
+      console.error("Failed to update task:", error);
       return false;
     }
   },
@@ -54,7 +54,7 @@ export const useTaskStore = create((set) => ({
       }));
       return true;
     } catch (error) {
-      console.error("Failed to delete task:", error.response?.data || error.message);
+      console.error("Failed to delete task:", error);
       return false;
     }
   },

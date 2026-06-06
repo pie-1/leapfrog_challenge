@@ -5,12 +5,12 @@ const Column = ({ column, tasks }) => {
   const { setNodeRef, isOver } = useDroppable({ id: column.id });
 
   return (
-    <div className="min-w-[350px]">
+    <div className="min-w-[350px] flex-shrink-0">
       <div className="flex items-center justify-between mb-6 px-2">
         <div className="flex items-center gap-3">
           <div className={`w-4 h-4 rounded-full ${column.color}`} />
           <h2 className="text-2xl font-light">{column.title}</h2>
-          <span className="bg-white/10 text-white/70 text-sm px-3 py-1 rounded-full font-mono">
+          <span className="bg-white/10 px-3 py-1 rounded-full text-sm font-mono">
             {tasks.length}
           </span>
         </div>
@@ -19,14 +19,14 @@ const Column = ({ column, tasks }) => {
       <div
         ref={setNodeRef}
         className={`min-h-[620px] bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-4 transition-all
-          ${isOver ? 'border-violet-400 bg-violet-500/10' : 'hover:border-white/20'}`}
+          ${isOver ? 'border-violet-400 bg-violet-500/10' : ''}`}
       >
         {tasks.map((task) => (
           <TaskCard key={task._id} task={task} />
         ))}
 
         {tasks.length === 0 && (
-          <div className="h-40 flex items-center justify-center text-gray-500 text-sm">
+          <div className="h-40 flex items-center justify-center text-gray-500">
             Drop tasks here
           </div>
         )}

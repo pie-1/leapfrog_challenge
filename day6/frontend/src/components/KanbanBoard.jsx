@@ -1,6 +1,7 @@
 import { DndContext, closestCorners } from "@dnd-kit/core";
 import { useTaskStore } from "../store/TaskStore";
 import Column from "./Column";
+import AddTask from "./AddTask";
 
 const columns = [
   { id: "todo", title: "To Do", color: "bg-blue-500" },
@@ -14,18 +15,11 @@ const KanbanBoard = () => {
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
-
     if (!over || active.id === over.id) return;
 
-    const task = tasks.find((t) => t._id === active.id);
-    if (!task) return;
-
-    const newStatus = over.id; // Column ID
-
-    // Update status in backend
     updateTask(active.id, { 
-      status: newStatus,
-      order: Date.now() // Simple ordering
+      status: over.id,
+      order: Date.now()
     });
   };
 
@@ -47,6 +41,9 @@ const KanbanBoard = () => {
             );
           })}
         </div>
+
+        {/* AddTask Component - This was probably missing */}
+        <AddTask />
       </div>
     </DndContext>
   );

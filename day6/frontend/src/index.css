@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+/* Add this in index.css */
+.touch-action {
+  touch-action: none;
+}
