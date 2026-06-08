@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Courier New', monospace;
+}
+
+.neon-text {
+  text-shadow: 0 0 10px #22ff88, 0 0 20px #22ff88, 0 0 40px #ff0088;
+}
