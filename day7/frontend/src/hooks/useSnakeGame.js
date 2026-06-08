@@ -1,53 +1,61 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useRef, useCallback, useEffect } from "react";
 
 const GRID_SIZE = 20;
-const CELL_SIZE = 25;
-const INITIAL_SNAKE = [{ x: 10, y: 10 }];
+
+const INITIAL_SNAKE = [
+  { x: 10, y: 10 },
+  { x: 9, y: 10 },
+  { x: 8, y: 10 },
+];
+
 const INITIAL_FOOD = { x: 15, y: 15 };
 
-const useSnakeGame = () => {
+export const useSnakeGame = () => {
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [food, setFood] = useState(INITIAL_FOOD);
   const [direction, setDirection] = useState({ x: 1, y: 0 });
   const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState(localStorage.getItem('naagHighScore') || 0);
-  const [isGameOver, setIsGameOver] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const gameInterval = useRef(null);
+  const intervalRef = useRef(null);
 
-  const generateFood = useCallback((currentSnake) => {
+  const generateFood = (snakeBody) => {
     let newFood;
     do {
       newFood = {
         x: Math.floor(Math.random() * GRID_SIZE),
         y: Math.floor(Math.random() * GRID_SIZE),
       };
-    } while (currentSnake.some(s => s.x === newFood.x && s.y === newFood.y));
+    } while (snakeBody.some((s) => s.x === newFood.x && s.y === newFood.y));
+
     return newFood;
-  }, []);
+  };
 
   const moveSnake = useCallback(() => {
-    setSnake(prevSnake => {
-      const newSnake = [...prevSnake];
-      const head = { x: newSnake[0].x + direction.x, y: newSnake[0].y + direction.y };
+    setSnake((prev) => {
+      const head = {
+        x: prev[0].x + direction.x,
+        y: prev[0].y + direction.y,
+      };
 
-      // Collision check
-      if (head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE ||
-          newSnake.some(segment => segment.x === head.x && segment.y === head.y)) {
-        setIsGameOver(true);
+      // collision
+      if (
+        head.x < 0 ||
+        head.x >= GRID_SIZE ||
+        head.y < 0 ||
+        head.y >= GRID_SIZE ||
+        prev.some((s) => s.x === head.x && s.y === head.y)
+      ) {
         setIsPlaying(false);
-        if (score > highScore) {
-          localStorage.setItem('naagHighScore', score);
-          setHighScore(score);
-        }
-        return prevSnake;
+        clearInterval(intervalRef.current);
+        return prev;
       }
 
-      newSnake.unshift(head);
+      const newSnake = [head, ...prev];
 
+      // food eaten
       if (head.x === food.x && head.y === food.y) {
-        setScore(s => s + 10);
+        setScore((s) => s + 10);
         setFood(generateFood(newSnake));
       } else {
         newSnake.pop();
@@ -55,21 +63,13 @@ const useSnakeGame = () => {
 
       return newSnake;
     });
-  }, [direction, food, generateFood, score, highScore]);
+  }, [direction, food]);
 
-  // Game Loop
   useEffect(() => {
     if (isPlaying) {
-      gameInterval.current = setInterval(moveSnake, 160);
-    } else {
-      if (gameInterval.current) {
-        clearInterval(gameInterval.current);
-      }
+      intervalRef.current = setInterval(moveSnake, 150);
     }
-
-    return () => {
-      if (gameInterval.current) clearInterval(gameInterval.current);
-    };
+    return () => clearInterval(intervalRef.current);
   }, [isPlaying, moveSnake]);
 
   const startGame = () => {
@@ -77,28 +77,33 @@ const useSnakeGame = () => {
     setFood(INITIAL_FOOD);
     setDirection({ x: 1, y: 0 });
     setScore(0);
-    setIsGameOver(false);
     setIsPlaying(true);
   };
 
-  const changeDirection = (newDir) => {
-    if (newDir.x === -direction.x && newDir.y === -direction.y) return;
-    setDirection(newDir);
+  const resetGame = () => {
+    setSnake(INITIAL_SNAKE);
+    setFood(INITIAL_FOOD);
+    setDirection({ x: 1, y: 0 });
+    setScore(0);
+    setIsPlaying(false);
+  };
+
+  const changeDirection = (dir) => {
+    setDirection((prev) => {
+      if (prev.x === -dir.x && prev.y === -dir.y) return prev;
+      return dir;
+    });
   };
 
   return {
     snake,
     food,
     score,
-    highScore,
-    isGameOver,
     isPlaying,
     GRID_SIZE,
-    CELL_SIZE,
     startGame,
+    resetGame,
     changeDirection,
   };
 };
 
-export default useSnakeGame;
-export { useSnakeGame };

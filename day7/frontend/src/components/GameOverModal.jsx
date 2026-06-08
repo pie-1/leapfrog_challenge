@@ -1,47 +1,50 @@
 import { useState } from "react";
-import axios from "axios";
+import { saveScore as saveScoreAPI } from "../api/scores";
 
 const GameOverModal = ({ score, onRestart }) => {
   const [playerName, setPlayerName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
-  const saveScore = async () => {
-    if (!playerName.trim()) return alert("Please enter your name");
+  const handleSaveScore = async () => {
+    if (!playerName.trim()) return alert("Enter name");
 
     setIsSaving(true);
+
     try {
-      await axios.post("http://localhost:5000/api/scores", {
+      await saveScoreAPI({
         playerName: playerName.trim(),
-        score: score,
+        score,
       });
-      alert("Score saved successfully!");
+
+      alert("Score saved!");
       onRestart();
-    } catch (error) {
-      alert("Failed to save score");
+    } catch (err) {
+      console.log(err);
+      alert("Backend not reachable");
     } finally {
       setIsSaving(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50">
-      <div className="bg-[#111] border border-red-500/50 rounded-3xl p-10 w-full max-w-md text-center">
-        <h2 className="text-5xl font-bold text-red-500 mb-2">GAME OVER</h2>
-        <p className="text-emerald-400 text-6xl font-bold mb-8">{score}</p>
+    <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
+      <div className="bg-[#111] border-2 border-red-500/60 rounded-3xl p-10 w-full max-w-md text-center">
+        <h2 className="text-5xl font-bold text-red-500 mb-4">GAME OVER</h2>
+        <p className="text-6xl font-bold text-emerald-400 mb-8">{score}</p>
 
         <input
           type="text"
-          placeholder="YOUR NAME"
+          placeholder="ENTER YOUR NAME"
           value={playerName}
           onChange={(e) => setPlayerName(e.target.value)}
-          className="w-full bg-black border border-emerald-500/50 rounded-2xl py-5 px-6 text-center text-xl mb-6 focus:outline-none"
-          maxLength={10}
+          className="w-full bg-black border border-emerald-500/50 rounded-2xl py-5 px-6 text-center text-xl mb-6"
+          maxLength={12}
         />
 
         <button
-          onClick={saveScore}
+          onClick={handleSaveScore}
           disabled={isSaving}
-          className="w-full py-5 bg-gradient-to-r from-emerald-500 to-green-500 rounded-2xl text-xl font-bold mb-4 hover:scale-105 transition disabled:opacity-70"
+          className="w-full py-5 bg-gradient-to-r from-emerald-500 to-green-500 rounded-2xl text-xl font-bold mb-4 hover:scale-105 transition"
         >
           {isSaving ? "SAVING..." : "SAVE SCORE"}
         </button>

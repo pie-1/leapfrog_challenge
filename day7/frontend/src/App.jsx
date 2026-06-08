@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GameCanvas from "./components/GameCanvas";
 import ScoreBoard from "./components/ScoreBoard";
 import GameOverModal from "./components/GameOverModal";
@@ -6,50 +6,45 @@ import Leaderboard from "./components/Leaderboard";
 import { useSnakeGame } from "./hooks/useSnakeGame";
 
 function App() {
+  const game = useSnakeGame();
   const [showGameOver, setShowGameOver] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
 
-  const game = useSnakeGame();
-
-  const handleGameOver = (score) => {
-    setFinalScore(score);
-    setShowGameOver(true);
-  };
+  // detect game over
+  useEffect(() => {
+    if (!game.isPlaying && game.score > 0) {
+      setFinalScore(game.score);
+      setShowGameOver(true);
+    }
+  }, [game.isPlaying]);
 
   const handleRestart = () => {
     setShowGameOver(false);
     game.resetGame();
-    game.startGame();
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white overflow-hidden relative">
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,#22ff8820_0%,transparent_70%)]" />
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top_right,#ff008820_0%,transparent_60%)]" />
+    <div className="min-h-screen bg-black text-white flex flex-col items-center p-6">
+      <h1 className="text-4xl mb-4">Naag Run</h1>
 
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-6">
-        <div className="text-center mb-8">
-          <h1 className="text-7xl font-bold tracking-tighter neon-text">NAAG RUN</h1>
-          <p className="text-emerald-400/70 text-xl">EAT • GROW • SURVIVE</p>
-        </div>
+      <ScoreBoard score={game.score} highScore={0} />
 
-        <ScoreBoard score={game.score} highScore={game.highScore} />
+      <GameCanvas game={game} />
 
-        <GameCanvas />
+      {!game.isPlaying && !showGameOver && (
+        <button
+          onClick={game.startGame}
+          className="mt-6 px-6 py-3 bg-green-500"
+        >
+          Start Game
+        </button>
+      )}
 
-        {!game.isPlaying && !showGameOver && (
-          <button
-            onClick={game.startGame}
-            className="mt-10 px-16 py-6 bg-gradient-to-r from-emerald-500 to-green-500 rounded-3xl text-2xl font-bold hover:scale-110 transition"
-          >
-            START GAME
-          </button>
-        )}
+      {showGameOver && (
+        <GameOverModal score={finalScore} onRestart={handleRestart} />
+      )}
 
-        {showGameOver && <GameOverModal score={finalScore} onRestart={handleRestart} />}
-
-        <Leaderboard />
-      </div>
+      <Leaderboard />
     </div>
   );
 }
