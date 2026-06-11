@@ -1,0 +1,427 @@
+@import "tailwindcss";
+
+/* =========================
+   ROOT
+========================= */
+
+:root {
+  color-scheme: dark;
+
+  --bg: #09090b;
+  --surface: #111113;
+  --surface-2: #18181b;
+
+  --border: #27272a;
+  --border-hover: #3f3f46;
+
+  --text: #fafafa;
+  --muted: #a1a1aa;
+
+  --primary: #ffffff;
+  --accent: #7c3aed;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================
+   TYPOGRAPHY
+========================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.gradient-text {
+  background: linear-gradient(
+    to bottom,
+    #ffffff,
+    #b4b4b8
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* =========================
+   APP BACKGROUND
+========================= */
+
+.page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -20;
+  overflow: hidden;
+}
+
+.page-bg::before {
+  content: "";
+
+  position: absolute;
+  top: -150px;
+  left: -150px;
+
+  width: 450px;
+  height: 450px;
+
+  border-radius: 999px;
+
+  background: rgba(124, 58, 237, 0.12);
+
+  filter: blur(120px);
+}
+
+.page-bg::after {
+  content: "";
+
+  position: absolute;
+  right: -150px;
+  bottom: -150px;
+
+  width: 500px;
+  height: 500px;
+
+  border-radius: 999px;
+
+  background: rgba(59, 130, 246, 0.08);
+
+  filter: blur(140px);
+}
+
+/* =========================
+   NOISE TEXTURE
+========================= */
+
+.noise {
+  position: fixed;
+  inset: 0;
+
+  pointer-events: none;
+
+  opacity: 0.025;
+
+  background-image:
+    radial-gradient(circle, white 1px, transparent 1px);
+
+  background-size: 20px 20px;
+
+  z-index: -10;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.container-custom {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+/* =========================
+   CARD SYSTEM
+========================= */
+
+.card {
+  background: rgba(17, 17, 19, 0.6);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 24px;
+
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+
+  transition: all 0.25s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+}
+
+.card-soft {
+  background: rgba(24, 24, 27, 0.65);
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 20px;
+}
+
+.card-elevated {
+  background: linear-gradient(
+    180deg,
+    rgba(24, 24, 27, 0.95),
+    rgba(17, 17, 19, 0.95)
+  );
+
+  border: 1px solid var(--border);
+
+  border-radius: 24px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 12px 20px;
+
+  border-radius: 14px;
+
+  background: white;
+  color: black;
+
+  font-weight: 600;
+
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+  background: #e4e4e7;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 12px 20px;
+
+  border-radius: 14px;
+
+  border: 1px solid var(--border);
+
+  background: rgba(255, 255, 255, 0.03);
+
+  color: white;
+
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--border-hover);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.input {
+  width: 100%;
+
+  background: rgba(255, 255, 255, 0.02);
+
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+
+  padding: 14px 16px;
+
+  color: white;
+
+  outline: none;
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+.input:focus {
+  border-color: #52525b;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.input::placeholder {
+  color: #71717a;
+}
+
+/* =========================
+   STATS CARD
+========================= */
+
+.stat-card {
+  background: rgba(17, 17, 19, 0.8);
+
+  border: 1px solid var(--border);
+
+  border-radius: 20px;
+
+  padding: 20px;
+
+  transition: all 0.25s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-hover);
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.stat-value {
+  font-size: 30px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+/* =========================
+   LINK CARD
+========================= */
+
+.link-card {
+  position: relative;
+
+  overflow: hidden;
+
+  background: rgba(17, 17, 19, 0.9);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  transition: all 0.25s ease;
+}
+
+.link-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #4c1d95;
+}
+
+.link-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 3px;
+  height: 100%;
+
+  background: linear-gradient(
+    to bottom,
+    #7c3aed,
+    #3b82f6
+  );
+
+  opacity: 0;
+
+  transition: opacity 0.25s ease;
+}
+
+.link-card:hover::before {
+  opacity: 1;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.03);
+
+  color: #d4d4d8;
+
+  font-size: 14px;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 999px;
+
+  background: #22c55e;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+.fade-up {
+  animation: fadeUp 0.6s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
