@@ -1,0 +1,3824 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.93881,
+          28.79369
+        ]
+      },
+      "properties": {
+        "name": "Thorong La",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": 5416,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 6941676
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.94482,
+          29.29892
+        ]
+      },
+      "properties": {
+        "name": "Kang La",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": 5400,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 8354659
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.81873,
+          28.71701
+        ]
+      },
+      "properties": {
+        "name": "Mesokantu Pass",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": 5099,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 6941657
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.06667,
+          27.43333
+        ]
+      },
+      "properties": {
+        "name": "Garaket La",
+        "country": "India",
+        "region": "",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1271586
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.74299,
+          28.83865
+        ]
+      },
+      "properties": {
+        "name": "Toridwari Bhanjyāng",
+        "country": "Nepal",
+        "region": "Lumbini Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1282648
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.49293,
+          28.01267
+        ]
+      },
+      "properties": {
+        "name": "Ţhāḍepāṭi̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1282679
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.548,
+          27.84501
+        ]
+      },
+      "properties": {
+        "name": "Tesi Lāpcha",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1282695
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.08333,
+          30.16667
+        ]
+      },
+      "properties": {
+        "name": "Tākhu La",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1282729
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.96843,
+          29.15018
+        ]
+      },
+      "properties": {
+        "name": "Sehula Bhanjyāng",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1282803
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.64504,
+          29.94704
+        ]
+      },
+      "properties": {
+        "name": "Sānkha Pass",
+        "country": "Nepal",
+        "region": "Sudurpashchim Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1282814
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.16353,
+          29.06559
+        ]
+      },
+      "properties": {
+        "name": "Samla Pass",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1282820
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.82587,
+          30.16304
+        ]
+      },
+      "properties": {
+        "name": "Ninyāl Lagna",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1282978
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.37799,
+          30.14003
+        ]
+      },
+      "properties": {
+        "name": "Nārā Bhan̄jyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283002
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.34187,
+          29.13046
+        ]
+      },
+      "properties": {
+        "name": "Molā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283042
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.92645,
+          29.87459
+        ]
+      },
+      "properties": {
+        "name": "Mārgor Lek Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283056
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.52317,
+          28.66325
+        ]
+      },
+      "properties": {
+        "name": "Lārke Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283134
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.84201,
+          27.94973
+        ]
+      },
+      "properties": {
+        "name": "Kāṅ Lā",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283215
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.9258,
+          28.21757
+        ]
+      },
+      "properties": {
+        "name": "Kaṭuwā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Lumbini Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283233
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.00889,
+          27.41596
+        ]
+      },
+      "properties": {
+        "name": "Māipenī Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283255
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.92806,
+          28.82764
+        ]
+      },
+      "properties": {
+        "name": "Jaṅglā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283314
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.54895,
+          27.7208
+        ]
+      },
+      "properties": {
+        "name": "Garuloir Bāba Pass",
+        "country": "Nepal",
+        "region": "Lumbini Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283402
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.57063,
+          28.16144
+        ]
+      },
+      "properties": {
+        "name": "Gāngja Pass",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283408
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.26994,
+          29.08069
+        ]
+      },
+      "properties": {
+        "name": "Chanlā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283533
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.11498,
+          29.63928
+        ]
+      },
+      "properties": {
+        "name": "Chankeli Pass",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283549
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.36529,
+          29.11211
+        ]
+      },
+      "properties": {
+        "name": "Chyākhure Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283557
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.56334,
+          29.05346
+        ]
+      },
+      "properties": {
+        "name": "Bhartha Pass",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283611
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.66011,
+          29.07897
+        ]
+      },
+      "properties": {
+        "name": "Balāṅgrā Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 1283691
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.97305,
+          28.18875
+        ]
+      },
+      "properties": {
+        "name": "Tham Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10328533
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.3614,
+          27.09828
+        ]
+      },
+      "properties": {
+        "name": "Sugāchauki̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10330368
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.7361,
+          27.98508
+        ]
+      },
+      "properties": {
+        "name": "Hile Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10321165
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.88339,
+          27.54458
+        ]
+      },
+      "properties": {
+        "name": "Thāru Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10322090
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.02719,
+          27.68614
+        ]
+      },
+      "properties": {
+        "name": "Bhañjyāṅ Deurāli̇̄",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10322221
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.43848,
+          27.82862
+        ]
+      },
+      "properties": {
+        "name": "Rāmdiṅ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10322384
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.45154,
+          27.91446
+        ]
+      },
+      "properties": {
+        "name": "Thāṅnā Bhañjyāṅ",
+        "country": "China",
+        "region": "",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10322388
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.58182,
+          27.3671
+        ]
+      },
+      "properties": {
+        "name": "Solā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10322394
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.58117,
+          27.37129
+        ]
+      },
+      "properties": {
+        "name": "Bāghphāl Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10322416
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.94741,
+          27.24646
+        ]
+      },
+      "properties": {
+        "name": "Keware Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10323560
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.98161,
+          27.24293
+        ]
+      },
+      "properties": {
+        "name": "Ṭaksār Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10323562
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.49149,
+          27.54219
+        ]
+      },
+      "properties": {
+        "name": "Jase Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10323622
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.97046,
+          27.18448
+        ]
+      },
+      "properties": {
+        "name": "Tharahari̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10323853
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.95829,
+          28.15679
+        ]
+      },
+      "properties": {
+        "name": "Mānagi̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10336970
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.28132,
+          28.15479
+        ]
+      },
+      "properties": {
+        "name": "Bālbuṭo Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10317896
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.32239,
+          28.16659
+        ]
+      },
+      "properties": {
+        "name": "Roṅgā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10317986
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.57062,
+          28.16137
+        ]
+      },
+      "properties": {
+        "name": "Kāṅjā Lā",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10318062
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.21215,
+          28.16656
+        ]
+      },
+      "properties": {
+        "name": "Khurpuḍā̃ḍā Pass",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10318128
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.1728,
+          28.1636
+        ]
+      },
+      "properties": {
+        "name": "Pāṅsāṅ Pass",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10318481
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.6373,
+          28.14601
+        ]
+      },
+      "properties": {
+        "name": "Selāmi̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10318843
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.27579,
+          28.28175
+        ]
+      },
+      "properties": {
+        "name": "Jarokharka",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10315209
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.46368,
+          28.33066
+        ]
+      },
+      "properties": {
+        "name": "Nājaltākharka",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10316236
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.28992,
+          28.27906
+        ]
+      },
+      "properties": {
+        "name": "Chauri̇̄kharka",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10316263
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.29163,
+          28.27308
+        ]
+      },
+      "properties": {
+        "name": "Gairi̇̄kharka",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10316264
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.30834,
+          28.27143
+        ]
+      },
+      "properties": {
+        "name": "Pāchokharka",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10316265
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.31934,
+          28.27473
+        ]
+      },
+      "properties": {
+        "name": "Mālākharka",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10316266
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.36802,
+          28.28269
+        ]
+      },
+      "properties": {
+        "name": "Mālākharka",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 10316517
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.55087,
+          26.81472
+        ]
+      },
+      "properties": {
+        "name": "Āhāle Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11606478
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.6374,
+          26.96309
+        ]
+      },
+      "properties": {
+        "name": "Rā̃ke Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11606496
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.01543,
+          26.93294
+        ]
+      },
+      "properties": {
+        "name": "Churi̇̄ Bhaṅjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11607448
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.6018,
+          26.79405
+        ]
+      },
+      "properties": {
+        "name": "Deurāli̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11608275
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.59936,
+          26.8249
+        ]
+      },
+      "properties": {
+        "name": "Khānepāni̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11608277
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.64028,
+          26.95146
+        ]
+      },
+      "properties": {
+        "name": "Puwāre Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11608300
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.67697,
+          26.93584
+        ]
+      },
+      "properties": {
+        "name": "Chauki̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11608302
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.67767,
+          26.89197
+        ]
+      },
+      "properties": {
+        "name": "Chilāune Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11608312
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.67612,
+          26.99314
+        ]
+      },
+      "properties": {
+        "name": "Gogane Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11608319
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.72451,
+          26.94261
+        ]
+      },
+      "properties": {
+        "name": "Tori̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11608328
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.51396,
+          26.88681
+        ]
+      },
+      "properties": {
+        "name": "Surga Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11608350
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.61533,
+          26.98124
+        ]
+      },
+      "properties": {
+        "name": "Chauki Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11608357
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.11472,
+          27.19785
+        ]
+      },
+      "properties": {
+        "name": "Hile Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11846540
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.87208,
+          27.13867
+        ]
+      },
+      "properties": {
+        "name": "Batāse Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11847116
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.87822,
+          27.23538
+        ]
+      },
+      "properties": {
+        "name": "Pañchami̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11847152
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.99928,
+          27.13628
+        ]
+      },
+      "properties": {
+        "name": "Pāsi̇̄ Bhañjyāṅ",
+        "country": "India",
+        "region": "",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11847161
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.87895,
+          27.1279
+        ]
+      },
+      "properties": {
+        "name": "Bāghkhor Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11847186
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.94665,
+          27.22518
+        ]
+      },
+      "properties": {
+        "name": "Poknām Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11847219
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.0134,
+          27.20602
+        ]
+      },
+      "properties": {
+        "name": "Jā̃che Bhañjyāṅ",
+        "country": "India",
+        "region": "",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11847294
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.01346,
+          27.17968
+        ]
+      },
+      "properties": {
+        "name": "Gorkhepāni̇̄ Bhañjyāṅ",
+        "country": "India",
+        "region": "",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11847296
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.87751,
+          27.07636
+        ]
+      },
+      "properties": {
+        "name": "Bikhe Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11847333
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.12877,
+          27.80007
+        ]
+      },
+      "properties": {
+        "name": "Kumari̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Bagmati Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11770852
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.13351,
+          27.9322
+        ]
+      },
+      "properties": {
+        "name": "Dhāruṅ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11771148
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.22668,
+          27.88451
+        ]
+      },
+      "properties": {
+        "name": "Thaprek Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11771190
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.60755,
+          27.17516
+        ]
+      },
+      "properties": {
+        "name": "Chumākhu Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11772035
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.63273,
+          27.92852
+        ]
+      },
+      "properties": {
+        "name": "Tinmāne Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11772633
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.70785,
+          27.87722
+        ]
+      },
+      "properties": {
+        "name": "Lākuri̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11772655
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.70833,
+          27.96602
+        ]
+      },
+      "properties": {
+        "name": "Lā̃kuri̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11772677
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.46661,
+          27.91469
+        ]
+      },
+      "properties": {
+        "name": "Gāighāt",
+        "country": "Nepal",
+        "region": "Lumbini Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11766219
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.36663,
+          26.81315
+        ]
+      },
+      "properties": {
+        "name": "Ṭakure Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11767093
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.80046,
+          27.94672
+        ]
+      },
+      "properties": {
+        "name": "Keware Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11767222
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.72373,
+          26.82537
+        ]
+      },
+      "properties": {
+        "name": "Wāliṅ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11767534
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.78984,
+          26.98991
+        ]
+      },
+      "properties": {
+        "name": "Phusre Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11767562
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.92976,
+          26.99933
+        ]
+      },
+      "properties": {
+        "name": "Dāri̇̄ Bañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11767599
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.75482,
+          28.96166
+        ]
+      },
+      "properties": {
+        "name": "Nauli̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11883365
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.81844,
+          28.9841
+        ]
+      },
+      "properties": {
+        "name": "Gobreni̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11883426
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.88889,
+          28.98462
+        ]
+      },
+      "properties": {
+        "name": "Laḍe Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11883457
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.8941,
+          28.90067
+        ]
+      },
+      "properties": {
+        "name": "Thārdule Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11883473
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.67336,
+          28.33805
+        ]
+      },
+      "properties": {
+        "name": "Deurāli̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Lumbini Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11897503
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.72497,
+          28.31574
+        ]
+      },
+      "properties": {
+        "name": "Deurãli̇̄ Bhañjyān",
+        "country": "Nepal",
+        "region": "Lumbini Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11897518
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.60551,
+          28.71611
+        ]
+      },
+      "properties": {
+        "name": "Jhilibāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11900602
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.70524,
+          28.4544
+        ]
+      },
+      "properties": {
+        "name": "Sirpā Dhuri̇̄",
+        "country": "Nepal",
+        "region": "Lumbini Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 11902112
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.79048,
+          28.82158
+        ]
+      },
+      "properties": {
+        "name": "Kulḍā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Lumbini Province",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12724649
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.07768,
+          28.24504
+        ]
+      },
+      "properties": {
+        "name": "Eklebar",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12726459
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.53065,
+          28.32706
+        ]
+      },
+      "properties": {
+        "name": "Sābu Bhan̄jyān",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12394182
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.72657,
+          28.3583
+        ]
+      },
+      "properties": {
+        "name": "Rupinā Lā",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12394208
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.26876,
+          29.1443
+        ]
+      },
+      "properties": {
+        "name": "Jhyārkoi Bañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12394253
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.06381,
+          29.79448
+        ]
+      },
+      "properties": {
+        "name": "Pathar Rāshi̇̄ Bhan̄jyāṅ",
+        "country": "Nepal",
+        "region": "Sudurpashchim Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12395618
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.09888,
+          29.77764
+        ]
+      },
+      "properties": {
+        "name": "Duwāl Bhan̄jyāṅ",
+        "country": "Nepal",
+        "region": "Sudurpashchim Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12395619
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.12581,
+          28.68819
+        ]
+      },
+      "properties": {
+        "name": "Kāṅlā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12392563
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.79027,
+          29.84501
+        ]
+      },
+      "properties": {
+        "name": "Khaḍi̇̄khāni̇̄ Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12426574
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.99489,
+          29.80108
+        ]
+      },
+      "properties": {
+        "name": "Hyāpse Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12426595
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.90864,
+          29.82381
+        ]
+      },
+      "properties": {
+        "name": "Bhubre Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12426600
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.78219,
+          29.82273
+        ]
+      },
+      "properties": {
+        "name": "Ḍhiḍ Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12426617
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.83244,
+          29.76795
+        ]
+      },
+      "properties": {
+        "name": "Mune Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12426620
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.58364,
+          27.28451
+        ]
+      },
+      "properties": {
+        "name": "Deurāli̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12412902
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.75166,
+          27.96171
+        ]
+      },
+      "properties": {
+        "name": "Nire Lā",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12402566
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.92348,
+          27.86687
+        ]
+      },
+      "properties": {
+        "name": "Āmbulāpchā Lā",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12402583
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.8361,
+          27.92942
+        ]
+      },
+      "properties": {
+        "name": "Koṅmā Lā",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12402590
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.88635,
+          27.84601
+        ]
+      },
+      "properties": {
+        "name": "Miṅbo Lā",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12402604
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.81946,
+          28.71446
+        ]
+      },
+      "properties": {
+        "name": "Mesokānto Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403220
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.17766,
+          29.21111
+        ]
+      },
+      "properties": {
+        "name": "Chhoilā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403541
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.09096,
+          29.19506
+        ]
+      },
+      "properties": {
+        "name": "Numlā Bhañjyāṅ South",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403543
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.0957,
+          29.21942
+        ]
+      },
+      "properties": {
+        "name": "Numlā Bhañjyāṅ North",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403544
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.03797,
+          29.15843
+        ]
+      },
+      "properties": {
+        "name": "Baglā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403545
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.06927,
+          29.24727
+        ]
+      },
+      "properties": {
+        "name": "Lāṅmuse Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403556
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.11178,
+          29.24527
+        ]
+      },
+      "properties": {
+        "name": "Jyāṅlā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403557
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.00064,
+          29.43381
+        ]
+      },
+      "properties": {
+        "name": "Neṅlā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403581
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.01089,
+          29.37172
+        ]
+      },
+      "properties": {
+        "name": "Selā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403596
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.02225,
+          29.32635
+        ]
+      },
+      "properties": {
+        "name": "Selā Mukchuṅ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403607
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.76685,
+          29.16388
+        ]
+      },
+      "properties": {
+        "name": "Kāgmārā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403629
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.92451,
+          29.72344
+        ]
+      },
+      "properties": {
+        "name": "Gusā Lagnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12403957
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.53024,
+          29.16264
+        ]
+      },
+      "properties": {
+        "name": "Bharbhare Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12426787
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.60772,
+          29.09939
+        ]
+      },
+      "properties": {
+        "name": "Khāme Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12426826
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.59546,
+          29.09626
+        ]
+      },
+      "properties": {
+        "name": "Dophāne",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12426827
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.54116,
+          29.04133
+        ]
+      },
+      "properties": {
+        "name": "Pāti̇̄hālnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12426861
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.72645,
+          27.36308
+        ]
+      },
+      "properties": {
+        "name": "Deurāli̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12428094
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.73109,
+          29.50573
+        ]
+      },
+      "properties": {
+        "name": "Jhoṅpālā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12281720
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.63569,
+          29.68048
+        ]
+      },
+      "properties": {
+        "name": "Chyārgolā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12281731
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.1978,
+          29.40978
+        ]
+      },
+      "properties": {
+        "name": "Budbudi̇̄ Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12475438
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.17835,
+          29.4127
+        ]
+      },
+      "properties": {
+        "name": "Bārnā Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12475439
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.15181,
+          29.42733
+        ]
+      },
+      "properties": {
+        "name": "Pursepāni̇̄ Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12475440
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.1309,
+          29.46839
+        ]
+      },
+      "properties": {
+        "name": "Ghurchi̇̄ Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12475441
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.16018,
+          29.34311
+        ]
+      },
+      "properties": {
+        "name": "Ḍā̃phe Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12475478
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.16343,
+          29.35446
+        ]
+      },
+      "properties": {
+        "name": "Khāli̇̄ Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12475497
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.30392,
+          29.2235
+        ]
+      },
+      "properties": {
+        "name": "Goṭhi̇̄chaur Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12475520
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.40269,
+          29.23193
+        ]
+      },
+      "properties": {
+        "name": "Leṭi̇̄ Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12475557
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.48115,
+          29.16078
+        ]
+      },
+      "properties": {
+        "name": "Maure Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12475566
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.41613,
+          29.13491
+        ]
+      },
+      "properties": {
+        "name": "Bhālu Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12475571
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.41397,
+          29.09864
+        ]
+      },
+      "properties": {
+        "name": "Khabmu Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12475636
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.72737,
+          29.66156
+        ]
+      },
+      "properties": {
+        "name": "Dublekā̃dh Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12473800
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.25319,
+          29.67653
+        ]
+      },
+      "properties": {
+        "name": "Burdhaulā Nāgnā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Sudurpashchim Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12474036
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.40017,
+          29.56809
+        ]
+      },
+      "properties": {
+        "name": "Gori̇̄ Nāgnā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Sudurpashchim Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12474072
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.59534,
+          29.44054
+        ]
+      },
+      "properties": {
+        "name": "Porakhe Lāgnā",
+        "country": "Nepal",
+        "region": "Sudurpashchim Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12474180
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.27997,
+          28.4707
+        ]
+      },
+      "properties": {
+        "name": "Nāmun Bhan̄jyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12474793
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.80892,
+          27.37672
+        ]
+      },
+      "properties": {
+        "name": "Sinchebuṅ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12268551
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.91055,
+          27.47297
+        ]
+      },
+      "properties": {
+        "name": "Dhupī Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12268596
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.89249,
+          27.42582
+        ]
+      },
+      "properties": {
+        "name": "Ghā̃ṭichhinne Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12268600
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.88811,
+          27.40772
+        ]
+      },
+      "properties": {
+        "name": "Ekchanā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12268604
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.58754,
+          27.68021
+        ]
+      },
+      "properties": {
+        "name": "Thā̃glā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12269104
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.58451,
+          30.06402
+        ]
+      },
+      "properties": {
+        "name": "Īlig Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12342462
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.61942,
+          30.02491
+        ]
+      },
+      "properties": {
+        "name": "Syākup Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12342465
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.65733,
+          30.04493
+        ]
+      },
+      "properties": {
+        "name": "Salli̇̄ Kā̃dh",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12342470
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.70645,
+          30.16292
+        ]
+      },
+      "properties": {
+        "name": "Nyālu Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12342483
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.71561,
+          30.0745
+        ]
+      },
+      "properties": {
+        "name": "Pāri̇̄ Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12342485
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.74202,
+          30.071
+        ]
+      },
+      "properties": {
+        "name": "Sechi̇̄ Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12342486
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.72963,
+          30.09365
+        ]
+      },
+      "properties": {
+        "name": "Kui Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12342488
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.58517,
+          30.03979
+        ]
+      },
+      "properties": {
+        "name": "Garsā Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12342515
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.8845,
+          29.106
+        ]
+      },
+      "properties": {
+        "name": "Muilā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12342556
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.89655,
+          29.06621
+        ]
+      },
+      "properties": {
+        "name": "Chiṅgel Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12342567
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.85309,
+          29.03314
+        ]
+      },
+      "properties": {
+        "name": "Nyi̇̄lā",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12342574
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.30487,
+          30.11168
+        ]
+      },
+      "properties": {
+        "name": "Sarpe Bhan̄jyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12343378
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.35611,
+          30.14855
+        ]
+      },
+      "properties": {
+        "name": "Chor Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12343387
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.31104,
+          28.9456
+        ]
+      },
+      "properties": {
+        "name": "Golgaha Deurāli̇̄",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12343810
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.54803,
+          28.92467
+        ]
+      },
+      "properties": {
+        "name": "Tuchelā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12343867
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.57898,
+          28.79198
+        ]
+      },
+      "properties": {
+        "name": "Thāpā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12343893
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.04334,
+          28.99689
+        ]
+      },
+      "properties": {
+        "name": "Dā̃silā Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12257730
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.82423,
+          29.64784
+        ]
+      },
+      "properties": {
+        "name": "Yālā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12258677
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.00248,
+          27.52667
+        ]
+      },
+      "properties": {
+        "name": "Simrāmlāse",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12249842
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.41502,
+          27.8501
+        ]
+      },
+      "properties": {
+        "name": "Pisu Lā",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12250070
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.96728,
+          29.31052
+        ]
+      },
+      "properties": {
+        "name": "Ṭiṅli̇̄ Bhoḍho Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12261260
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.62025,
+          29.0983
+        ]
+      },
+      "properties": {
+        "name": "Ghami̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12335902
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.8022,
+          27.3177
+        ]
+      },
+      "properties": {
+        "name": "Bhaīse Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12335996
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.88425,
+          27.35657
+        ]
+      },
+      "properties": {
+        "name": "Muku Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12339240
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.90508,
+          27.31806
+        ]
+      },
+      "properties": {
+        "name": "Terse Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12339246
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.99274,
+          27.35958
+        ]
+      },
+      "properties": {
+        "name": "Ṭhulo Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12339273
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.95436,
+          27.34143
+        ]
+      },
+      "properties": {
+        "name": "Deurālī Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12339281
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.65832,
+          27.94631
+        ]
+      },
+      "properties": {
+        "name": "Renjā Pass",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12341642
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.04644,
+          28.82913
+        ]
+      },
+      "properties": {
+        "name": "Teri̇̄ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12341681
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.88794,
+          27.68403
+        ]
+      },
+      "properties": {
+        "name": "Nā̃go Lā",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12341845
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.9876,
+          27.60911
+        ]
+      },
+      "properties": {
+        "name": "Lāpsāṅ Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12341850
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.89715,
+          27.50052
+        ]
+      },
+      "properties": {
+        "name": "Lasiyā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12341852
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.95159,
+          27.5812
+        ]
+      },
+      "properties": {
+        "name": "Sinelāpche Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Koshi",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12341854
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.7757,
+          30.0475
+        ]
+      },
+      "properties": {
+        "name": "Chhubāṅ Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12341981
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.34272,
+          28.05529
+        ]
+      },
+      "properties": {
+        "name": "Sũgure Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 13153494
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.67126,
+          28.24944
+        ]
+      },
+      "properties": {
+        "name": "Rām Bhan̄jyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 13154617
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.01682,
+          29.74534
+        ]
+      },
+      "properties": {
+        "name": "Mānal Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Sudurpashchim Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 13058067
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.03113,
+          29.64924
+        ]
+      },
+      "properties": {
+        "name": "Wailek Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Sudurpashchim Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 13058099
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.99877,
+          29.62126
+        ]
+      },
+      "properties": {
+        "name": "Kālāmudā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Sudurpashchim Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 13058101
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.57288,
+          29.60537
+        ]
+      },
+      "properties": {
+        "name": "Syāule Lek",
+        "country": "Nepal",
+        "region": "Sudurpashchim Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 13059160
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.92097,
+          28.94301
+        ]
+      },
+      "properties": {
+        "name": "Bāhā Bhañjyāṅ",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12904997
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.81715,
+          28.98125
+        ]
+      },
+      "properties": {
+        "name": "Beg Lā",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12905006
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.80612,
+          28.94865
+        ]
+      },
+      "properties": {
+        "name": "Dajoṅ Lā",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12905016
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.80898,
+          28.94462
+        ]
+      },
+      "properties": {
+        "name": "Taklam Lā",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12905019
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.85309,
+          28.85743
+        ]
+      },
+      "properties": {
+        "name": "Gyũ Lā",
+        "country": "Nepal",
+        "region": "Gandaki Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 12905036
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.54088,
+          29.47542
+        ]
+      },
+      "properties": {
+        "name": "Khuṭkuḍi̇̄ Dharmashālā",
+        "country": "Nepal",
+        "region": "Sudurpashchim Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 13197348
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.57587,
+          29.23362
+        ]
+      },
+      "properties": {
+        "name": "Rupsā Lāgnā",
+        "country": "Nepal",
+        "region": "Karnali Pradesh",
+        "elevation_m": null,
+        "population": 0,
+        "feature_type": "pass",
+        "geoname_id": 13037916
+      }
+    }
+  ]
+}
