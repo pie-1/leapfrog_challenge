@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import RouteMap from "../components/RouteMap";
+import RouteMap from "../components/RouteMap/index";
 import PopularTreks from "../components/PopularTreks";
+
 
 const RoutesPage = () => {
   const [selectedTrek, setSelectedTrek] = useState(null);
