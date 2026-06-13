@@ -5,15 +5,15 @@ import Footer from "../components/Footer";
 import PopularTreks from "../components/PopularTreks";
 
 const Home = () => {
-  return (
-    <>
+  return ( 
+    <div className="pb-24">
       <Navbar />
       <Hero />
 
       <PopularTreks/>
       <TrekkerForm />
       <Footer />
-    </>
+    </div>
   );
 };
 

@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.18.0",
+    "@clerk/clerk-react": "^5.61.8",
     "@mapbox/polyline": "^1.2.1",
     "@tailwindcss/vite": "^4.3.0",
     "framer-motion": "^12.40.0",
