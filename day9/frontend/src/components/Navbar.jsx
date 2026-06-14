@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
+import FirebaseLogin from './FirebaseLogin';
+import { auth } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user] = useAuthState(auth);
 
   const navLinks = [
     { name: "Home", path: "/", color: "hover:text-green-400" },
@@ -42,13 +46,18 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {/* Login Button */}
-            <Link
-              to="/login"
-              className="bg-gradient-to-r from-green-600 to-green-700 text-white px-5 py-2 rounded-full hover:from-green-700 hover:to-green-800 transition shadow-lg"
-            >
-              Login / Signup
-            </Link>
+            {/* Dashboard Link - Only when logged in */}
+            {user && (
+              <Link
+                to="/dashboard"
+                className="text-gray-300 hover:text-green-400 transition-colors font-medium flex items-center gap-1"
+              >
+                <LayoutDashboard size={16} />
+                Dashboard
+              </Link>
+            )}
+            
+            <FirebaseLogin />
           </div>
 
           {/* Mobile Menu Button */}
@@ -73,13 +82,22 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <Link
-              to="/login"
-              onClick={() => setIsOpen(false)}
-              className="block mt-3 bg-gradient-to-r from-green-600 to-green-700 text-white text-center px-5 py-2 rounded-full"
-            >
-              Login / Signup
-            </Link>
+            
+            {/* Dashboard Link for mobile */}
+            {user && (
+              <Link
+                to="/dashboard"
+                onClick={() => setIsOpen(false)}
+                className="block py-3 text-gray-300 hover:text-green-400 transition-colors flex items-center gap-2"
+              >
+                <LayoutDashboard size={16} />
+                Dashboard
+              </Link>
+            )}
+            
+            <div className="mt-3">
+              <FirebaseLogin />
+            </div>
           </div>
         )}
       </div>

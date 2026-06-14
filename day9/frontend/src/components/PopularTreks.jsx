@@ -71,17 +71,17 @@ const PopularTreks = ({ initialFilters = {}, onSelectTrek }) => {
             <p className="mt-4 text-gray-600">Loading treks...</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredTreks.map((trek) => (
-              <div 
-                key={trek.id} 
-                onClick={() => onSelectTrek && onSelectTrek(trek)}
-                className="cursor-pointer transition-transform hover:scale-105"
-              >
-                <TrekCard trek={trek} />
-              </div>
-            ))}
-          </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredTreks.map((trek) => (
+            <div 
+              key={trek._id || trek.id}
+              onClick={() => onSelectTrek && onSelectTrek(trek)}
+              className="cursor-pointer transition-transform hover:scale-105"
+            >
+              <TrekCard trek={trek} />
+            </div>
+          ))}
+        </div>
         )}
 
         {!loading && filteredTreks.length === 0 && (

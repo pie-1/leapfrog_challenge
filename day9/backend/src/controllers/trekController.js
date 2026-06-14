@@ -1,8 +1,7 @@
-const treks = require("../data/treks");
-const { loadMountainPasses } = require("../utils/geojsonParser");
-const { getRoute, getTrekTrail } = require("../utils/routingService");
+const Trek = require('../models/Trek');
+const { loadMountainPasses } = require('../utils/geojsonParser');
+const { getRoute } = require('../utils/routingService');
 
-// Cache passes
 let cachedPasses = null;
 
 const getPasses = () => {
@@ -12,49 +11,62 @@ const getPasses = () => {
   return cachedPasses;
 };
 
-// Get ALL treks
-const getAllTreks = (req, res) => {
-  res.json(treks);
+// Get ALL treks from MongoDB
+const getAllTreks = async (req, res) => {
+  try {
+    const treks = await Trek.find();
+    res.json(treks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-// Get ALL map points
-const getAllMapPoints = (req, res) => {
-  const passes = getPasses();
-  const mapPoints = {
-    treks: treks.map(trek => ({ ...trek, type: 'trek' })),
-    passes: passes
-  };
-  res.json(mapPoints);
+// Get ALL map points (treks + passes)
+const getAllMapPoints = async (req, res) => {
+  try {
+    const treks = await Trek.find();
+    const passes = getPasses();
+    res.json({
+      treks: treks.map(trek => ({ ...trek.toObject(), type: 'trek' })),
+      passes: passes
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 // Search treks
-const searchTreks = (req, res) => {
-  const query = req.query.q?.toLowerCase() || "";
-  const results = treks.filter((trek) =>
-    trek.name.toLowerCase().includes(query)
-  );
-  res.json(results);
+const searchTreks = async (req, res) => {
+  try {
+    const query = req.query.q || '';
+    const treks = await Trek.find({
+      name: { $regex: query, $options: 'i' }
+    });
+    res.json(treks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 // Filter treks
-const filterTreks = (req, res) => {
-  const { difficulty, maxBudget } = req.query;
-  let results = [...treks];
-
-  if (difficulty) {
-    results = results.filter((trek) => trek.difficulty === difficulty);
+const filterTreks = async (req, res) => {
+  try {
+    const { difficulty, maxBudget } = req.query;
+    let filter = {};
+    
+    if (difficulty) filter.difficulty = difficulty;
+    if (maxBudget) filter.budget = { $lte: parseInt(maxBudget) };
+    
+    const treks = await Trek.find(filter);
+    res.json(treks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-
-  if (maxBudget) {
-    results = results.filter((trek) => trek.budget <= parseInt(maxBudget));
-  }
-
-  res.json(results);
 };
 
-// NEW: Get route to trek
+// Get route to trek
 const getRouteToTrek = async (req, res) => {
-  const { userLat, userLng, trekLat, trekLng, trekId } = req.query;
+  const { userLat, userLng, trekLat, trekLng } = req.query;
   
   if (!userLat || !userLng || !trekLat || !trekLng) {
     return res.status(400).json({ error: 'Missing coordinates' });
@@ -68,13 +80,10 @@ const getRouteToTrek = async (req, res) => {
   );
   
   if (route.success) {
-    const trail = trekId ? getTrekTrail(parseInt(trekId)) : null;
-    
     res.json({
       route: route.coordinates,
       distance: route.distance,
-      duration: route.duration,
-      trail: trail
+      duration: route.duration
     });
   } else {
     res.status(500).json({ error: route.error });

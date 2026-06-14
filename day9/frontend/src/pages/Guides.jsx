@@ -1,50 +1,36 @@
 import PageLayout from "../components/PageLayout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Star, Phone, MapPin, Languages } from "lucide-react";
-
-// This data will move to backend when you add authentication
-const INITIAL_GUIDES = [
-  {
-    id: 1,
-    name: "Pasang Sherpa",
-    experience: 12,
-    languages: ["English", "Nepali", "Sherpa"],
-    region: "Everest Region",
-    rating: 4.9,
-    phone: "9841234567",
-    verified: true,
-    pricePerDay: 45,
-  },
-  {
-    id: 2,
-    name: "Kumar Gurung",
-    experience: 8,
-    languages: ["English", "Nepali"],
-    region: "Annapurna Region",
-    rating: 4.8,
-    phone: "9847654321",
-    verified: true,
-    pricePerDay: 40,
-  },
-  {
-    id: 3,
-    name: "Mingma Tamang",
-    experience: 10,
-    languages: ["English", "Nepali", "Tamang"],
-    region: "Langtang Region",
-    rating: 4.7,
-    phone: "9849876543",
-    verified: true,
-    pricePerDay: 42,
-  },
-];
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const Guides = () => {
-  const [guides, setGuides] = useState(INITIAL_GUIDES);
+  const [guides, setGuides] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
+  const [user] = useAuthState(auth);
+  const navigate = useNavigate();
 
-  const regions = ["All", "Everest Region", "Annapurna Region", "Langtang Region"];
+  // Fetch guides from backend
+  useEffect(() => {
+    fetchGuides();
+  }, []);
+
+  const fetchGuides = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/guides");
+      const data = await response.json();
+      setGuides(data);
+    } catch (error) {
+      console.error("Error fetching guides:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const regions = ["All", ...new Set(guides.map(g => g.region).filter(Boolean))];
 
   const filteredGuides = guides.filter(guide => {
     const matchesSearch = guide.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -52,10 +38,36 @@ const Guides = () => {
     return matchesSearch && matchesRegion;
   });
 
-  // This function will connect to backend after login feature
   const contactGuide = (guide) => {
-    alert(`📞 Contact ${guide.name} at ${guide.phone}\n\n(After login, this will connect you directly)`);
+    if (!user) {
+      alert("Please login to contact guides");
+      navigate("/login");
+      return;
+    }
+    alert(`📞 Contact ${guide.name} at ${guide.phone}\n\n(Booking system coming soon!)`);
   };
+
+  const handleRegisterGuide = () => {
+    if (!user) {
+      alert("Please login to register as a guide");
+      navigate("/login");
+      return;
+    }
+    navigate("/dashboard");
+    // Trigger guide registration modal
+    setTimeout(() => {
+      const event = new CustomEvent('openGuideForm');
+      window.dispatchEvent(event);
+    }, 500);
+  };
+
+  if (loading) {
+    return (
+      <PageLayout title="👨‍🏫 Local Trekking Guides" subtitle="Connect with verified guides who know the mountains best">
+        <div className="text-center py-20">Loading guides...</div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout 
@@ -83,50 +95,50 @@ const Guides = () => {
       </div>
 
       {/* Guides Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredGuides.map(guide => (
-          <div key={guide.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
-            <div className="bg-gradient-to-r from-green-600 to-green-700 p-4 text-white">
-              <div className="flex justify-between items-start">
-                <h3 className="text-xl font-bold">{guide.name}</h3>
-                {guide.verified && (
-                  <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs">✓ Verified</span>
-                )}
-              </div>
-              <div className="flex items-center gap-1 mt-2">
-                <Star size={16} fill="gold" stroke="gold" />
-                <span className="text-sm">{guide.rating} ★</span>
-              </div>
-            </div>
-            
-            <div className="p-5 space-y-3">
-              <div className="flex items-center gap-2 text-gray-600">
-                <MapPin size={18} />
-                <span className="text-sm">{guide.region}</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-600">
-                <Languages size={18} />
-                <span className="text-sm">{guide.languages.join(", ")}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">📅 {guide.experience} years</span>
-                <span className="text-green-600 font-bold">${guide.pricePerDay}/day</span>
-              </div>
-              <button
-                onClick={() => contactGuide(guide)}
-                className="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-semibold transition flex items-center justify-center gap-2"
-              >
-                <Phone size={18} />
-                Contact Guide
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {filteredGuides.length === 0 && (
+      {filteredGuides.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500">No guides found. Try different filters.</p>
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredGuides.map((guide) => (
+            <div key={guide._id || guide.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-r from-green-600 to-green-700 p-4 text-white">
+                <div className="flex justify-between items-start">
+                  <h3 className="text-xl font-bold">{guide.name}</h3>
+                  {guide.verified && (
+                    <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs">✓ Verified</span>
+                  )}
+                </div>
+                <div className="flex items-center gap-1 mt-2">
+                  <Star size={16} fill="gold" stroke="gold" />
+                  <span className="text-sm">{guide.guideProfile?.rating || guide.rating || 0} ★</span>
+                </div>
+              </div>
+              
+              <div className="p-5 space-y-3">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <MapPin size={18} />
+                  <span className="text-sm">{guide.guideProfile?.pastPlaces?.[0] || guide.region || "Nepal"}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Languages size={18} />
+                  <span className="text-sm">{guide.guideProfile?.languages?.join(", ") || guide.languages?.join(", ") || "English, Nepali"}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">📅 {guide.guideProfile?.experience || guide.experience || 0} years</span>
+                  <span className="text-green-600 font-bold">₹{guide.guideProfile?.pricePerDay || guide.pricePerDay || 0}/day</span>
+                </div>
+                <button
+                  onClick={() => contactGuide(guide)}
+                  className="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-semibold transition flex items-center justify-center gap-2"
+                >
+                  <Phone size={18} />
+                  Contact Guide
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
@@ -134,7 +146,10 @@ const Guides = () => {
       <div className="mt-10 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl p-6 text-center border border-orange-200">
         <h3 className="font-bold text-xl mb-2">Are you a local guide?</h3>
         <p className="text-gray-600 mb-4">Join our platform to connect with trekkers from around the world</p>
-        <button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-xl font-semibold">
+        <button 
+          onClick={handleRegisterGuide}
+          className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-xl font-semibold"
+        >
           Register as Guide →
         </button>
       </div>

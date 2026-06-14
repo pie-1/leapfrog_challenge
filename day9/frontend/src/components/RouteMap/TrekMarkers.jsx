@@ -12,7 +12,7 @@ const TrekMarkers = ({ treks, userLocation, getRouteToTrek }) => {
     <>
       {validTreks.map((trek) => (
         <DifficultyMarker 
-          key={trek.id}
+          key={trek._id || trek.id}
           trek={trek}
           userLocation={userLocation}
           getRouteToTrek={getRouteToTrek}
