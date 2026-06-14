@@ -1,21 +1,35 @@
-// Using OSRM - No API key required
+// OSRM with better route geometry
 const getRoute = async (startLat, startLng, endLat, endLng) => {
   try {
+    // Use car routing for better road network
     const response = await fetch(
-      `https://router.project-osrm.org/route/v1/foot/${startLng},${startLat};${endLng},${endLat}?overview=full&geometries=geojson`
+      `https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=full&geometries=geojson&steps=true&alternatives=true`
     );
     
     const data = await response.json();
     
     if (data.code === 'Ok' && data.routes[0]) {
       const route = data.routes[0];
+      // Get full geometry with all points
       const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+      const distance = (route.distance / 1000).toFixed(1);
+      const duration = Math.round(route.duration / 60);
+      
+      // Also get waypoints for better visualization
+      const waypoints = route.legs[0].steps.map(step => ({
+        name: step.name,
+        distance: (step.distance / 1000).toFixed(1),
+        duration: Math.round(step.duration / 60),
+        coordinates: [step.maneuver.location[1], step.maneuver.location[0]]
+      }));
       
       return {
         success: true,
         coordinates: coordinates,
-        distance: (route.distance / 1000).toFixed(1),
-        duration: Math.round(route.duration / 60)
+        distance: distance,
+        duration: duration,
+        waypoints: waypoints,
+        instruction: route.legs[0].steps[0]?.maneuver?.instruction || "Start your journey"
       };
     }
     
@@ -26,12 +40,4 @@ const getRoute = async (startLat, startLng, endLat, endLng) => {
   }
 };
 
-const getTrekTrail = (trekId) => {
-  const trails = {
-    1: [[27.9881, 86.925], [27.9042, 86.8607], [27.8037, 86.7148]],
-    2: [[28.5983, 83.9311], [28.5682, 83.9624], [28.5733, 83.9856]]
-  };
-  return trails[trekId] || null;
-};
-
-module.exports = { getRoute, getTrekTrail };
+module.exports = { getRoute };

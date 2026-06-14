@@ -1,4 +1,4 @@
-import PageLayout from "../components/PageLayout";
+import PageLayout from "../components/common/PageLayout";
 import { useState, useEffect } from "react";
 import { Star, Phone, MapPin, Languages } from "lucide-react";
 import { useNavigate } from "react-router-dom";

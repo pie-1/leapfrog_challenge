@@ -28,6 +28,7 @@ const MapControls = ({ validTreks, validPasses, userLocation, locationLoading, g
         >
           {locationLoading ? ' Getting location...' : userLocation ? ' Location Shared' : '📍 Share My Location'}
         </button>
+       
       </div>
     </div>
   );

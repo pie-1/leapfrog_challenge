@@ -6,7 +6,7 @@ import {
   signOut,
   onAuthStateChanged
 } from "firebase/auth";
-import { auth, googleProvider } from "../firebase";
+import { auth, googleProvider } from "../../firebase";
 
 const FirebaseLogin = () => {
   const [user, setUser] = useState(null);
@@ -90,7 +90,7 @@ const FirebaseLogin = () => {
           <img src={user.photoURL} alt="profile" className="w-8 h-8 rounded-full" />
         )}
         <span className="text-white text-sm hidden md:inline">
-          👋 {user.displayName || user.email}
+           {user.displayName || user.email}
         </span>
         <button
           onClick={handleLogout}

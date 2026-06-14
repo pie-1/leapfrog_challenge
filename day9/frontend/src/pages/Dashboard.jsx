@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import PageLayout from "../components/PageLayout";
-import GuideRegistrationForm from "../components/GuideRegistrationForm";
-import { MapPin, Calendar, Award, Star, Phone, Mail, Globe, Mountain, TrendingUp, Users, Camera, CheckCircle, LayoutDashboard } from "lucide-react";
+import PageLayout from "../components/common/PageLayout";
+import GuideRegistrationForm from "../components/forms/GuideRegistrationForm";
+import EditProfileForm from "../components/forms/EditProfileForm";
+import { MapPin, Calendar, Award, Star, Phone, Mail, Globe, Mountain, TrendingUp, Users, Camera, CheckCircle, Settings } from "lucide-react";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -12,6 +13,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("profile");
   const [showGuideForm, setShowGuideForm] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
   const navigate = useNavigate();
 
   const fetchUserData = async (uid) => {
@@ -25,10 +27,10 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-  const handleOpenForm = () => setShowGuideForm(true);
-  window.addEventListener('openGuideForm', handleOpenForm);
-  return () => window.removeEventListener('openGuideForm', handleOpenForm);
-}, []);
+    const handleOpenForm = () => setShowGuideForm(true);
+    window.addEventListener('openGuideForm', handleOpenForm);
+    return () => window.removeEventListener('openGuideForm', handleOpenForm);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -135,16 +137,39 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Become a Guide Button - Only for travellers */}
-      {!isGuide && (
-        <div className="mb-6">
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {/* Edit Profile Button */}
+        <button
+          onClick={() => setShowEditProfile(true)}
+          className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold transition shadow-lg flex items-center gap-2"
+        >
+          <Settings size={18} />
+          Edit Profile
+        </button>
+
+        {/* Become a Guide Button - Only for travellers */}
+        {!isGuide && (
           <button
             onClick={() => setShowGuideForm(true)}
             className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition shadow-lg flex items-center gap-2"
           >
             🏔️ Register as a Professional Guide
           </button>
-        </div>
+        )}
+      </div>
+
+      {/* Edit Profile Form Modal */}
+      {showEditProfile && (
+        <EditProfileForm
+          userData={userData}
+          uid={user?.uid}
+          onClose={() => setShowEditProfile(false)}
+          onSuccess={() => {
+            setShowEditProfile(false);
+            fetchUserData(user?.uid);
+          }}
+        />
       )}
 
       {/* Guide Registration Form Modal */}

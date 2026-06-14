@@ -27,7 +27,7 @@ const TrekkerForm = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+    <section id= "trekker-form" className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl p-8 md:p-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

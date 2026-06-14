@@ -1,19 +1,23 @@
-import Navbar from "../components/Navbar";
-import Hero from "../components/Hero";
-import TrekkerForm from "../components/TrekkerForm";
-import Footer from "../components/Footer";
-import PopularTreks from "../components/PopularTreks";
+import Navbar from "../components/common/Navbar";
+import Hero from "../components/home/Hero";
+import TrekkerForm from "../components/home/TrekkerForm";
+import PopularTreks from "../components/home/PopularTreks";
+import Footer from "../components/common/Footer";
+import AnimatedSection from "../components/common/AnimatedSection.jsx";
 
 const Home = () => {
-  return ( 
-    <div className="pb-24">
+  return (
+    <>
       <Navbar />
       <Hero />
-
-      <PopularTreks/>
-      <TrekkerForm />
+      <AnimatedSection>
+        <TrekkerForm />
+      </AnimatedSection>
+      <AnimatedSection delay={0.2}>
+        <PopularTreks />
+      </AnimatedSection>
       <Footer />
-    </div>
+    </>
   );
 };
 

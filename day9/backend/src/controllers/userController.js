@@ -37,6 +37,17 @@ const getUser = async (req, res) => {
   }
 };
 
+
+// Get all users (for profiles page)
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}).select('-uid -__v');
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Update user role
 const updateRole = async (req, res) => {
   try {
@@ -92,4 +103,21 @@ const updateGuideProfile = async (req, res) => {
   }
 };
 
-module.exports = { saveUser, getUser, updateRole, updateGuideProfile };
+// Update user profile
+const updateProfile = async (req, res) => {
+  try {
+    const { uid, name, phone, location, bio } = req.body;
+    
+    const user = await User.findOneAndUpdate(
+      { uid },
+      { name, phone, location, bio },
+      { new: true, returnDocument: 'after' }
+    );
+    
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { saveUser, getUser, getAllUsers, updateRole, updateGuideProfile,updateProfile };

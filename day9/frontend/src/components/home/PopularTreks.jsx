@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import TrekCard from "./TrekCard";
+import TrekCard from "../map/TrekCard";
 
 const PopularTreks = ({ initialFilters = {}, onSelectTrek }) => {
   const [treks, setTreks] = useState([]);

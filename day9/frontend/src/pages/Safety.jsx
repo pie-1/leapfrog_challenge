@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Save } from "lucide-react";
-import PageLayout from "../components/PageLayout";
+import PageLayout from "../components/common/PageLayout";
 
 const Safety = () => {
   const [emergencyContacts, setEmergencyContacts] = useState(() => {

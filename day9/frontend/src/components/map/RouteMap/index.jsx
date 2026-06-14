@@ -1,6 +1,7 @@
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import RouteLine from "./RouteLine";
+import RouteSteps from "./RouteSteps";
 import "leaflet/dist/leaflet.css";
 
 // Fix default marker icons
@@ -34,6 +35,18 @@ const MapController = ({ center, zoom }) => {
   return null;
 };
 
+// Component to fit bounds when route is calculated
+const FitBounds = ({ coordinates }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (coordinates && coordinates.length > 0) {
+      const bounds = coordinates.map(coord => [coord[0], coord[1]]);
+      map.fitBounds(bounds, { padding: [50, 50] });
+    }
+  }, [coordinates, map]);
+  return null;
+};
+
 const RouteMap = ({ selectedTrek }) => {
   // State
   const [treks, setTreks] = useState([]);
@@ -43,6 +56,8 @@ const RouteMap = ({ selectedTrek }) => {
   const [locationLoading, setLocationLoading] = useState(false);
   const [routeInfo, setRouteInfo] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState(null);
+  const [waypoints, setWaypoints] = useState([]);
+  const mapRef = useRef(null);
 
   // Fetch map data
   useEffect(() => {
@@ -74,7 +89,12 @@ const RouteMap = ({ selectedTrek }) => {
         const { latitude, longitude } = position.coords;
         setUserLocation({ lat: latitude, lng: longitude });
         setLocationLoading(false);
-        alert("📍 Location found! Now click 'Get Route' on any trek.");
+        // Show success message
+        const msg = document.createElement('div');
+        msg.className = 'fixed bottom-24 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse';
+        msg.innerText = '📍 Location found! Click any trek marker for route';
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), 3000);
       },
       (error) => {
         console.error("Location error:", error);
@@ -86,36 +106,51 @@ const RouteMap = ({ selectedTrek }) => {
   };
 
   // Get route from user location to trek
-const getRouteToTrek = async (trek) => {
-  if (!userLocation) {
-    alert("Please share your location first");
-    return;
-  }
-  
-  // This will trigger RouteLine component via selectedTrek prop
-  // But we need to pass selectedTrek to RouteLine
-  // For now, just show route info
-  const trekLat = trek.coordinates?.[0] ?? trek.lat;
-  const trekLng = trek.coordinates?.[1] ?? trek.lng;
-  
-  try {
-    const response = await fetch(
-      `http://localhost:5000/api/treks/route?userLat=${userLocation.lat}&userLng=${userLocation.lng}&trekLat=${trekLat}&trekLng=${trekLng}`
-    );
-    const data = await response.json();
-    
-    if (data.route) {
-      setRouteInfo({
-        distance: data.distance,
-        duration: data.duration
-      });
-      // Store route coordinates for RouteLine
-      setRouteCoordinates(data.route);
+  const getRouteToTrek = async (trek) => {
+    if (!userLocation) {
+      alert("📍 Please share your location first using the button above");
+      return;
     }
-  } catch (error) {
-    console.error('Route error:', error);
-  }
-};
+    
+    const trekLat = trek.coordinates?.[0] ?? trek.lat;
+    const trekLng = trek.coordinates?.[1] ?? trek.lng;
+    
+    // Show loading indicator
+    const loadingMsg = document.createElement('div');
+    loadingMsg.className = 'fixed bottom-24 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+    loadingMsg.innerText = '🔄 Calculating route...';
+    document.body.appendChild(loadingMsg);
+    
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/treks/route?userLat=${userLocation.lat}&userLng=${userLocation.lng}&trekLat=${trekLat}&trekLng=${trekLng}`
+      );
+      const data = await response.json();
+      
+      if (data.route && data.route.length > 0) {
+        setRouteInfo({
+          distance: data.distance,
+          duration: data.duration
+        });
+        setRouteCoordinates(data.route);
+        setWaypoints(data.waypoints || []);
+        
+        // Success message
+        loadingMsg.innerText = '✅ Route calculated! ' + data.distance + ' km, ' + data.duration + ' mins';
+        loadingMsg.className = 'fixed bottom-24 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+        setTimeout(() => loadingMsg.remove(), 3000);
+      } else {
+        loadingMsg.innerText = '❌ No route found';
+        loadingMsg.className = 'fixed bottom-24 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+        setTimeout(() => loadingMsg.remove(), 2000);
+      }
+    } catch (error) {
+      console.error('Route error:', error);
+      loadingMsg.innerText = '❌ Error calculating route';
+      loadingMsg.className = 'fixed bottom-24 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+      setTimeout(() => loadingMsg.remove(), 2000);
+    }
+  };
 
   // Filter valid treks for count
   const validTreksCount = treks.filter(trek => {
@@ -163,25 +198,35 @@ const getRouteToTrek = async (trek) => {
           getUserLocation={getUserLocation}
         />
 
-            <RouteInfo 
-            routeInfo={routeInfo}
-            onClose={() => {
-                setRouteInfo(null);
-                setRouteCoordinates(null); 
-            }}
-            />
+        <RouteInfo 
+          routeInfo={routeInfo}
+          onClose={() => {
+            setRouteInfo(null);
+            setRouteCoordinates(null);
+            setWaypoints([]);
+          }}
+        />
 
-        <div className="rounded-3xl overflow-hidden shadow-2xl border border-gray-200">
+        <div className="rounded-3xl overflow-hidden shadow-2xl border border-gray-200 relative">
           <MapContainer 
             center={center} 
             zoom={7} 
-            style={{ height: "550px", width: "100%" }}
+            style={{ height: "550px", width: "100%", background: "#e8f4f8" }}
+            zoomControl={true}
+            scrollWheelZoom={true}
           >
+            {/* Add a subtle gradient overlay for better contrast */}
+            <div className="absolute inset-0 pointer-events-none z-[500] bg-gradient-to-t from-black/10 to-transparent" />
+            
             <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.stadiamaps.com">Stadia Maps</a>'
+              url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}.png"
             />
+   
+
+            
             <MapController center={center} />
+            <FitBounds coordinates={routeCoordinates} />
 
             <TrekMarkers 
               treks={treks}
@@ -189,21 +234,25 @@ const getRouteToTrek = async (trek) => {
               getRouteToTrek={getRouteToTrek}
             />
 
-           <PassMarkers 
-                passes={passes}
-                userLocation={userLocation}
-                getRouteToTrek={getRouteToTrek}
-                />
+            <PassMarkers 
+              passes={passes}
+              userLocation={userLocation}
+              getRouteToTrek={getRouteToTrek}
+            />
 
             <UserLocationMarker userLocation={userLocation} />
-                <RouteLine 
-                    routeCoordinates={routeCoordinates}
-                    />
+            
+            <RouteLine 
+              routeCoordinates={routeCoordinates}
+              userLocation={userLocation}
+              destination={selectedTrek}
+            />
           </MapContainer>
+          
         </div>
 
         <p className="text-center text-gray-500 text-sm mt-4">
-          🟢 Green = Trek Routes | 🔵 Blue = Mountain Passes | Click any marker for details
+          🟢 Green = Trek Routes | 🔵 Blue = Mountain Passes | 📍 Click marker → Get Route
         </p>
       </div>
     </section>

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import RouteMap from "../components/RouteMap/index";
-import PopularTreks from "../components/PopularTreks";
+import Navbar from "../components/common/Navbar";
+import RouteMap from "../components/map/RouteMap/index";
+import PopularTreks from "../components/home/PopularTreks";
 
 
 const RoutesPage = () => {
@@ -20,7 +20,7 @@ const RoutesPage = () => {
   }, [location]);
 
   return (
-    <>
+    <div className="pb-24">
       <Navbar />
       <div className="pt-24">
         <section className="bg-gradient-to-r from-slate-900 to-slate-800 text-white py-20 text-center">
@@ -42,7 +42,7 @@ const RoutesPage = () => {
           onSelectTrek={setSelectedTrek} 
         />
       </div>
-    </>
+    </div>
   );
 };
 

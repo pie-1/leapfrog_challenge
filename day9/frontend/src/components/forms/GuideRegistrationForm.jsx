@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 import { X, Plus, Trash2 } from "lucide-react";
 
 const GuideRegistrationForm = ({ onClose, onSuccess }) => {
