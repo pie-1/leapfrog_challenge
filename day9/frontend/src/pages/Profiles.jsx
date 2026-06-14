@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import PageLayout from "../components/common/PageLayout";
 import { Search, MapPin, Star, Users, Mountain, Briefcase, Mail, Phone } from "lucide-react";
+import API_URL from '../config'; 
 
 const Profiles = () => {
   const [profiles, setProfiles] = useState([]);
@@ -14,7 +15,7 @@ const Profiles = () => {
 
   const fetchProfiles = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/users/all");
+      const response = await fetch(`${API_URL}/api/users/all`);
       const data = await response.json();
       console.log("Fetched profiles:", data);
       setProfiles(Array.isArray(data) ? data : []);
