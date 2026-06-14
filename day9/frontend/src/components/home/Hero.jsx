@@ -30,7 +30,7 @@ const Hero = () => {
           transition={{ duration: 0.8 }}
         >
           <span className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm mb-4">
-            🏔️ Nepal Best Trekking Platform
+            🏔️ Nepal Trek Guiding one-stop Platform
           </span>
         </motion.div>
 

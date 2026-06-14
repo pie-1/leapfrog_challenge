@@ -40,7 +40,7 @@ const Profiles = () => {
 
   if (loading) {
     return (
-      <PageLayout title="🌍 Trek Community" subtitle="Connect with fellow trekkers and experienced guides">
+      <PageLayout title="Trek Community" subtitle="Connect with fellow trekkers and experienced guides">
         <div className="text-center py-20">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
           <p className="mt-4 text-gray-500">Loading profiles...</p>
@@ -51,7 +51,7 @@ const Profiles = () => {
 
   return (
     <PageLayout 
-      title="🌍 Trek Community" 
+      title="Trek Community" 
       subtitle="Connect with fellow trekkers and experienced guides"
     >
       {/* Filter Bar */}

@@ -3,7 +3,7 @@
 ```markdown
 # 🏔️ TrekSarathi - AI Trekking Route Planner for Nepal
 
-![TrekSarathi Banner](https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1200)
+
 
 ## 📋 Overview
 

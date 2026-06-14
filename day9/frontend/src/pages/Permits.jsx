@@ -178,7 +178,7 @@ const Permits = () => {
 
   return (
     <PageLayout 
-      title="📋 Trekking Permits Guide" 
+      title="Trekking Permits Guide" 
       subtitle="Everything you need to know about permits for Nepal's famous treks"
     >
       {/* Info Banner */}
@@ -199,31 +199,7 @@ const Permits = () => {
         </div>
       </AnimatedSection>
 
-      {/* Quick Stats */}
-      <AnimatedSection delay={0.1}>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-          <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-            <div className="text-2xl mb-1">🏔️</div>
-            <div className="font-bold text-xl">5+</div>
-            <div className="text-xs text-gray-500">Popular Treks</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-            <div className="text-2xl mb-1">📄</div>
-            <div className="font-bold text-xl">12+</div>
-            <div className="text-xs text-gray-500">Permits Available</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-            <div className="text-2xl mb-1">💰</div>
-            <div className="font-bold text-xl">NPR 3,000</div>
-            <div className="text-xs text-gray-500">Avg Permit Cost</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-            <div className="text-2xl mb-1">⏱️</div>
-            <div className="font-bold text-xl">24hrs</div>
-            <div className="text-xs text-gray-500">Processing Time</div>
-          </div>
-        </div>
-      </AnimatedSection>
+
 
       {/* Trek Cards */}
       <div className="space-y-6">
