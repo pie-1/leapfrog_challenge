@@ -1,109 +1,113 @@
-import { useEffect } from 'react';
-import { useSocket } from './hooks/useSocket';
-import { useDrawing } from './hooks/useDrawing';
-import Toolbar from './components/Whiteboard/Toolbar';
+import { useState } from 'react';
 import Canvas from './components/Whiteboard/Canvas';
+import ToolbarLeft from './components/Whiteboard/ToolbarLeft';
+import ToolbarTop from './components/Whiteboard/ToolbarTop';
+import PanelRight from './components/Whiteboard/PanelRight';
+import { useSocket } from './hooks/useSocket';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
-  const socket = useSocket('http://localhost:3001');
-  const {
-    canvasRef,
-    color,
-    setColor,
-    brushSize,
-    setBrushSize,
-    tool,
-    setTool,
-    startDrawing,
-    draw,
-    stopDrawing,
-    clearCanvas,
-    getCanvasContext
-  } = useDrawing();
+  const [selectedTool, setSelectedTool] = useState('rectangle'); // Default to rectangle
+  const [canvasRef, setCanvasRef] = useState(null);
+  const [roomId] = useState('default-room');
 
-  // Listen for incoming drawing events
-  useEffect(() => {
-    if (!socket) return;
+  // Style states
+  const [color, setColor] = useState('#ffffff');
+  const [fillColor, setFillColor] = useState('transparent');
+  const [brushSize, setBrushSize] = useState(2);
+  const [opacity, setOpacity] = useState(100);
+  const [fontSize, setFontSize] = useState(20);
 
-    socket.on('draw', (data) => {
-      const ctx = getCanvasContext();
-      if (!ctx) return;
-      ctx.strokeStyle = data.color;
-      ctx.lineWidth = data.size;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.beginPath();
-      ctx.moveTo(data.x1, data.y1);
-      ctx.lineTo(data.x2, data.y2);
-      ctx.stroke();
-    });
+  const { shapes, isConnected, addShape, updateShape, deleteShape, clearCanvas } = useSocket(roomId);
 
-    socket.on('clear', () => {
-      const canvas = canvasRef.current;
-      const ctx = getCanvasContext();
-      if (!ctx) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    });
+  // Undo/Redo
+  const [history, setHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
 
-    return () => {
-      socket.off('draw');
-      socket.off('clear');
-    };
-  }, [socket, getCanvasContext]);
+  const handleAddShape = (shape) => {
+    console.log('Adding shape:', shape);
+    const newShape = { ...shape, id: uuidv4() };
+    addShape(newShape);
 
-  // Send drawing to others
-  const sendDraw = (x1, y1, x2, y2, color, size) => {
-    if (socket) {
-      socket.emit('draw', { x1, y1, x2, y2, color, size });
-    }
+    // Add to history
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push([...shapes, newShape]);
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
   };
 
   const handleClear = () => {
+    console.log('Clearing canvas');
     clearCanvas();
-    if (socket) {
-      socket.emit('clear');
+  };
+
+  const handleUndo = () => {
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1);
     }
   };
 
+  const handleRedo = () => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(historyIndex + 1);
+    }
+  };
+
+  console.log('App state - selectedTool:', selectedTool);
+
   return (
-    <div className="min-h-screen bg-[#f5f0eb] flex items-center justify-center p-6">
-      <div className="max-w-6xl w-full">
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-[#d6cec4]">
-          
-          {/* Header */}
-          <div className="px-6 py-4 bg-[#faf8f6] border-b border-[#e8e4de] flex justify-between items-center">
-            <h1 className="text-xl font-bold text-[#1e293b]">✏️ CollabBoard</h1>
-            <div className="flex items-center gap-3">
-              <div className={`w-2 h-2 rounded-full ${socket?.connected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-              <span className="text-xs text-[#8a7f73]">{socket?.connected ? 'Live' : 'Offline'}</span>
-            </div>
-          </div>
+    <div className="relative w-screen h-screen overflow-hidden bg-[#121212]">
+      {/* Canvas */}
+      <Canvas
+        shapes={shapes}
+        onCanvasReady={({ canvas, ctx }) => setCanvasRef({ canvas, ctx })}
+        onAddShape={handleAddShape}
+        onUpdateShape={updateShape}
+        onDeleteShape={deleteShape}
+        selectedTool={selectedTool}
+        color={color}
+        fillColor={fillColor}
+        brushSize={brushSize}
+        opacity={opacity}
+        fontSize={fontSize}
+      />
 
-          {/* Toolbar */}
-          <Toolbar
-            color={color}
-            setColor={setColor}
-            brushSize={brushSize}
-            setBrushSize={setBrushSize}
-            tool={tool}
-            setTool={setTool}
-            onClear={handleClear}
-          />
-
-          {/* Canvas */}
-          <Canvas
-            ref={canvasRef}
-            startDrawing={startDrawing}
-            draw={(e) => draw(e, sendDraw)}
-            stopDrawing={stopDrawing}
-          />
-
-          {/* Footer */}
-          <div className="px-6 py-2 text-xs text-[#8a7f73] text-center border-t border-[#e8e4de] bg-[#faf8f6]">
-            {socket?.connected ? '🟢 Connected — drawing in real-time' : '🔴 Reconnecting...'}
-          </div>
+      {/* Connection Status */}
+      <div className="fixed top-3 right-3 z-20 bg-[#1e1e1e] px-3 py-1.5 rounded-lg border border-[#333]">
+        <div className={`flex items-center gap-2 text-xs ${isConnected ? 'text-green-400' : 'text-red-400'}`}>
+          <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`}></span>
+          {isConnected ? 'Live' : 'Connecting...'}
         </div>
       </div>
+
+      {/* Left Toolbar */}
+      <ToolbarLeft
+        selectedTool={selectedTool}
+        onToolSelect={setSelectedTool}
+      />
+
+      {/* Top Toolbar */}
+      <ToolbarTop
+        onUndo={handleUndo}
+        onRedo={handleRedo}
+        onClear={handleClear}
+        canUndo={historyIndex > 0}
+        canRedo={historyIndex < history.length - 1}
+      />
+
+      {/* Right Panel */}
+      <PanelRight
+        color={color}
+        setColor={setColor}
+        fillColor={fillColor}
+        setFillColor={setFillColor}
+        brushSize={brushSize}
+        setBrushSize={setBrushSize}
+        opacity={opacity}
+        setOpacity={setOpacity}
+        fontSize={fontSize}
+        setFontSize={setFontSize}
+      />
     </div>
   );
 }
