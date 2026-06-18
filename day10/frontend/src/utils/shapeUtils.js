@@ -11,27 +11,6 @@ export const shapeTypes = {
   IMAGE: 'image'
 };
 
-export const createShape = (type, x, y, width, height, options = {}) => {
-  return {
-    id: options.id || null,
-    type,
-    x,
-    y,
-    width: width || 0,
-    height: height || 0,
-    strokeColor: options.strokeColor || '#ffffff',
-    fillColor: options.fillColor || 'transparent',
-    strokeWidth: options.strokeWidth || 2,
-    strokeStyle: options.strokeStyle || 'solid',
-    opacity: options.opacity || 1,
-    points: options.points || [],
-    text: options.text || '',
-    fontSize: options.fontSize || 20,
-    rotation: options.rotation || 0,
-    imageData: options.imageData || null
-  };
-};
-
 export const drawShape = (ctx, shape, roughCanvas) => {
   if (!ctx || !roughCanvas || !shape) return;
 
@@ -48,6 +27,7 @@ export const drawShape = (ctx, shape, roughCanvas) => {
     points, 
     text, 
     fontSize,
+    fontFamily,
     imageData
   } = shape;
 
@@ -85,7 +65,6 @@ export const drawShape = (ctx, shape, roughCanvas) => {
         const endX = x + width;
         const endY = y + height;
         roughCanvas.line(x, y, endX, endY, options);
-        // Arrowhead
         const angle = Math.atan2(endY - y, endX - x);
         const headLen = 10;
         const headPoints = [
@@ -106,7 +85,7 @@ export const drawShape = (ctx, shape, roughCanvas) => {
 
       case shapeTypes.TEXT:
         ctx.fillStyle = strokeColor;
-        ctx.font = `${fontSize || 20}px Inter, sans-serif`;
+        ctx.font = `${fontSize || 20}px ${fontFamily || 'Inter'}, sans-serif`;
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
         ctx.fillText(text || 'Text', x, y);
@@ -124,11 +103,8 @@ export const drawShape = (ctx, shape, roughCanvas) => {
 
       case shapeTypes.DRAW:
         if (points && points.length > 1) {
-          // Convert points to array format if needed
           const pathPoints = points.map(p => {
-            if (Array.isArray(p)) {
-              return p;
-            }
+            if (Array.isArray(p)) return p;
             return [p.x || 0, p.y || 0];
           });
           roughCanvas.linearPath(pathPoints, options);

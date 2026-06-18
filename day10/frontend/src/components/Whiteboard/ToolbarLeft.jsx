@@ -1,6 +1,5 @@
 const tools = [
   { id: 'select', label: '🖱️', title: 'Select (V)' },
-  { id: 'hand', label: '✋', title: 'Pan (H)' },
   { id: 'rectangle', label: '▭', title: 'Rectangle (R)' },
   { id: 'ellipse', label: '◯', title: 'Ellipse (O)' },
   { id: 'diamond', label: '◇', title: 'Diamond (D)' },
@@ -9,6 +8,7 @@ const tools = [
   { id: 'draw', label: '✏️', title: 'Freehand (P)' },
   { id: 'text', label: 'T', title: 'Text (T)' },
   { id: 'image', label: '🖼️', title: 'Image (I)' },
+  { id: 'eraser', label: '🧹', title: 'Eraser (E)' },
 ];
 
 const ToolbarLeft = ({ selectedTool, onToolSelect }) => {

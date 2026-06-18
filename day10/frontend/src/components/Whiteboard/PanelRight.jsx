@@ -8,10 +8,16 @@ const PanelRight = ({
   opacity = 100,
   setOpacity,
   fontSize = 20,
-  setFontSize
+  setFontSize,
+  fontFamily = 'Inter',
+  setFontFamily,
+  backgroundColor = '#121212', 
+   setBackgroundColor 
 }) => {
+  const fontFamilies = ['Inter', 'Comic Sans MS', 'Arial', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana', 'Roboto'];
+
   return (
-    <div className="fixed right-3 top-1/2 -translate-y-1/2 z-10 bg-[#1e1e1e] rounded-xl p-4 shadow-2xl border border-[#333] w-48">
+    <div className="fixed right-3 top-1/2 -translate-y-1/2 z-10 bg-[#1e1e1e] rounded-xl p-4 shadow-2xl border border-[#333] w-52 max-h-[90vh] overflow-y-auto">
       <h3 className="text-xs font-semibold text-[#888] uppercase tracking-wider mb-4">
         Style
       </h3>
@@ -94,6 +100,45 @@ const PanelRight = ({
             onChange={(e) => setFontSize && setFontSize(parseInt(e.target.value))}
             className="w-full accent-[#4a9eff] h-1 bg-[#333] rounded-lg appearance-none cursor-pointer"
           />
+        </div>
+
+        {/* // Add background color picker */}
+        <div>
+          <label className="block text-xs text-[#aaa] mb-1.5">Canvas Background</label>
+          <div className="flex gap-2">
+            <input
+              type="color"
+              value={backgroundColor || '#121212'}
+              onChange={(e) => setBackgroundColor && setBackgroundColor(e.target.value)}
+              className="flex-1 h-9 rounded-lg cursor-pointer bg-[#2a2a2a] border border-[#444]"
+            />
+            <button
+              onClick={() => setBackgroundColor && setBackgroundColor('#ffffff')}
+              className="px-2 text-xs text-white bg-[#2a2a2a] rounded-lg border border-[#444] hover:border-[#4a9eff]"
+            >
+              ☀️
+            </button>
+            <button
+              onClick={() => setBackgroundColor && setBackgroundColor('#121212')}
+              className="px-2 text-xs text-white bg-[#2a2a2a] rounded-lg border border-[#444] hover:border-[#4a9eff]"
+            >
+              🌙
+            </button>
+          </div>
+        </div>
+
+        {/* Font Family */}
+        <div>
+          <label className="block text-xs text-[#aaa] mb-1.5">Font</label>
+          <select
+            value={fontFamily || 'Inter'}
+            onChange={(e) => setFontFamily && setFontFamily(e.target.value)}
+            className="w-full p-2 text-sm bg-[#2a2a2a] text-white rounded-lg border border-[#444] focus:outline-none focus:border-[#4a9eff] transition"
+          >
+            {fontFamilies.map(f => (
+              <option key={f} value={f} style={{ fontFamily: f }}>{f}</option>
+            ))}
+          </select>
         </div>
       </div>
     </div>

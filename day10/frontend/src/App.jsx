@@ -7,8 +7,7 @@ import { useSocket } from './hooks/useSocket';
 import { v4 as uuidv4 } from 'uuid';
 
 function App() {
-  const [selectedTool, setSelectedTool] = useState('rectangle'); // Default to rectangle
-  const [canvasRef, setCanvasRef] = useState(null);
+  const [selectedTool, setSelectedTool] = useState('rectangle');
   const [roomId] = useState('default-room');
 
   // Style states
@@ -17,27 +16,34 @@ function App() {
   const [brushSize, setBrushSize] = useState(2);
   const [opacity, setOpacity] = useState(100);
   const [fontSize, setFontSize] = useState(20);
+  const [fontFamily, setFontFamily] = useState('Inter');
+  const [backgroundColor, setBackgroundColor] = useState('#121212');
 
   const { shapes, isConnected, addShape, updateShape, deleteShape, clearCanvas } = useSocket(roomId);
 
-  // Undo/Redo
+  // Undo/Redo (local only)
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
   const handleAddShape = (shape) => {
-    console.log('Adding shape:', shape);
     const newShape = { ...shape, id: uuidv4() };
     addShape(newShape);
 
-    // Add to history
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push([...shapes, newShape]);
     setHistory(newHistory);
     setHistoryIndex(newHistory.length - 1);
   };
 
+  const handleUpdateShape = (id, updates) => {
+    updateShape(id, updates);
+  };
+
+  const handleDeleteShape = (id) => {
+    deleteShape(id);
+  };
+
   const handleClear = () => {
-    console.log('Clearing canvas');
     clearCanvas();
   };
 
@@ -53,23 +59,22 @@ function App() {
     }
   };
 
-  console.log('App state - selectedTool:', selectedTool);
-
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-[#121212]">
       {/* Canvas */}
       <Canvas
         shapes={shapes}
-        onCanvasReady={({ canvas, ctx }) => setCanvasRef({ canvas, ctx })}
         onAddShape={handleAddShape}
-        onUpdateShape={updateShape}
-        onDeleteShape={deleteShape}
+        onUpdateShape={handleUpdateShape}
+        onDeleteShape={handleDeleteShape}
         selectedTool={selectedTool}
         color={color}
         fillColor={fillColor}
         brushSize={brushSize}
         opacity={opacity}
         fontSize={fontSize}
+        fontFamily={fontFamily}
+        backgroundColor={backgroundColor}
       />
 
       {/* Connection Status */}
@@ -107,6 +112,10 @@ function App() {
         setOpacity={setOpacity}
         fontSize={fontSize}
         setFontSize={setFontSize}
+        fontFamily={fontFamily}
+        setFontFamily={setFontFamily}
+        backgroundColor={backgroundColor}
+        setBackgroundColor={setBackgroundColor}
       />
     </div>
   );
