@@ -1,23 +1,37 @@
+import { motion } from 'framer-motion';
+
 const tools = [
-  { id: 'select', label: '🖱️', title: 'Select (V)' },
-  { id: 'rectangle', label: '▭', title: 'Rectangle (R)' },
-  { id: 'ellipse', label: '◯', title: 'Ellipse (O)' },
-  { id: 'diamond', label: '◇', title: 'Diamond (D)' },
-  { id: 'arrow', label: '→', title: 'Arrow (A)' },
-  { id: 'line', label: '╱', title: 'Line (L)' },
-  { id: 'draw', label: '✏️', title: 'Freehand (P)' },
-  { id: 'text', label: 'T', title: 'Text (T)' },
-  { id: 'image', label: '🖼️', title: 'Image (I)' },
-  { id: 'eraser', label: '🧹', title: 'Eraser (E)' },
+  { id: 'select', label: '🖱️', title: 'Select' },
+  { id: 'rectangle', label: '▭', title: 'Rectangle' },
+  { id: 'ellipse', label: '◯', title: 'Ellipse' },
+  { id: 'diamond', label: '◇', title: 'Diamond' },
+  { id: 'arrow', label: '→', title: 'Arrow' },
+  { id: 'line', label: '╱', title: 'Line' },
+  { id: 'draw', label: '✏️', title: 'Freehand' },
+  { id: 'text', label: 'T', title: 'Text' },
+  { id: 'image', label: '🖼️', title: 'Image' },
+  { id: 'eraser', label: '🧹', title: 'Eraser' },
 ];
 
 const ToolbarLeft = ({ selectedTool, onToolSelect }) => {
   return (
-    <div className="fixed left-3 top-1/2 -translate-y-1/2 z-10 bg-[#1e1e1e] rounded-xl p-2 shadow-2xl border border-[#333]">
-      <div className="flex flex-col gap-1">
+    <motion.div
+      initial={{ x: -50, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className={`
+        fixed z-10 
+        md:left-3 md:top-1/2 md:-translate-y-1/2
+        bottom-6 left-1/2 -translate-x-1/2 md:translate-x-0
+        bg-[#1e1e1e] rounded-xl p-2 shadow-2xl border border-[#333]
+      `}
+    >
+      <div className="flex md:flex-col gap-1">
         {tools.map((tool) => (
-          <button
+          <motion.button
             key={tool.id}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => onToolSelect(tool.id)}
             className={`w-10 h-10 rounded-lg text-lg transition-all flex items-center justify-center ${
               selectedTool === tool.id
@@ -27,10 +41,10 @@ const ToolbarLeft = ({ selectedTool, onToolSelect }) => {
             title={tool.title}
           >
             {tool.label}
-          </button>
+          </motion.button>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

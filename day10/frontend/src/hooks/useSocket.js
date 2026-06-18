@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import io from 'socket.io-client';
 
 export const useSocket = (roomId = 'default') => {
@@ -36,6 +36,10 @@ export const useSocket = (roomId = 'default') => {
       setShapes([]);
     });
 
+    socketRef.current.on('shapes-synced', (newShapes) => {
+      setShapes(newShapes);
+    });
+
     socketRef.current.on('disconnect', () => {
       setIsConnected(false);
     });
@@ -45,34 +49,32 @@ export const useSocket = (roomId = 'default') => {
     };
   }, [roomId]);
 
-  const addShape = (shape) => {
+  const addShape = useCallback((shape) => {
     setShapes(prev => [...prev, shape]);
     socketRef.current.emit('add-shape', { roomId, shape });
-  };
+  }, [roomId]);
 
-  const updateShape = (shapeId, updates) => {
+  const updateShape = useCallback((shapeId, updates) => {
     setShapes(prev =>
       prev.map(s => s.id === shapeId ? { ...s, ...updates } : s)
     );
     socketRef.current.emit('update-shape', { roomId, shapeId, updates });
-  };
+  }, [roomId]);
 
-  const deleteShape = (shapeId) => {
+  const deleteShape = useCallback((shapeId) => {
     setShapes(prev => prev.filter(s => s.id !== shapeId));
     socketRef.current.emit('delete-shape', { roomId, shapeId });
-  };
+  }, [roomId]);
 
-  const clearCanvas = () => {
+  const clearCanvas = useCallback(() => {
     setShapes([]);
     socketRef.current.emit('clear-canvas', { roomId });
-  };
+  }, [roomId]);
 
-  return {
-    shapes,
-    isConnected,
-    addShape,
-    updateShape,
-    deleteShape,
-    clearCanvas
-  };
+  const syncShapes = useCallback((newShapes) => {
+    setShapes(newShapes);
+    socketRef.current.emit('sync-shapes', { roomId, shapes: newShapes });
+  }, [roomId]);
+
+  return { shapes, isConnected, addShape, updateShape, deleteShape, clearCanvas, syncShapes };
 };

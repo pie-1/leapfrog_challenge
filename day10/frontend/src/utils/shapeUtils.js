@@ -1,35 +1,9 @@
 import rough from 'roughjs';
 
-export const shapeTypes = {
-  RECTANGLE: 'rectangle',
-  ELLIPSE: 'ellipse',
-  DIAMOND: 'diamond',
-  ARROW: 'arrow',
-  LINE: 'line',
-  DRAW: 'draw',
-  TEXT: 'text',
-  IMAGE: 'image'
-};
-
 export const drawShape = (ctx, shape, roughCanvas) => {
   if (!ctx || !roughCanvas || !shape) return;
 
-  const { 
-    type, 
-    x, 
-    y, 
-    width, 
-    height, 
-    strokeColor, 
-    fillColor, 
-    strokeWidth, 
-    opacity, 
-    points, 
-    text, 
-    fontSize,
-    fontFamily,
-    imageData
-  } = shape;
+  const { type, x, y, width, height, strokeColor, fillColor, strokeWidth, opacity, points, text, fontSize, fontFamily, imageData } = shape;
 
   ctx.save();
   ctx.globalAlpha = opacity || 1;
@@ -43,81 +17,63 @@ export const drawShape = (ctx, shape, roughCanvas) => {
 
   try {
     switch (type) {
-      case shapeTypes.RECTANGLE:
+      case 'rectangle':
         roughCanvas.rectangle(x, y, width, height, options);
         break;
-
-      case shapeTypes.ELLIPSE:
+      case 'ellipse':
         roughCanvas.ellipse(x + width/2, y + height/2, width, height, options);
         break;
-
-      case shapeTypes.DIAMOND:
-        const diamondPoints = [
+      case 'diamond': {
+        const pts = [
           [x + width/2, y],
           [x + width, y + height/2],
           [x + width/2, y + height],
           [x, y + height/2]
         ];
-        roughCanvas.polygon(diamondPoints, options);
+        roughCanvas.polygon(pts, options);
         break;
-
-      case shapeTypes.ARROW:
-        const endX = x + width;
-        const endY = y + height;
+      }
+      case 'arrow': {
+        const endX = x + width, endY = y + height;
         roughCanvas.line(x, y, endX, endY, options);
         const angle = Math.atan2(endY - y, endX - x);
         const headLen = 10;
-        const headPoints = [
+        const headPts = [
           [endX, endY],
           [endX - headLen * Math.cos(angle - 0.5), endY - headLen * Math.sin(angle - 0.5)],
           [endX - headLen * Math.cos(angle + 0.5), endY - headLen * Math.sin(angle + 0.5)]
         ];
-        roughCanvas.polygon(headPoints, { 
-          stroke: strokeColor, 
-          strokeWidth: strokeWidth, 
-          fill: strokeColor 
-        });
+        roughCanvas.polygon(headPts, { stroke: strokeColor, strokeWidth, fill: strokeColor });
         break;
-
-      case shapeTypes.LINE:
+      }
+      case 'line':
         roughCanvas.line(x, y, x + width, y + height, options);
         break;
-
-      case shapeTypes.TEXT:
+      case 'text':
         ctx.fillStyle = strokeColor;
         ctx.font = `${fontSize || 20}px ${fontFamily || 'Inter'}, sans-serif`;
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
         ctx.fillText(text || 'Text', x, y);
         break;
-
-      case shapeTypes.IMAGE:
+      case 'image':
         if (imageData) {
           const img = new Image();
-          img.onload = () => {
-            ctx.drawImage(img, x, y, width, height);
-          };
+          img.onload = () => ctx.drawImage(img, x, y, width, height);
           img.src = imageData;
         }
         break;
-
-      case shapeTypes.DRAW:
+      case 'draw':
         if (points && points.length > 1) {
-          const pathPoints = points.map(p => {
-            if (Array.isArray(p)) return p;
-            return [p.x || 0, p.y || 0];
-          });
-          roughCanvas.linearPath(pathPoints, options);
+          const path = points.map(p => Array.isArray(p) ? p : [p.x, p.y]);
+          roughCanvas.linearPath(path, options);
         }
         break;
-
       default:
-        console.warn('Unknown shape type:', type);
         break;
     }
-  } catch (error) {
-    console.error('Error drawing shape:', error);
+  } catch (err) {
+    console.warn('Draw error:', err);
   }
-
   ctx.restore();
 };
