@@ -1,1 +1,16 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+
+/* Font is loaded from index.html, so we just set it here */
+body {
+  font-family: 'Fredoka', sans-serif;
+  background: #fdf6f0;
+}
+
+/* Custom utilities (optional) */
+.btn-primary {
+  @apply px-6 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold shadow-lg hover:scale-105 transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 bg-white/80 backdrop-blur-sm text-gray-700 rounded-full font-semibold shadow-md hover:bg-white transition-all duration-200;
+}
