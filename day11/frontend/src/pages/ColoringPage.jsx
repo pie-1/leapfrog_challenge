@@ -2,11 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from '../components/common/Navbar';
-import Canvas from '../components/ColoringBook/Canvas';
-import Toolbar from '../components/ColoringBook/Toolbar';
-import ColorPalette from '../components/ColoringBook/ColorPalette';
-import { templates } from '../data/templates';
+import Canvas from '../components/coloring/Canvas';
+import Toolbar from '../components/coloring/Toolbar';
+import ColorPalette from '../components/coloring/ColorPalette';
+import { builtInTemplates } from '../data/builtInTemplates';
 import { useSound } from '../hooks/useSound';
+import ShareButton from '../components/shared/ShareButton';
 
 const ColoringPage = () => {
   const { id } = useParams();
@@ -19,9 +20,8 @@ const ColoringPage = () => {
   const canvasRef = useRef(null);
   const { play } = useSound();
 
-  // Load page template
   useEffect(() => {
-    const template = Object.values(templates).find(t => t.id === id);
+    const template = Object.values(builtInTemplates).find(t => t.id === id);
     if (template) {
       setPage(template);
     } else {
@@ -29,25 +29,21 @@ const ColoringPage = () => {
     }
   }, [id, navigate]);
 
-  // Handle color change
   const handleColorChange = (color) => {
     setSelectedColor(color);
     play('click');
   };
 
-  // Handle tool change
   const handleToolChange = (newTool) => {
     setTool(newTool);
     play('click');
   };
 
-  // Handle brush size change
   const handleBrushSizeChange = (size) => {
     setBrushSize(size);
     play('click');
   };
 
-  // Resume audio on user interaction
   const handleStartColoring = () => {
     setAudioReady(true);
     play('click');
@@ -68,7 +64,6 @@ const ColoringPage = () => {
     <div>
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Page Header */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -86,7 +81,6 @@ const ColoringPage = () => {
           </button>
         </motion.div>
 
-        {/* Audio Activation Overlay */}
         {!audioReady && (
           <motion.div 
             initial={{ opacity: 0 }}
@@ -104,9 +98,7 @@ const ColoringPage = () => {
           </motion.div>
         )}
 
-        {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Left - Color Palette */}
           <div className="lg:col-span-1">
             <ColorPalette 
               selectedColor={selectedColor}
@@ -114,7 +106,6 @@ const ColoringPage = () => {
             />
           </div>
 
-          {/* Center - Canvas */}
           <div className="lg:col-span-2">
             <Canvas
               ref={canvasRef}
@@ -127,7 +118,19 @@ const ColoringPage = () => {
             />
           </div>
 
-          {/* Right - Toolbar */}
+            <div className="flex items-center gap-3">
+            <ShareButton 
+              title={`Check out my coloring page: ${page.name} on ColorMe! 🎨`}
+              image={page.thumbnail}
+            />
+            <button
+              onClick={() => navigate('/')}
+              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-600 transition"
+            >
+              ← Back
+            </button>
+          </div>
+
           <div className="lg:col-span-1">
             <Toolbar
               selectedTool={tool}

@@ -1,9 +1,9 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
 import { Howl } from 'howler';
 
 const soundFiles = {
   pop: '/sounds/pop.mp3',
-  brush: '/sounds/brush.mp3', 
+  brush: '/sounds/brush.mp3',
   complete: '/sounds/complete.mp3',
   click: '/sounds/click.mp3',
   sparkle: '/sounds/sparkle.mp3',
@@ -11,12 +11,13 @@ const soundFiles = {
 };
 
 export const useSound = () => {
+  const [isAudioReady, setIsAudioReady] = useState(false);
   const sounds = useMemo(() => {
     const loadedSounds = {};
     Object.entries(soundFiles).forEach(([name, path]) => {
       loadedSounds[name] = new Howl({
         src: [path],
-        volume: 0.5,
+        volume: 0.4,
         preload: true,
         autoplay: false,
       });
@@ -24,21 +25,25 @@ export const useSound = () => {
     return loadedSounds;
   }, []);
 
-  // Resume AudioContext on first user interaction
+  // Resume AudioContext on the first user interaction
   useEffect(() => {
     const resumeAudio = () => {
       try {
-        // Howler's global AudioContext
-        if (window.Howler && window.Howler.ctx && window.Howler.ctx.state === 'suspended') {
-          window.Howler.ctx.resume();
+        if (window.Howler?.ctx && window.Howler.ctx.state === 'suspended') {
+          window.Howler.ctx.resume().then(() => {
+            setIsAudioReady(true);
+          }).catch(() => {});
+        } else {
+          setIsAudioReady(true);
         }
-      } catch (e) {}
+      } catch (e) {
+        // Ignore errors
+      }
     };
 
-    // Resume on any user interaction
     const events = ['click', 'touchstart', 'keydown'];
     events.forEach(event => {
-      document.addEventListener(event, resumeAudio, { once: true });
+      document.addEventListener(event, resumeAudio, { once: false, passive: true });
     });
 
     return () => {
@@ -49,14 +54,15 @@ export const useSound = () => {
   }, []);
 
   const play = (name) => {
+    if (!isAudioReady) return;
     try {
       if (sounds[name]) {
         sounds[name].play();
       }
     } catch (e) {
-      // Silent fail
+      // Silently fail
     }
   };
 
-  return { play };
+  return { play, isAudioReady };
 };

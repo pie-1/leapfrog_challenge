@@ -1,10 +1,42 @@
 @import "tailwindcss";
 
 /* Font is loaded from index.html, so we just set it here */
-body {
-  font-family: 'Fredoka', sans-serif;
-  background: #fdf6f0;
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 18px; /* Increased base size */
+    line-height: 1.6;
+    background: #fdf6f0;
+  }
+
+  /* Increase all heading sizes */
+  h1 {
+    font-size: 3.5rem;
+  }
+  h2 {
+    font-size: 2.8rem;
+  }
+  h3 {
+    font-size: 2rem;
+  }
+  h4 {
+    font-size: 1.5rem;
+  }
 }
+
+/* Navbar specific fix */
+.navbar-text {
+  font-size: 1.1rem;
+  letter-spacing: 0.3px;
+}
+
+
 
 /* Custom utilities (optional) */
 .btn-primary {
@@ -13,4 +45,26 @@ body {
 
 .btn-secondary {
   @apply px-6 py-3 bg-white/80 backdrop-blur-sm text-gray-700 rounded-full font-semibold shadow-md hover:bg-white transition-all duration-200;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-delay {
+  animation: float 3s ease-in-out infinite 1.5s;
+}
+
+@keyframes crayon-bounce {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+.crayon-icon {
+  animation: crayon-bounce 0.5s ease-in-out infinite;
 }
