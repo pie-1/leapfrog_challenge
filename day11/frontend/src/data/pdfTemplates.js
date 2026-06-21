@@ -7,6 +7,7 @@ export const pdfTemplates = [
     name: 'Nature Scenes',
     category: 'Nature',
     difficulty: 'Easy',
+    source: 'pdf',
     // Pre-converted SVG from colorfiling1.pdf page 1
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
       <rect width="800" height="600" fill="white" stroke="#333" stroke-width="2"/>
@@ -34,6 +35,7 @@ export const pdfTemplates = [
     name: 'Animal Friends',
     category: 'Animals',
     difficulty: 'Medium',
+    source: 'pdf',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
       <rect width="800" height="600" fill="white" stroke="#333" stroke-width="2"/>
       <!-- Elephant -->
@@ -64,6 +66,7 @@ export const pdfTemplates = [
     name: 'Underwater World',
     category: 'Nature',
     difficulty: 'Hard',
+    source: 'pdf',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
       <rect width="800" height="600" fill="white" stroke="#333" stroke-width="2"/>
       <!-- Fish -->

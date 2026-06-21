@@ -14,29 +14,31 @@ const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-// Configure multer for PDF uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    cb(null, `pdf_${Date.now()}.pdf`);
+    const timestamp = Date.now();
+    const ext = path.extname(file.originalname);
+    const name = path.basename(file.originalname, ext);
+    cb(null, `${name}_${timestamp}${ext}`);
   }
 });
 
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    if (file.mimetype === 'application/pdf') {
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'image/svg+xml'];
+    if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Only PDF files are allowed'), false);
+      cb(new Error('Only PDF and image files are allowed'), false);
     }
   },
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB
+  limits: { fileSize: 20 * 1024 * 1024 }
 });
 
-// Routes
 router.get('/', getAllPages);
 router.get('/:id', getPageById);
 router.post('/upload-pdf', upload.single('pdf'), uploadPDF);

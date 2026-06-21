@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, Menu, X, User, Upload, Home } from 'lucide-react';
+import { Search, Menu, X, Upload, Home, Image, Palette } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,6 +27,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', path: '/', icon: <Home size={18} /> },
+    { name: 'Gallery', path: '/gallery', icon: <Image size={18} /> },
     { name: 'Upload', path: '/upload', icon: <Upload size={18} /> },
   ];
 
@@ -51,12 +52,12 @@ const Navbar = () => {
             >
               🎨
             </motion.div>
-             <span className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
-                ColorMe
-              </span>
+            <span className="text-lg md:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+              ColorMe
+            </span>
           </Link>
 
-          {/* Desktop Search - Centered */}
+          {/* Desktop Search */}
           <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-6">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
@@ -82,12 +83,6 @@ const Navbar = () => {
                 <span className="hidden lg:inline">{link.name}</span>
               </Link>
             ))}
-            <Link
-              to="/profile"
-              className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 flex items-center justify-center text-white hover:scale-105 transition shadow-md shrink-0"
-            >
-              <User size={16} />
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -132,14 +127,6 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <Link
-              to="/profile"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-pink-500 hover:bg-pink-50 rounded-xl transition"
-            >
-              <User size={18} />
-              Profile
-            </Link>
           </motion.div>
         )}
       </div>

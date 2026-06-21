@@ -1,20 +1,18 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-const featuredPages = [
-  { id: 'lion', name: 'Happy Lion', category: 'Animals', emoji: '🦁' },
-  { id: 'butterfly', name: 'Butterfly', category: 'Animals', emoji: '🦋' },
-  { id: 'flower', name: 'Flower Garden', category: 'Nature', emoji: '🌺' },
-  { id: 'tree', name: 'Magic Tree', category: 'Nature', emoji: '🌳' },
-  { id: 'cat', name: 'Friendly Cat', category: 'Cartoon', emoji: '🐱' },
-  { id: 'rocket', name: 'Rocket Ship', category: 'Cartoon', emoji: '🚀' },
-  { id: 'sun', name: 'Sun & Clouds', category: 'Nature', emoji: '☀️' },
-  { id: 'fish', name: 'Underwater Fish', category: 'Animals', emoji: '🐠' },
-  { id: 'dino', name: 'Cute Dinosaur', category: 'Cartoon', emoji: '🦕' },
-  { id: 'rainbow', name: 'Rainbow', category: 'Nature', emoji: '🌈' },
-];
+const FeaturedPages = ({ pages = [], loading = false }) => {
+  if (loading) {
+    return (
+      <section className="py-16 bg-white/50">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-400 mx-auto"></div>
+          <p className="text-gray-400 mt-4">Loading...</p>
+        </div>
+      </section>
+    );
+  }
 
-const FeaturedPages = () => {
   return (
     <section id="pages" className="py-16 bg-white/50">
       <div className="max-w-7xl mx-auto px-4">
@@ -34,21 +32,30 @@ const FeaturedPages = () => {
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {featuredPages.map((page, index) => (
+          {pages.map((page, index) => (
             <motion.div
-              key={page.id}
+              key={page.id || page._id || index}
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.05, type: 'spring' }}
               viewport={{ once: true }}
               whileHover={{ scale: 1.05 }}
             >
-              <Link to={`/color/${page.id}`}>
+              <Link to={`/color/${page.id || page._id}`}>
                 <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border-2 border-pastel-pink/20 hover:border-pastel-pink/50">
-                  <div className="h-32 bg-gradient-to-br from-pastel-pink/10 to-pastel-sky/10 flex items-center justify-center text-5xl">
-                    {page.emoji}
+                  <div className="h-32 bg-gradient-to-br from-pastel-pink/10 to-pastel-sky/10 flex items-center justify-center p-2 relative">
+                    <span className="absolute top-1 right-1 text-xs px-2 py-0.5 rounded-full bg-black/10">
+                      {page.source === 'image' ? '🖼️' : 
+                       page.source === 'pdf' ? '📄' : '📤'}
+                    </span>
+                    <div 
+                      className="w-full h-full flex items-center justify-center"
+                      dangerouslySetInnerHTML={{ 
+                        __html: page.svg || page.imageData || '<span class="text-4xl">🎨</span>' 
+                      }}
+                    />
                   </div>
-                  <div className="p-3 text-center">
+                  <div className="p-2 text-center">
                     <h3 className="font-semibold text-gray-700 text-sm truncate">
                       {page.name}
                     </h3>

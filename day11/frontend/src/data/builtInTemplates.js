@@ -4,6 +4,7 @@ export const builtInTemplates = {
     name: 'Happy Lion',
     category: 'Animals',
     difficulty: 'Easy',
+    source: 'image',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
       <!-- Mane -->
       <circle cx="200" cy="200" r="120" fill="none" stroke="#333" stroke-width="3" />
@@ -31,6 +32,7 @@ export const builtInTemplates = {
     name: 'Butterfly',
     category: 'Animals',
     difficulty: 'Medium',
+    source: 'image',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
       <!-- Body -->
       <ellipse cx="200" cy="200" rx="12" ry="70" fill="none" stroke="#333" stroke-width="3" />
@@ -58,6 +60,7 @@ export const builtInTemplates = {
     name: 'Flower Garden',
     category: 'Nature',
     difficulty: 'Easy',
+    source: 'image',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
       <!-- Stem -->
       <line x1="200" y1="280" x2="200" y2="150" stroke="#333" stroke-width="4" />
@@ -80,6 +83,7 @@ export const builtInTemplates = {
     name: 'Magic Tree',
     category: 'Nature',
     difficulty: 'Medium',
+    source: 'image',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
       <!-- Trunk -->
       <rect x="180" y="240" width="40" height="120" fill="none" stroke="#333" stroke-width="3" />
@@ -103,6 +107,7 @@ export const builtInTemplates = {
     name: 'Friendly Cat',
     category: 'Cartoon',
     difficulty: 'Easy',
+    source: 'image',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
       <!-- Face -->
       <circle cx="200" cy="200" r="100" fill="none" stroke="#333" stroke-width="3" />
@@ -131,6 +136,7 @@ export const builtInTemplates = {
     name: 'Rocket Ship',
     category: 'Cartoon',
     difficulty: 'Medium',
+    source: 'image',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
       <!-- Body -->
       <ellipse cx="200" cy="220" rx="60" ry="100" fill="none" stroke="#333" stroke-width="3" />

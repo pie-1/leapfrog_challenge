@@ -1,15 +1,15 @@
 import { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useColorFill } from '../../hooks/useColorFill';
+import { floodFill } from '../../utils/floodFill';
 import { useSound } from '../../hooks/useSound';
 
-const Canvas = forwardRef(({ 
-  svg, 
-  selectedColor, 
-  brushSize, 
+const Canvas = forwardRef(({
+  svg,
+  selectedColor,
+  brushSize,
   tool,
   onFill,
-  onDraw 
+  onDraw
 }, ref) => {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
@@ -18,8 +18,6 @@ const Canvas = forwardRef(({
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isLoaded, setIsLoaded] = useState(false);
-
-  const { fillArea } = useColorFill(canvasRef, selectedColor, onFill);
   const { play } = useSound();
 
   // Initialize canvas
@@ -45,56 +43,66 @@ const Canvas = forwardRef(({
     return () => window.removeEventListener('resize', handleResize);
   }, [svg]);
 
-  // Load SVG template onto canvas
+  // Load template
   const loadTemplate = () => {
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
     if (!ctx || !svg) return;
 
-    // Clear and set white background
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Create image from SVG
+    // If it's a URL (from backend), load differently
+    if (typeof svg === 'string' && (svg.startsWith('/uploads') || svg.startsWith('http'))) {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        setIsLoaded(true);
+        saveState();
+      };
+      img.onerror = () => {
+        drawFallback(ctx, canvas.width, canvas.height);
+        setIsLoaded(true);
+      };
+      img.src = `http://localhost:5000${svg}`;
+      return;
+    }
+
+    // It's an SVG string
     const img = new Image();
     const svgString = svg;
-    
-    // Create blob URL
     const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
     const url = URL.createObjectURL(blob);
-    
+
     img.onload = () => {
-      // Draw SVG centered and scaled to fit canvas
-      const scale = Math.min(canvas.width / 400, canvas.height / 400);
-      const x = (canvas.width - 400 * scale) / 2;
-      const y = (canvas.height - 400 * scale) / 2;
-      
-      ctx.drawImage(img, x, y, 400 * scale, 400 * scale);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
       setIsLoaded(true);
       saveState();
     };
-    
-    img.onerror = (err) => {
-      console.warn('SVG load error:', err);
-      // Draw fallback
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
       drawFallback(ctx, canvas.width, canvas.height);
       setIsLoaded(true);
     };
-    
+
     img.src = url;
   };
 
-  // Fallback shapes
   const drawFallback = (ctx, w, h) => {
     ctx.strokeStyle = '#333';
     ctx.lineWidth = 3;
     ctx.strokeRect(50, 50, w - 100, h - 100);
+    ctx.beginPath();
+    ctx.arc(w / 2, h / 2, 80, 0, Math.PI * 2);
+    ctx.stroke();
     ctx.font = '24px Fredoka';
     ctx.fillStyle = '#999';
     ctx.textAlign = 'center';
-    ctx.fillText('🎨 Coloring Page', w/2, h/2);
+    ctx.fillText('🎨 Coloring Page', w / 2, h / 2 + 140);
   };
 
   const saveState = () => {
@@ -119,16 +127,25 @@ const Canvas = forwardRef(({
         ctx.drawImage(img, 0, 0);
       };
       img.src = history[newIndex];
+      play('click');
     }
   };
 
   const clearCanvas = () => {
     loadTemplate();
+    play('erase');
   };
 
+  // Expose methods to parent
   useImperativeHandle(ref, () => ({
     clearCanvas,
     undo,
+    canvasRef,
+    getImageData: () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return null;
+      return canvas.toDataURL('image/png');
+    }
   }));
 
   const getPos = (e) => {
@@ -136,7 +153,7 @@ const Canvas = forwardRef(({
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    
+
     let clientX, clientY;
     if (e.touches) {
       clientX = e.touches[0].clientX;
@@ -145,7 +162,7 @@ const Canvas = forwardRef(({
       clientX = e.clientX;
       clientY = e.clientY;
     }
-    
+
     return {
       x: (clientX - rect.left) * scaleX,
       y: (clientY - rect.top) * scaleY
@@ -154,23 +171,48 @@ const Canvas = forwardRef(({
 
   const startDrawing = (e) => {
     if (!isLoaded) return;
-    
     const pos = getPos(e);
+
+    // Fill tool
+    if (tool === 'fill') {
+      const canvas = canvasRef.current;
+      const ctx = ctxRef.current;
+      if (!ctx) return;
+
+      try {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        const idx = (Math.round(pos.y) * canvas.width + Math.round(pos.x)) * 4;
+        const targetColor = [data[idx], data[idx + 1], data[idx + 2]];
+
+        // Don't fill if it's white (background) or transparent
+        if (targetColor[0] === 255 && targetColor[1] === 255 && targetColor[2] === 255) {
+          console.log('Clicking on white background - skipping');
+          return;
+        }
+
+        const filled = floodFill(ctx, Math.round(pos.x), Math.round(pos.y), selectedColor);
+        if (filled > 0) {
+          saveState();
+          if (onFill) onFill();
+          play('pop');
+          console.log(`✅ Filled ${filled} pixels`);
+        } else {
+          console.warn('⚠️ No pixels filled - try clicking on a colored area');
+        }
+      } catch (err) {
+        console.error('Fill error:', err);
+      }
+      return;
+    }
+
+    // Drawing tools (brush, eraser)
     setIsDrawing(true);
     setLastPos(pos);
-
-    if (tool === 'fill') {
-      const filled = fillArea(pos.x, pos.y);
-      if (filled) {
-        saveState();
-        play('pop');
-      }
-    }
   };
 
   const draw = (e) => {
     if (!isDrawing || tool === 'fill' || !isLoaded) return;
-
     const pos = getPos(e);
     const ctx = ctxRef.current;
     if (!ctx) return;
@@ -189,7 +231,7 @@ const Canvas = forwardRef(({
     play('brush');
   };
 
-  const stopDrawing = (e) => {
+  const stopDrawing = () => {
     if (isDrawing && tool !== 'fill' && isLoaded) {
       saveState();
     }

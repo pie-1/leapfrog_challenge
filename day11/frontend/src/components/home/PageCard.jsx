@@ -4,8 +4,18 @@ const PageCard = ({ page }) => {
   return (
     <Link to={`/color/${page._id || page.id}`} className="block">
       <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-pastel-pink/20 hover:border-pastel-pink/50">
-        {/* Preview */}
-        <div className="h-40 bg-gradient-to-br from-pastel-pink/10 to-pastel-sky/10 flex items-center justify-center p-4">
+        <div className="h-40 bg-gradient-to-br from-pastel-pink/10 to-pastel-sky/10 flex items-center justify-center p-4 relative">
+          {/* Source badge */}
+          {page.source && (
+            <span className={`absolute top-2 right-2 text-xs px-2 py-1 rounded-full ${
+              page.source === 'image' ? 'bg-blue-100 text-blue-600' :
+              page.source === 'pdf' ? 'bg-purple-100 text-purple-600' :
+              'bg-green-100 text-green-600'
+            }`}>
+              {page.source === 'image' ? '🖼️' :
+               page.source === 'pdf' ? '📄' : '📤'}
+            </span>
+          )}
           <div
             className="w-full h-full"
             dangerouslySetInnerHTML={{
@@ -14,7 +24,6 @@ const PageCard = ({ page }) => {
           />
         </div>
         
-        {/* Info */}
         <div className="p-4">
           <h3 className="font-semibold text-gray-700 truncate text-sm">
             {page.name || 'Untitled'}
