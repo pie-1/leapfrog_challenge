@@ -1,7 +1,13 @@
-import Page from '../models/Page.js';
-import { convertPDFToSVG } from '../services/pdfService.js';
-import fs from 'fs/promises';
 
+import Page from '../models/Page.js';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Get all pages
 export const getAllPages = async (req, res) => {
   try {
     const pages = await Page.find({ isPublic: true });
@@ -12,16 +18,21 @@ export const getAllPages = async (req, res) => {
   }
 };
 
+// Get page by ID
 export const getPageById = async (req, res) => {
   try {
     const page = await Page.findById(req.params.id);
-    if (!page) return res.status(404).json({ error: 'Page not found' });
+    if (!page) {
+      return res.status(404).json({ error: 'Page not found' });
+    }
     res.json(page);
   } catch (error) {
+    console.error('Get page by ID error:', error);
     res.status(500).json({ error: error.message });
   }
 };
 
+// Upload PDF or Image
 export const uploadPDF = async (req, res) => {
   try {
     if (!req.file) {
@@ -32,82 +43,71 @@ export const uploadPDF = async (req, res) => {
     const fileName = file.originalname;
     const filePath = file.path;
     const fileType = file.mimetype;
+    const fileSize = file.size;
 
-    let pages = [];
+    console.log(`📤 Uploading: ${fileName} (${fileType}, ${fileSize} bytes)`);
 
-    // Handle PDF
-    if (fileType === 'application/pdf') {
-      pages = await convertPDFToSVG(filePath, fileName);
-    } 
-    // Handle Images
-    else if (fileType.startsWith('image/')) {
-      const svg = await convertImageToSVG(filePath, fileName);
-      pages = [{
-        pageNumber: 1,
-        name: fileName.replace(/\.[^/.]+$/, ''),
-        svg: svg
-      }];
-    } 
-    else {
-      return res.status(400).json({ error: 'Unsupported file type. Please upload PDF or image.' });
-    }
+    // Read file as base64
+    const fileBuffer = await fs.readFile(filePath);
+    const base64File = fileBuffer.toString('base64');
+    const dataUrl = `data:${fileType};base64,${base64File}`;
 
-    if (!pages || pages.length === 0) {
-      return res.status(500).json({ error: 'Failed to convert file' });
-    }
+    // Determine if it's a PDF or image
+    const isPDF = fileType === 'application/pdf';
+    const category = isPDF ? 'PDF Book' : 'Image';
 
-    // Save all pages with original name
-    const savedPages = await Promise.all(pages.map(async (pageData) => {
-      const page = new Page({
-        name: pageData.name || `Page ${pageData.pageNumber}`,
-        category: 'Uploaded',
-        difficulty: 'Easy',
-        imageData: pageData.svg,
-        originalFileName: fileName,
-        fileType: fileType,
-        pageNumber: pageData.pageNumber || 1,
-        totalPages: pages.length,
-      });
-      return await page.save();
-    }));
+    // Create page entry
+    const page = new Page({
+      name: fileName.replace(/\.[^/.]+$/, ''), // Remove extension
+      category: category,
+      difficulty: 'Easy',
+      imageData: dataUrl,
+      isPDF: isPDF,
+      originalFileName: fileName,
+      fileType: fileType,
+      fileSize: fileSize,
+      pageNumber: 1,
+      totalPages: 1,
+    });
 
-    // Clean up uploaded file
+    await page.save();
+
+    // Clean up temp file
     try {
       await fs.unlink(filePath);
     } catch (err) {
-      console.warn('Could not delete temp file:', err.message);
+      console.warn('⚠️ Could not delete temp file:', err.message);
     }
+
+    console.log(`✅ Uploaded: ${fileName}`);
 
     res.json({
       success: true,
-      message: `Converted ${savedPages.length} pages from "${fileName}"`,
-      pages: savedPages
+      message: `Successfully uploaded "${fileName}" as a coloring book`,
+      page: page
     });
   } catch (error) {
-    console.error('Upload error:', error);
+    console.error('❌ Upload error:', error);
+    // Clean up temp file if it exists
+    try {
+      if (req.file && req.file.path) {
+        await fs.unlink(req.file.path);
+      }
+    } catch (err) {
+      // Ignore cleanup errors
+    }
     res.status(500).json({ error: error.message });
   }
 };
 
-const convertImageToSVG = async (imagePath, fileName) => {
-  const imageBuffer = await fs.readFile(imagePath);
-  const base64Image = imageBuffer.toString('base64');
-  const mimeType = fileName.endsWith('.png') ? 'image/png' : 
-                   fileName.endsWith('.jpg') || fileName.endsWith('.jpeg') ? 'image/jpeg' : 
-                   'image/svg+xml';
-  
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
-    <rect width="800" height="600" fill="white"/>
-    <image href="data:${mimeType};base64,${base64Image}" x="0" y="0" width="800" height="600" preserveAspectRatio="xMidYMid meet"/>
-  </svg>`;
-};
-
+// Create custom page
 export const createPage = async (req, res) => {
   try {
     const page = new Page(req.body);
     await page.save();
     res.status(201).json(page);
   } catch (error) {
+    console.error('Create page error:', error);
     res.status(500).json({ error: error.message });
   }
 };

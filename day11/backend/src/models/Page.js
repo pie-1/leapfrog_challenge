@@ -4,12 +4,14 @@ const pageSchema = new mongoose.Schema({
   name: { type: String, required: true },
   category: { type: String, default: 'Uploaded' },
   difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], default: 'Easy' },
-  imageData: { type: String, required: true },
+  imageData: { type: String, required: true }, // Base64 data URL
   thumbnail: { type: String },
   isPublic: { type: Boolean, default: true },
-  originalFileName: { type: String }, // Store original name
-  fileType: { type: String }, // PDF or image type
-  pageNumber: { type: Number, default: 1 }, // For multi-page PDFs
+  isPDF: { type: Boolean, default: false },
+  originalFileName: { type: String },
+  fileType: { type: String },
+  fileSize: { type: Number },
+  pageNumber: { type: Number, default: 1 },
   totalPages: { type: Number, default: 1 },
   createdAt: { type: Date, default: Date.now }
 });

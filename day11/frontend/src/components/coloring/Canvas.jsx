@@ -1,7 +1,10 @@
 import { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { floodFill } from '../../utils/floodFill';
 import { useSound } from '../../hooks/useSound';
+import * as pdfjsLib from 'pdfjs-dist';
+
+// Set worker source
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
 const Canvas = forwardRef(({
   svg,
@@ -9,10 +12,14 @@ const Canvas = forwardRef(({
   brushSize,
   tool,
   onFill,
-  onDraw
+  onDraw,
+  isPDF = false
 }, ref) => {
   const canvasRef = useRef(null);
+  const colorCanvasRef = useRef(null);
   const ctxRef = useRef(null);
+  const colorCtxRef = useRef(null);
+  
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
   const [history, setHistory] = useState([]);
@@ -20,22 +27,31 @@ const Canvas = forwardRef(({
   const [isLoaded, setIsLoaded] = useState(false);
   const { play } = useSound();
 
-  // Initialize canvas
+  // Initialize canvas and load template
   useEffect(() => {
     const canvas = canvasRef.current;
+    const colorCanvas = colorCanvasRef.current;
+    
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const colorCtx = colorCanvas.getContext('2d', { willReadFrequently: true });
+    
     ctxRef.current = ctx;
+    colorCtxRef.current = colorCtx;
 
     const size = Math.min(window.innerWidth - 80, 500);
     canvas.width = size;
+    colorCanvas.width = size;
     canvas.height = size;
+    colorCanvas.height = size;
 
     loadTemplate();
 
     const handleResize = () => {
       const newSize = Math.min(window.innerWidth - 80, 500);
       canvas.width = newSize;
+      colorCanvas.width = newSize;
       canvas.height = newSize;
+      colorCanvas.height = newSize;
       loadTemplate();
     };
 
@@ -43,41 +59,86 @@ const Canvas = forwardRef(({
     return () => window.removeEventListener('resize', handleResize);
   }, [svg]);
 
-  // Load template
+  // Load template on background layer
   const loadTemplate = () => {
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
+    const colorCanvas = colorCanvasRef.current;
+    const colorCtx = colorCtxRef.current;
+    
     if (!ctx || !svg) return;
 
+    // Clear background
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // If it's a URL (from backend), load differently
-    if (typeof svg === 'string' && (svg.startsWith('/uploads') || svg.startsWith('http'))) {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        setIsLoaded(true);
-        saveState();
-      };
-      img.onerror = () => {
-        drawFallback(ctx, canvas.width, canvas.height);
-        setIsLoaded(true);
-      };
-      img.src = `http://localhost:5000${svg}`;
+    // Clear color layer
+    if (colorCtx) {
+      colorCtx.clearRect(0, 0, colorCanvas.width, colorCanvas.height);
+    }
+
+    // Check if it's a PDF data URL
+    if (svg.startsWith('data:application/pdf')) {
+      loadPDF(ctx, canvas.width, canvas.height, svg);
       return;
     }
 
-    // It's an SVG string
+    // Check if it's an image data URL
+    if (svg.startsWith('data:image/')) {
+      loadImageDataURL(ctx, canvas.width, canvas.height, svg);
+      return;
+    }
+
+    // Check if it's a URL
+    if (svg.startsWith('http') || svg.startsWith('/uploads')) {
+      loadImageURL(ctx, canvas.width, canvas.height, svg);
+      return;
+    }
+
+    // Default: SVG string
+    loadSVG(ctx, canvas.width, canvas.height, svg);
+  };
+
+  // Load image data URL
+  const loadImageDataURL = (ctx, w, h, dataUrl) => {
     const img = new Image();
-    const svgString = svg;
-    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, w, h);
+      setIsLoaded(true);
+      saveState();
+    };
+    img.onerror = () => {
+      drawFallback(ctx, w, h);
+      setIsLoaded(true);
+    };
+    img.src = dataUrl;
+  };
+
+  // Load image URL
+  const loadImageURL = (ctx, w, h, url) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, w, h);
+      setIsLoaded(true);
+      saveState();
+    };
+    img.onerror = () => {
+      drawFallback(ctx, w, h);
+      setIsLoaded(true);
+    };
+    img.src = url;
+  };
+
+  // Load SVG on background
+  const loadSVG = (ctx, w, h, svgContent) => {
+    const img = new Image();
+    const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
     const url = URL.createObjectURL(blob);
 
     img.onload = () => {
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, w, h);
       URL.revokeObjectURL(url);
       setIsLoaded(true);
       saveState();
@@ -85,11 +146,41 @@ const Canvas = forwardRef(({
 
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      drawFallback(ctx, canvas.width, canvas.height);
+      drawFallback(ctx, w, h);
       setIsLoaded(true);
     };
 
     img.src = url;
+  };
+
+  // Load PDF on background
+  const loadPDF = (ctx, w, h, pdfUrl) => {
+    const loadingTask = pdfjsLib.getDocument(pdfUrl);
+    loadingTask.promise.then(pdf => {
+      pdf.getPage(1).then(page => {
+        const scale = 1.5;
+        const viewport = page.getViewport({ scale: scale });
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = viewport.width;
+        tempCanvas.height = viewport.height;
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        const renderContext = {
+          canvasContext: tempCtx,
+          viewport: viewport
+        };
+        
+        page.render(renderContext).promise.then(() => {
+          ctx.drawImage(tempCanvas, 0, 0, w, h);
+          setIsLoaded(true);
+          saveState();
+        });
+      });
+    }).catch(err => {
+      console.warn('PDF load error:', err);
+      drawFallback(ctx, w, h);
+      setIsLoaded(true);
+    });
   };
 
   const drawFallback = (ctx, w, h) => {
@@ -105,10 +196,20 @@ const Canvas = forwardRef(({
     ctx.fillText('🎨 Coloring Page', w / 2, h / 2 + 140);
   };
 
+  // Save state (background + color layer)
   const saveState = () => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const imageData = canvas.toDataURL();
+    const colorCanvas = colorCanvasRef.current;
+    if (!canvas || !colorCanvas) return;
+    
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.drawImage(canvas, 0, 0);
+    tempCtx.drawImage(colorCanvas, 0, 0);
+    
+    const imageData = tempCanvas.toDataURL();
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push(imageData);
     setHistory(newHistory);
@@ -119,34 +220,116 @@ const Canvas = forwardRef(({
     if (historyIndex > 0) {
       const newIndex = historyIndex - 1;
       setHistoryIndex(newIndex);
-      const img = new Image();
-      img.onload = () => {
-        const ctx = ctxRef.current;
-        if (!ctx) return;
-        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-        ctx.drawImage(img, 0, 0);
-      };
-      img.src = history[newIndex];
+      restoreState(history[newIndex]);
       play('click');
     }
   };
 
+  const restoreState = (imageData) => {
+    const canvas = canvasRef.current;
+    const colorCanvas = colorCanvasRef.current;
+    const ctx = ctxRef.current;
+    const colorCtx = colorCtxRef.current;
+    if (!ctx || !colorCtx) return;
+
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      colorCtx.clearRect(0, 0, colorCanvas.width, colorCanvas.height);
+      ctx.drawImage(img, 0, 0);
+    };
+    img.src = imageData;
+  };
+
   const clearCanvas = () => {
-    loadTemplate();
+    const colorCanvas = colorCanvasRef.current;
+    const colorCtx = colorCtxRef.current;
+    if (colorCtx) {
+      colorCtx.clearRect(0, 0, colorCanvas.width, colorCanvas.height);
+    }
+    saveState();
     play('erase');
   };
 
-  // Expose methods to parent
+  const resetCanvas = () => {
+    loadTemplate();
+  };
+
   useImperativeHandle(ref, () => ({
     clearCanvas,
     undo,
+    resetCanvas,
     canvasRef,
     getImageData: () => {
       const canvas = canvasRef.current;
-      if (!canvas) return null;
-      return canvas.toDataURL('image/png');
+      const colorCanvas = colorCanvasRef.current;
+      if (!canvas || !colorCanvas) return null;
+      
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.drawImage(canvas, 0, 0);
+      tempCtx.drawImage(colorCanvas, 0, 0);
+      return tempCanvas.toDataURL('image/png');
     }
   }));
+
+  // Flood fill on color layer only
+  const fillColorLayer = (startX, startY, fillColor) => {
+    const colorCanvas = colorCanvasRef.current;
+    const colorCtx = colorCtxRef.current;
+    if (!colorCtx) return 0;
+
+    const w = colorCanvas.width;
+    const h = colorCanvas.height;
+    const imageData = colorCtx.getImageData(0, 0, w, h);
+    const data = imageData.data;
+    const fillRGB = hexToRgb(fillColor);
+    const startIdx = (startY * w + startX) * 4;
+    const targetRGB = [data[startIdx], data[startIdx + 1], data[startIdx + 2]];
+
+    if (targetRGB[0] === 255 && targetRGB[1] === 255 && targetRGB[2] === 255) return 0;
+    if (colorsMatch(targetRGB, fillRGB, 0)) return 0;
+
+    const stack = [[startX, startY]];
+    const visited = new Set();
+    let filled = 0;
+
+    while (stack.length > 0) {
+      const [px, py] = stack.pop();
+      const key = `${px},${py}`;
+      if (visited.has(key)) continue;
+      if (px < 0 || px >= w || py < 0 || py >= h) continue;
+
+      const idx = (py * w + px) * 4;
+      const current = [data[idx], data[idx + 1], data[idx + 2]];
+      if (!colorsMatch(current, targetRGB, 50)) continue;
+
+      visited.add(key);
+      data[idx] = fillRGB[0];
+      data[idx + 1] = fillRGB[1];
+      data[idx + 2] = fillRGB[2];
+      data[idx + 3] = 255;
+      filled++;
+
+      stack.push([px + 1, py], [px - 1, py], [px, py + 1], [px, py - 1]);
+    }
+
+    colorCtx.putImageData(imageData, 0, 0);
+    return filled;
+  };
+
+  const hexToRgb = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : [0, 0, 0];
+  };
+
+  const colorsMatch = (c1, c2, tolerance = 50) => {
+    return Math.abs(c1[0] - c2[0]) < tolerance &&
+           Math.abs(c1[1] - c2[1]) < tolerance &&
+           Math.abs(c1[2] - c2[2]) < tolerance;
+  };
 
   const getPos = (e) => {
     const canvas = canvasRef.current;
@@ -173,40 +356,21 @@ const Canvas = forwardRef(({
     if (!isLoaded) return;
     const pos = getPos(e);
 
-    // Fill tool
+    // Fill tool – works on color layer
     if (tool === 'fill') {
-      const canvas = canvasRef.current;
-      const ctx = ctxRef.current;
-      if (!ctx) return;
-
       try {
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        const idx = (Math.round(pos.y) * canvas.width + Math.round(pos.x)) * 4;
-        const targetColor = [data[idx], data[idx + 1], data[idx + 2]];
-
-        // Don't fill if it's white (background) or transparent
-        if (targetColor[0] === 255 && targetColor[1] === 255 && targetColor[2] === 255) {
-          console.log('Clicking on white background - skipping');
-          return;
-        }
-
-        const filled = floodFill(ctx, Math.round(pos.x), Math.round(pos.y), selectedColor);
+        const filled = fillColorLayer(Math.round(pos.x), Math.round(pos.y), selectedColor);
         if (filled > 0) {
           saveState();
           if (onFill) onFill();
           play('pop');
-          console.log(`✅ Filled ${filled} pixels`);
-        } else {
-          console.warn('⚠️ No pixels filled - try clicking on a colored area');
         }
       } catch (err) {
-        console.error('Fill error:', err);
+        console.warn('Fill error:', err);
       }
       return;
     }
 
-    // Drawing tools (brush, eraser)
     setIsDrawing(true);
     setLastPos(pos);
   };
@@ -214,17 +378,27 @@ const Canvas = forwardRef(({
   const draw = (e) => {
     if (!isDrawing || tool === 'fill' || !isLoaded) return;
     const pos = getPos(e);
-    const ctx = ctxRef.current;
-    if (!ctx) return;
+    const colorCtx = colorCtxRef.current;
+    if (!colorCtx) return;
 
-    ctx.beginPath();
-    ctx.moveTo(lastPos.x, lastPos.y);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.strokeStyle = tool === 'eraser' ? '#ffffff' : selectedColor;
-    ctx.lineWidth = brushSize * (tool === 'eraser' ? 2 : 1);
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.stroke();
+    colorCtx.beginPath();
+    colorCtx.moveTo(lastPos.x, lastPos.y);
+    colorCtx.lineTo(pos.x, pos.y);
+    
+    if (tool === 'eraser') {
+      colorCtx.globalCompositeOperation = 'destination-out';
+      colorCtx.strokeStyle = 'rgba(255,255,255,1)';
+    } else {
+      colorCtx.globalCompositeOperation = 'source-over';
+      colorCtx.strokeStyle = selectedColor;
+    }
+    
+    colorCtx.lineWidth = brushSize * (tool === 'eraser' ? 3 : 1);
+    colorCtx.lineCap = 'round';
+    colorCtx.lineJoin = 'round';
+    colorCtx.stroke();
+
+    colorCtx.globalCompositeOperation = 'source-over';
 
     setLastPos(pos);
     if (onDraw) onDraw();
@@ -243,11 +417,19 @@ const Canvas = forwardRef(({
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', damping: 15 }}
-      className="bg-white rounded-2xl shadow-2xl p-4 border-4 border-pastel-pink/30"
+      className="bg-white rounded-2xl shadow-2xl p-4 border-4 border-pastel-pink/30 relative"
     >
+      {/* Color Layer (top) */}
+      <canvas
+        ref={colorCanvasRef}
+        className="absolute top-4 left-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] rounded-lg touch-none"
+        style={{ maxWidth: '500px', maxHeight: '500px', pointerEvents: 'none' }}
+      />
+      
+      {/* Background Layer */}
       <canvas
         ref={canvasRef}
-        className="w-full h-auto rounded-lg cursor-crosshair touch-none"
+        className="w-full h-auto rounded-lg cursor-crosshair touch-none relative z-10"
         style={{ maxWidth: '500px', maxHeight: '500px' }}
         onMouseDown={startDrawing}
         onMouseMove={draw}

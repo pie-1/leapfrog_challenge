@@ -22,7 +22,7 @@ const ColoringPage = () => {
   const { play } = useSound();
 
   useEffect(() => {
-    // First check built-in or PDF templates
+    // 1. Check built-in templates first (FASTEST)
     const template = getTemplateById(id);
     if (template) {
       setPage(template);
@@ -30,13 +30,13 @@ const ColoringPage = () => {
       return;
     }
 
-    // If not found, try fetching from backend (uploaded pages)
+    // 2. Try fetching from backend (uploaded pages)
     const fetchPage = async () => {
       try {
         const response = await fetch(`http://localhost:5000/api/pages/${id}`);
         if (response.ok) {
           const data = await response.json();
-          if (data && data.imageData) {
+          if (data) {
             setPage({
               id: data._id,
               name: data.name || 'Uploaded Page',
@@ -149,7 +149,6 @@ const ColoringPage = () => {
           </div>
         </motion.div>
 
-        {/* Audio activation overlay */}
         {!audioReady && (
           <motion.div
             initial={{ opacity: 0 }}
