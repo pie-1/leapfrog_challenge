@@ -1,4 +1,3 @@
-
 import Page from '../models/Page.js';
 import fs from 'fs/promises';
 import path from 'path';
@@ -6,6 +5,16 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const PDFS_DIR = path.join(__dirname, '../../../uploads/pdfs');
+
+// Ensure directory exists
+const ensureDir = async () => {
+  try {
+    await fs.mkdir(PDFS_DIR, { recursive: true });
+  } catch (err) {
+    console.warn('Could not create directory:', err.message);
+  }
+};
 
 // Get all pages
 export const getAllPages = async (req, res) => {
@@ -35,6 +44,8 @@ export const getPageById = async (req, res) => {
 // Upload PDF or Image
 export const uploadPDF = async (req, res) => {
   try {
+    await ensureDir();
+    
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
@@ -108,6 +119,37 @@ export const createPage = async (req, res) => {
     res.status(201).json(page);
   } catch (error) {
     console.error('Create page error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Update page
+export const updatePage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    const page = await Page.findByIdAndUpdate(id, updates, { new: true });
+    if (!page) {
+      return res.status(404).json({ error: 'Page not found' });
+    }
+    res.json(page);
+  } catch (error) {
+    console.error('Update page error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Delete page
+export const deletePage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const page = await Page.findByIdAndDelete(id);
+    if (!page) {
+      return res.status(404).json({ error: 'Page not found' });
+    }
+    res.json({ success: true, message: 'Page deleted' });
+  } catch (error) {
+    console.error('Delete page error:', error);
     res.status(500).json({ error: error.message });
   }
 };

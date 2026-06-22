@@ -7,7 +7,9 @@ import {
   getAllPages,
   getPageById,
   uploadPDF,
-  createPage
+  createPage,
+  updatePage,
+  deletePage
 } from '../controllers/pageController.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -85,5 +87,7 @@ router.post('/upload-pdf', (req, res, next) => {
 }, uploadPDF);
 
 router.post('/', createPage);
+router.put('/:id', updatePage);
+router.delete('/:id', deletePage);
 
 export default router;

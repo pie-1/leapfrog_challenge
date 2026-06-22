@@ -1,19 +1,14 @@
 import { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSound } from '../../hooks/useSound';
-import * as pdfjsLib from 'pdfjs-dist';
-
-// Set worker source
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
 const Canvas = forwardRef(({
-  svg,
+  pageData,
   selectedColor,
   brushSize,
   tool,
   onFill,
-  onDraw,
-  isPDF = false
+  onDraw
 }, ref) => {
   const canvasRef = useRef(null);
   const colorCanvasRef = useRef(null);
@@ -27,7 +22,7 @@ const Canvas = forwardRef(({
   const [isLoaded, setIsLoaded] = useState(false);
   const { play } = useSound();
 
-  // Initialize canvas and load template
+  // Initialize both layers
   useEffect(() => {
     const canvas = canvasRef.current;
     const colorCanvas = colorCanvasRef.current;
@@ -57,7 +52,7 @@ const Canvas = forwardRef(({
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [svg]);
+  }, [pageData]);
 
   // Load template on background layer
   const loadTemplate = () => {
@@ -66,7 +61,7 @@ const Canvas = forwardRef(({
     const colorCanvas = colorCanvasRef.current;
     const colorCtx = colorCtxRef.current;
     
-    if (!ctx || !svg) return;
+    if (!ctx || !pageData) return;
 
     // Clear background
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -78,109 +73,23 @@ const Canvas = forwardRef(({
       colorCtx.clearRect(0, 0, colorCanvas.width, colorCanvas.height);
     }
 
-    // Check if it's a PDF data URL
-    if (svg.startsWith('data:application/pdf')) {
-      loadPDF(ctx, canvas.width, canvas.height, svg);
-      return;
+    // Load page preview
+    if (pageData.preview) {
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        setIsLoaded(true);
+        saveState();
+      };
+      img.onerror = () => {
+        drawFallback(ctx, canvas.width, canvas.height);
+        setIsLoaded(true);
+      };
+      img.src = pageData.preview;
+    } else {
+      drawFallback(ctx, canvas.width, canvas.height);
+      setIsLoaded(true);
     }
-
-    // Check if it's an image data URL
-    if (svg.startsWith('data:image/')) {
-      loadImageDataURL(ctx, canvas.width, canvas.height, svg);
-      return;
-    }
-
-    // Check if it's a URL
-    if (svg.startsWith('http') || svg.startsWith('/uploads')) {
-      loadImageURL(ctx, canvas.width, canvas.height, svg);
-      return;
-    }
-
-    // Default: SVG string
-    loadSVG(ctx, canvas.width, canvas.height, svg);
-  };
-
-  // Load image data URL
-  const loadImageDataURL = (ctx, w, h, dataUrl) => {
-    const img = new Image();
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, w, h);
-      setIsLoaded(true);
-      saveState();
-    };
-    img.onerror = () => {
-      drawFallback(ctx, w, h);
-      setIsLoaded(true);
-    };
-    img.src = dataUrl;
-  };
-
-  // Load image URL
-  const loadImageURL = (ctx, w, h, url) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, w, h);
-      setIsLoaded(true);
-      saveState();
-    };
-    img.onerror = () => {
-      drawFallback(ctx, w, h);
-      setIsLoaded(true);
-    };
-    img.src = url;
-  };
-
-  // Load SVG on background
-  const loadSVG = (ctx, w, h, svgContent) => {
-    const img = new Image();
-    const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, w, h);
-      URL.revokeObjectURL(url);
-      setIsLoaded(true);
-      saveState();
-    };
-
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      drawFallback(ctx, w, h);
-      setIsLoaded(true);
-    };
-
-    img.src = url;
-  };
-
-  // Load PDF on background
-  const loadPDF = (ctx, w, h, pdfUrl) => {
-    const loadingTask = pdfjsLib.getDocument(pdfUrl);
-    loadingTask.promise.then(pdf => {
-      pdf.getPage(1).then(page => {
-        const scale = 1.5;
-        const viewport = page.getViewport({ scale: scale });
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = viewport.width;
-        tempCanvas.height = viewport.height;
-        const tempCtx = tempCanvas.getContext('2d');
-        
-        const renderContext = {
-          canvasContext: tempCtx,
-          viewport: viewport
-        };
-        
-        page.render(renderContext).promise.then(() => {
-          ctx.drawImage(tempCanvas, 0, 0, w, h);
-          setIsLoaded(true);
-          saveState();
-        });
-      });
-    }).catch(err => {
-      console.warn('PDF load error:', err);
-      drawFallback(ctx, w, h);
-      setIsLoaded(true);
-    });
   };
 
   const drawFallback = (ctx, w, h) => {

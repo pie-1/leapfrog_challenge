@@ -1,69 +1,52 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { pdf } from 'pdf-to-img';
+import { fileURLToPath } from 'url';
+import * as pdfjsLib from 'pdfjs-dist';
 
-export const convertPDFToSVG = async (pdfPath, originalFileName) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export const processPDF = async (pdfPath, fileName) => {
   try {
+    // Read PDF
+    const dataBuffer = await fs.readFile(pdfPath);
+    const pdfData = await pdfjsLib.getDocument({ data: dataBuffer }).promise;
+    
+    const totalPages = pdfData.numPages;
     const pages = [];
 
-    try {
-      const document = await pdf(pdfPath);
-
-      let pageIndex = 0;
-
-      for await (const image of document) {
-        const base64Image = image.toString('base64');
-
-        const svg = `
-          <svg xmlns="http://www.w3.org/2000/svg"
-               viewBox="0 0 800 600"
-               width="800"
-               height="600">
-            <rect width="800" height="600" fill="white"/>
-            <image
-              href="data:image/png;base64,${base64Image}"
-              x="0"
-              y="0"
-              width="800"
-              height="600"
-              preserveAspectRatio="xMidYMid meet"
-            />
-          </svg>
-        `;
-
-        pages.push({
-          pageNumber: pageIndex + 1,
-          name: `${originalFileName.replace(/\.[^/.]+$/, '')} - Page ${pageIndex + 1}`,
-          svg
-        });
-
-        pageIndex++;
-      }
-
-      return pages;
-    } catch (renderError) {
-      console.warn(
-        'PDF render error, using fallback:',
-        renderError.message
-      );
-
-      return [
-        {
-          pageNumber: 1,
-          name: originalFileName.replace(/\.[^/.]+$/, ''),
-          svg: generateFallbackSVG(originalFileName)
-        }
-      ];
+    // Generate preview for each page
+    for (let i = 1; i <= totalPages; i++) {
+      const page = await pdfjsLib.getDocument({ data: dataBuffer }).promise;
+      const pageContent = await page.getPage(i);
+      const viewport = pageContent.getViewport({ scale: 1.5 });
+      
+      // Create canvas for preview (using canvas module for Node)
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      
+      await pageContent.render({ canvasContext: ctx, viewport }).promise;
+      
+      // Store as base64
+      const preview = canvas.toDataURL('image/png');
+      
+      pages.push({
+        pageNumber: i,
+        preview: preview,
+        width: viewport.width,
+        height: viewport.height
+      });
     }
-  } catch (error) {
-    console.error('PDF conversion error:', error);
 
-    return [
-      {
-        pageNumber: 1,
-        name: 'Uploaded Page',
-        svg: generateFallbackSVG('Uploaded')
-      }
-    ];
+    return {
+      totalPages,
+      pages,
+      pdfData: dataBuffer.toString('base64')
+    };
+  } catch (error) {
+    console.error('PDF processing error:', error);
+    throw error;
   }
 };
