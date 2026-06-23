@@ -48,7 +48,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-6">
             {currentUser ? (
               <>
-                {/* Dropdown for Planner features */}
+                {/* Dropdown for Services */}
                 <div className="relative">
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -68,18 +68,21 @@ export default function Navbar() {
                         <Link
                           to="/planner"
                           className="block px-4 py-2 text-sm hover:bg-rose-50 hover:text-rose-600"
+                          onClick={() => setDropdownOpen(false)}
                         >
                           Wedding Timeline
                         </Link>
                         <Link
                           to="/budget"
                           className="block px-4 py-2 text-sm hover:bg-rose-50 hover:text-rose-600"
+                          onClick={() => setDropdownOpen(false)}
                         >
                           Budget Tracker
                         </Link>
                         <Link
                           to="/checklist"
                           className="block px-4 py-2 text-sm hover:bg-rose-50 hover:text-rose-600"
+                          onClick={() => setDropdownOpen(false)}
                         >
                           Personalized Checklist
                         </Link>
@@ -136,7 +139,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu (slide-down) */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
