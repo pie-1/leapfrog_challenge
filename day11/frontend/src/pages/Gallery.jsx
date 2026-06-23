@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -10,39 +9,36 @@ const Gallery = () => {
   const [pages, setPages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
-  const location = useLocation();
-
-  const fetchPages = async () => {
-    setLoading(true);
-    try {
-      const [backendRes] = await Promise.all([
-        fetch('http://localhost:5000/api/pages'),
-      ]);
-      let backendPages = [];
-      if (backendRes.ok) {
-        backendPages = await backendRes.json();
-        backendPages = backendPages.map(p => ({ ...p, source: 'uploaded' }));
-      }
-      const localTemplates = getAllTemplates();
-      const allPages = [...localTemplates, ...backendPages];
-      setPages(allPages);
-    } catch (error) {
-      console.error('Error fetching pages:', error);
-      const localTemplates = getAllTemplates();
-      setPages(localTemplates);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
+    const fetchPages = async () => {
+      try {
+        const [backendRes] = await Promise.all([
+          fetch('http://localhost:5000/api/pages'),
+        ]);
+        let backendPages = [];
+        if (backendRes.ok) {
+          backendPages = await backendRes.json();
+          backendPages = backendPages.map(p => ({ ...p, source: 'uploaded' }));
+        }
+        const localTemplates = getAllTemplates();
+        const allPages = [...localTemplates, ...backendPages];
+        setPages(allPages);
+      } catch (error) {
+        console.error('Error fetching pages:', error);
+        const localTemplates = getAllTemplates();
+        setPages(localTemplates);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchPages();
-  }, [location.key]); // Re-fetch on navigation
+  }, []);
 
   const filteredPages = pages.filter(page => {
     if (filter === 'all') return true;
-    if (filter === 'image') return page.source === 'image';
-    if (filter === 'pdf') return page.source === 'pdf' || page.source === 'uploaded';
+    if (filter === 'image') return page.source === 'image' || !page.source;
+    if (filter === 'pdf') return page.source === 'uploaded' || page.isPDF === true;
     return true;
   });
 
@@ -59,7 +55,6 @@ const Gallery = () => {
           <p className="text-gray-500 mt-2">All coloring pages in one place</p>
         </motion.div>
 
-        {/* Filter Tabs */}
         <div className="flex justify-center gap-4 mb-8">
           <button
             onClick={() => setFilter('all')}
@@ -69,7 +64,7 @@ const Gallery = () => {
                 : 'bg-white/80 text-gray-600 hover:bg-white'
             }`}
           >
-            All
+            All ({pages.length})
           </button>
           <button
             onClick={() => setFilter('image')}
@@ -95,7 +90,7 @@ const Gallery = () => {
 
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-400"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-400 mx-auto"></div>
           </div>
         ) : filteredPages.length === 0 ? (
           <div className="text-center py-12">

@@ -5,21 +5,22 @@ const pageSchema = new mongoose.Schema({
   category: { type: String, default: 'Uploaded' },
   difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], default: 'Easy' },
   
-  // Original PDF storage
-  originalPDF: { type: String }, // Path to stored PDF file
-  totalPages: { type: Number, default: 1 },
+  // For images: store base64 directly
+  imageData: { type: String },
   
-  // Page previews (as SVGs or image data)
+  // For PDFs: store file path and previews
+  filePath: { type: String },
+  fileType: { type: String },
+  isPDF: { type: Boolean, default: false },
+  totalPages: { type: Number, default: 1 },
   pages: [{
     pageNumber: Number,
-    preview: { type: String }, // Base64 or URL
+    preview: { type: String }, // base64 image of page
     width: Number,
     height: Number
   }],
   
-  // User coloring data (optional)
-  userColoring: { type: Object, default: {} },
-  
+  originalFileName: { type: String },
   isPublic: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now }
 });

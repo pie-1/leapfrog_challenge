@@ -1,13 +1,5 @@
 import { motion } from 'framer-motion';
-import { 
-  PaintBucket, 
-  Pencil, 
-  Eraser, 
-  RotateCcw, 
-  Trash2,
-  Minus,
-  Plus
-} from 'lucide-react';
+import { PaintBucket, Pencil, Eraser, RotateCcw, Trash2, Minus, Plus } from 'lucide-react';
 
 const tools = [
   { id: 'fill', icon: PaintBucket, label: 'Fill' },
@@ -23,8 +15,6 @@ const Toolbar = ({
   onClear,
   onUndo
 }) => {
-  const brushSizes = [2, 4, 6, 8, 12];
-
   return (
     <motion.div
       initial={{ x: 50, opacity: 0 }}
@@ -34,7 +24,6 @@ const Toolbar = ({
     >
       <h3 className="text-sm font-semibold text-gray-500 mb-4">Tools</h3>
       
-      {/* Tool Buttons */}
       <div className="flex flex-wrap gap-2 mb-4">
         {tools.map((tool) => {
           const Icon = tool.icon;
@@ -55,7 +44,6 @@ const Toolbar = ({
         })}
       </div>
 
-      {/* Brush Size */}
       <div className="mb-4">
         <label className="text-xs text-gray-400 block mb-2">Brush Size</label>
         <div className="flex items-center gap-2">
@@ -87,7 +75,6 @@ const Toolbar = ({
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="flex gap-2">
         <button
           onClick={onUndo}

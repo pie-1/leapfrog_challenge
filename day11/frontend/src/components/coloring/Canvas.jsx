@@ -1,6 +1,7 @@
-import { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useSound } from '../../hooks/useSound';
+import { floodFill } from '../../utils/floodFill';
 
 const Canvas = forwardRef(({
   pageData,
@@ -10,10 +11,10 @@ const Canvas = forwardRef(({
   onFill,
   onDraw
 }, ref) => {
-  const canvasRef = useRef(null);
+  const bgCanvasRef = useRef(null);
   const colorCanvasRef = useRef(null);
-  const ctxRef = useRef(null);
-  const colorCtxRef = useRef(null);
+  const bgCtx = useRef(null);
+  const colorCtx = useRef(null);
   
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
@@ -22,230 +23,126 @@ const Canvas = forwardRef(({
   const [isLoaded, setIsLoaded] = useState(false);
   const { play } = useSound();
 
-  // Initialize both layers
+  const size = Math.min(window.innerWidth - 80, 500);
+
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const bgCanvas = bgCanvasRef.current;
     const colorCanvas = colorCanvasRef.current;
-    
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    const colorCtx = colorCanvas.getContext('2d', { willReadFrequently: true });
-    
-    ctxRef.current = ctx;
-    colorCtxRef.current = colorCtx;
-
-    const size = Math.min(window.innerWidth - 80, 500);
-    canvas.width = size;
+    bgCanvas.width = size;
+    bgCanvas.height = size;
     colorCanvas.width = size;
-    canvas.height = size;
     colorCanvas.height = size;
-
+    bgCtx.current = bgCanvas.getContext('2d', { willReadFrequently: true });
+    colorCtx.current = colorCanvas.getContext('2d', { willReadFrequently: true });
     loadTemplate();
-
-    const handleResize = () => {
-      const newSize = Math.min(window.innerWidth - 80, 500);
-      canvas.width = newSize;
-      colorCanvas.width = newSize;
-      canvas.height = newSize;
-      colorCanvas.height = newSize;
-      loadTemplate();
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
   }, [pageData]);
 
-  // Load template on background layer
   const loadTemplate = () => {
-    const canvas = canvasRef.current;
-    const ctx = ctxRef.current;
-    const colorCanvas = colorCanvasRef.current;
-    const colorCtx = colorCtxRef.current;
-    
-    if (!ctx || !pageData) return;
+    const ctx = bgCtx.current;
+    const colorCtxLocal = colorCtx.current;
+    if (!ctx) return;
 
-    // Clear background
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, size, size);
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Clear color layer
-    if (colorCtx) {
-      colorCtx.clearRect(0, 0, colorCanvas.width, colorCanvas.height);
+    ctx.fillRect(0, 0, size, size);
+    if (colorCtxLocal) {
+      colorCtxLocal.clearRect(0, 0, size, size);
     }
 
-    // Load page preview
-    if (pageData.preview) {
+    const preview = pageData?.preview || pageData?.imageData;
+    if (preview) {
       const img = new Image();
       img.onload = () => {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, size, size);
         setIsLoaded(true);
         saveState();
       };
       img.onerror = () => {
-        drawFallback(ctx, canvas.width, canvas.height);
+        drawFallback(ctx);
         setIsLoaded(true);
       };
-      img.src = pageData.preview;
+      img.src = preview;
     } else {
-      drawFallback(ctx, canvas.width, canvas.height);
+      drawFallback(ctx);
       setIsLoaded(true);
     }
   };
 
-  const drawFallback = (ctx, w, h) => {
+  const drawFallback = (ctx) => {
     ctx.strokeStyle = '#333';
     ctx.lineWidth = 3;
-    ctx.strokeRect(50, 50, w - 100, h - 100);
+    ctx.strokeRect(50, 50, size - 100, size - 100);
     ctx.beginPath();
-    ctx.arc(w / 2, h / 2, 80, 0, Math.PI * 2);
+    ctx.arc(size / 2, size / 2, 80, 0, Math.PI * 2);
     ctx.stroke();
     ctx.font = '24px Fredoka';
     ctx.fillStyle = '#999';
     ctx.textAlign = 'center';
-    ctx.fillText('🎨 Coloring Page', w / 2, h / 2 + 140);
+    ctx.fillText('🎨 Coloring Page', size / 2, size / 2 + 140);
   };
 
-  // Save state (background + color layer)
-  const saveState = () => {
-    const canvas = canvasRef.current;
+  const saveState = useCallback(() => {
+    const bgCanvas = bgCanvasRef.current;
     const colorCanvas = colorCanvasRef.current;
-    if (!canvas || !colorCanvas) return;
-    
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCtx.drawImage(canvas, 0, 0);
+    if (!bgCanvas || !colorCanvas) return;
+    const temp = document.createElement('canvas');
+    temp.width = size;
+    temp.height = size;
+    const tempCtx = temp.getContext('2d');
+    tempCtx.drawImage(bgCanvas, 0, 0);
     tempCtx.drawImage(colorCanvas, 0, 0);
-    
-    const imageData = tempCanvas.toDataURL();
+    const imageData = temp.toDataURL();
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push(imageData);
     setHistory(newHistory);
     setHistoryIndex(newHistory.length - 1);
-  };
+  }, [history, historyIndex, size]);
 
   const undo = () => {
     if (historyIndex > 0) {
       const newIndex = historyIndex - 1;
       setHistoryIndex(newIndex);
-      restoreState(history[newIndex]);
+      const img = new Image();
+      img.onload = () => {
+        bgCtx.current.clearRect(0, 0, size, size);
+        colorCtx.current.clearRect(0, 0, size, size);
+        bgCtx.current.drawImage(img, 0, 0);
+      };
+      img.src = history[newIndex];
       play('click');
     }
   };
 
-  const restoreState = (imageData) => {
-    const canvas = canvasRef.current;
-    const colorCanvas = colorCanvasRef.current;
-    const ctx = ctxRef.current;
-    const colorCtx = colorCtxRef.current;
-    if (!ctx || !colorCtx) return;
-
-    const img = new Image();
-    img.onload = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      colorCtx.clearRect(0, 0, colorCanvas.width, colorCanvas.height);
-      ctx.drawImage(img, 0, 0);
-    };
-    img.src = imageData;
-  };
-
   const clearCanvas = () => {
-    const colorCanvas = colorCanvasRef.current;
-    const colorCtx = colorCtxRef.current;
-    if (colorCtx) {
-      colorCtx.clearRect(0, 0, colorCanvas.width, colorCanvas.height);
-    }
+    colorCtx.current.clearRect(0, 0, size, size);
     saveState();
     play('erase');
   };
 
-  const resetCanvas = () => {
-    loadTemplate();
-  };
+  const resetCanvas = () => loadTemplate();
 
   useImperativeHandle(ref, () => ({
     clearCanvas,
     undo,
     resetCanvas,
-    canvasRef,
     getImageData: () => {
-      const canvas = canvasRef.current;
+      const bgCanvas = bgCanvasRef.current;
       const colorCanvas = colorCanvasRef.current;
-      if (!canvas || !colorCanvas) return null;
-      
-      const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
-      const tempCtx = tempCanvas.getContext('2d');
-      tempCtx.drawImage(canvas, 0, 0);
+      if (!bgCanvas || !colorCanvas) return null;
+      const temp = document.createElement('canvas');
+      temp.width = size;
+      temp.height = size;
+      const tempCtx = temp.getContext('2d');
+      tempCtx.drawImage(bgCanvas, 0, 0);
       tempCtx.drawImage(colorCanvas, 0, 0);
-      return tempCanvas.toDataURL('image/png');
+      return temp.toDataURL('image/png');
     }
   }));
 
-  // Flood fill on color layer only
-  const fillColorLayer = (startX, startY, fillColor) => {
-    const colorCanvas = colorCanvasRef.current;
-    const colorCtx = colorCtxRef.current;
-    if (!colorCtx) return 0;
-
-    const w = colorCanvas.width;
-    const h = colorCanvas.height;
-    const imageData = colorCtx.getImageData(0, 0, w, h);
-    const data = imageData.data;
-    const fillRGB = hexToRgb(fillColor);
-    const startIdx = (startY * w + startX) * 4;
-    const targetRGB = [data[startIdx], data[startIdx + 1], data[startIdx + 2]];
-
-    if (targetRGB[0] === 255 && targetRGB[1] === 255 && targetRGB[2] === 255) return 0;
-    if (colorsMatch(targetRGB, fillRGB, 0)) return 0;
-
-    const stack = [[startX, startY]];
-    const visited = new Set();
-    let filled = 0;
-
-    while (stack.length > 0) {
-      const [px, py] = stack.pop();
-      const key = `${px},${py}`;
-      if (visited.has(key)) continue;
-      if (px < 0 || px >= w || py < 0 || py >= h) continue;
-
-      const idx = (py * w + px) * 4;
-      const current = [data[idx], data[idx + 1], data[idx + 2]];
-      if (!colorsMatch(current, targetRGB, 50)) continue;
-
-      visited.add(key);
-      data[idx] = fillRGB[0];
-      data[idx + 1] = fillRGB[1];
-      data[idx + 2] = fillRGB[2];
-      data[idx + 3] = 255;
-      filled++;
-
-      stack.push([px + 1, py], [px - 1, py], [px, py + 1], [px, py - 1]);
-    }
-
-    colorCtx.putImageData(imageData, 0, 0);
-    return filled;
-  };
-
-  const hexToRgb = (hex) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : [0, 0, 0];
-  };
-
-  const colorsMatch = (c1, c2, tolerance = 50) => {
-    return Math.abs(c1[0] - c2[0]) < tolerance &&
-           Math.abs(c1[1] - c2[1]) < tolerance &&
-           Math.abs(c1[2] - c2[2]) < tolerance;
-  };
-
   const getPos = (e) => {
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-
+    const rect = bgCanvasRef.current.getBoundingClientRect();
+    const scaleX = size / rect.width;
+    const scaleY = size / rect.height;
     let clientX, clientY;
     if (e.touches) {
       clientX = e.touches[0].clientX;
@@ -254,7 +151,6 @@ const Canvas = forwardRef(({
       clientX = e.clientX;
       clientY = e.clientY;
     }
-
     return {
       x: (clientX - rect.left) * scaleX,
       y: (clientY - rect.top) * scaleY
@@ -265,10 +161,9 @@ const Canvas = forwardRef(({
     if (!isLoaded) return;
     const pos = getPos(e);
 
-    // Fill tool – works on color layer
     if (tool === 'fill') {
       try {
-        const filled = fillColorLayer(Math.round(pos.x), Math.round(pos.y), selectedColor);
+        const filled = floodFill(colorCtx.current, Math.round(pos.x), Math.round(pos.y), selectedColor);
         if (filled > 0) {
           saveState();
           if (onFill) onFill();
@@ -287,27 +182,27 @@ const Canvas = forwardRef(({
   const draw = (e) => {
     if (!isDrawing || tool === 'fill' || !isLoaded) return;
     const pos = getPos(e);
-    const colorCtx = colorCtxRef.current;
-    if (!colorCtx) return;
+    const ctx = colorCtx.current;
+    if (!ctx) return;
 
-    colorCtx.beginPath();
-    colorCtx.moveTo(lastPos.x, lastPos.y);
-    colorCtx.lineTo(pos.x, pos.y);
+    ctx.beginPath();
+    ctx.moveTo(lastPos.x, lastPos.y);
+    ctx.lineTo(pos.x, pos.y);
     
     if (tool === 'eraser') {
-      colorCtx.globalCompositeOperation = 'destination-out';
-      colorCtx.strokeStyle = 'rgba(255,255,255,1)';
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.strokeStyle = 'rgba(255,255,255,1)';
     } else {
-      colorCtx.globalCompositeOperation = 'source-over';
-      colorCtx.strokeStyle = selectedColor;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = selectedColor;
     }
     
-    colorCtx.lineWidth = brushSize * (tool === 'eraser' ? 3 : 1);
-    colorCtx.lineCap = 'round';
-    colorCtx.lineJoin = 'round';
-    colorCtx.stroke();
+    ctx.lineWidth = brushSize * (tool === 'eraser' ? 3 : 1);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
 
-    colorCtx.globalCompositeOperation = 'source-over';
+    ctx.globalCompositeOperation = 'source-over';
 
     setLastPos(pos);
     if (onDraw) onDraw();
@@ -328,18 +223,25 @@ const Canvas = forwardRef(({
       transition={{ type: 'spring', damping: 15 }}
       className="bg-white rounded-2xl shadow-2xl p-4 border-4 border-pastel-pink/30 relative"
     >
-      {/* Color Layer (top) */}
       <canvas
         ref={colorCanvasRef}
-        className="absolute top-4 left-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] rounded-lg touch-none"
-        style={{ maxWidth: '500px', maxHeight: '500px', pointerEvents: 'none' }}
+        className="absolute top-4 left-4 rounded-lg touch-none"
+        style={{ 
+          width: `${size}px`, 
+          height: `${size}px`,
+          pointerEvents: 'none',
+        }}
       />
       
-      {/* Background Layer */}
       <canvas
-        ref={canvasRef}
+        ref={bgCanvasRef}
         className="w-full h-auto rounded-lg cursor-crosshair touch-none relative z-10"
-        style={{ maxWidth: '500px', maxHeight: '500px' }}
+        style={{ 
+          maxWidth: '500px', 
+          maxHeight: '500px',
+          width: `${size}px`,
+          height: `${size}px`
+        }}
         onMouseDown={startDrawing}
         onMouseMove={draw}
         onMouseUp={stopDrawing}

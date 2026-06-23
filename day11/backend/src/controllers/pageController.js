@@ -2,19 +2,11 @@ import Page from '../models/Page.js';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { generatePDFPreviews } from '../services/pdfService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PDFS_DIR = path.join(__dirname, '../../../uploads/pdfs');
-
-// Ensure directory exists
-const ensureDir = async () => {
-  try {
-    await fs.mkdir(PDFS_DIR, { recursive: true });
-  } catch (err) {
-    console.warn('Could not create directory:', err.message);
-  }
-};
 
 // Get all pages
 export const getAllPages = async (req, res) => {
@@ -44,8 +36,6 @@ export const getPageById = async (req, res) => {
 // Upload PDF or Image
 export const uploadPDF = async (req, res) => {
   try {
-    await ensureDir();
-    
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
@@ -54,87 +44,57 @@ export const uploadPDF = async (req, res) => {
     const fileName = file.originalname;
     const filePath = file.path;
     const fileType = file.mimetype;
-    const fileSize = file.size;
-
-    console.log(`📤 Uploading: ${fileName} (${fileType}, ${fileSize} bytes)`);
-
-    // Read file as base64
-    const fileBuffer = await fs.readFile(filePath);
-    const base64File = fileBuffer.toString('base64');
-    const dataUrl = `data:${fileType};base64,${base64File}`;
-
-    // Determine if it's a PDF or image
     const isPDF = fileType === 'application/pdf';
-    const category = isPDF ? 'PDF Book' : 'Image';
 
-    // Create page entry
-    const page = new Page({
-      name: fileName.replace(/\.[^/.]+$/, ''), // Remove extension
-      category: category,
-      difficulty: 'Easy',
-      imageData: dataUrl,
-      isPDF: isPDF,
-      originalFileName: fileName,
-      fileType: fileType,
-      fileSize: fileSize,
-      pageNumber: 1,
-      totalPages: 1,
-    });
+    // Ensure uploads/pdfs exists
+    await fs.mkdir(PDFS_DIR, { recursive: true });
 
-    await page.save();
+    // Move file to permanent storage
+    const pdfName = `${Date.now()}_${fileName}`;
+    const permanentPath = path.join(PDFS_DIR, pdfName);
+    await fs.copyFile(filePath, permanentPath);
+    await fs.unlink(filePath);
 
-    // Clean up temp file
-    try {
-      await fs.unlink(filePath);
-    } catch (err) {
-      console.warn('⚠️ Could not delete temp file:', err.message);
+    let pageData;
+
+    if (isPDF) {
+      const { totalPages, pages } = await generatePDFPreviews(permanentPath);
+      pageData = {
+        name: fileName.replace(/\.[^/.]+$/, ''),
+        category: 'PDF Book',
+        difficulty: 'Easy',
+        isPDF: true,
+        filePath: permanentPath,
+        fileType: fileType,
+        totalPages,
+        pages,
+        originalFileName: fileName,
+      };
+    } else {
+      const imageBuffer = await fs.readFile(permanentPath);
+      const base64 = imageBuffer.toString('base64');
+      const dataUrl = `data:${fileType};base64,${base64}`;
+      pageData = {
+        name: fileName.replace(/\.[^/.]+$/, ''),
+        category: 'Image',
+        difficulty: 'Easy',
+        imageData: dataUrl,
+        fileType: fileType,
+        isPDF: false,
+        originalFileName: fileName,
+      };
     }
 
-    console.log(`✅ Uploaded: ${fileName}`);
+    const page = new Page(pageData);
+    await page.save();
 
     res.json({
       success: true,
-      message: `Successfully uploaded "${fileName}" as a coloring book`,
+      message: `Uploaded "${fileName}" successfully`,
       page: page
     });
   } catch (error) {
-    console.error('❌ Upload error:', error);
-    // Clean up temp file if it exists
-    try {
-      if (req.file && req.file.path) {
-        await fs.unlink(req.file.path);
-      }
-    } catch (err) {
-      // Ignore cleanup errors
-    }
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Create custom page
-export const createPage = async (req, res) => {
-  try {
-    const page = new Page(req.body);
-    await page.save();
-    res.status(201).json(page);
-  } catch (error) {
-    console.error('Create page error:', error);
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Update page
-export const updatePage = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updates = req.body;
-    const page = await Page.findByIdAndUpdate(id, updates, { new: true });
-    if (!page) {
-      return res.status(404).json({ error: 'Page not found' });
-    }
-    res.json(page);
-  } catch (error) {
-    console.error('Update page error:', error);
+    console.error('Upload error:', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -143,10 +103,21 @@ export const updatePage = async (req, res) => {
 export const deletePage = async (req, res) => {
   try {
     const { id } = req.params;
-    const page = await Page.findByIdAndDelete(id);
+    const page = await Page.findById(id);
     if (!page) {
       return res.status(404).json({ error: 'Page not found' });
     }
+
+    // Delete file if exists
+    if (page.filePath) {
+      try {
+        await fs.unlink(page.filePath);
+      } catch (err) {
+        console.warn('Could not delete file:', err.message);
+      }
+    }
+
+    await Page.findByIdAndDelete(id);
     res.json({ success: true, message: 'Page deleted' });
   } catch (error) {
     console.error('Delete page error:', error);

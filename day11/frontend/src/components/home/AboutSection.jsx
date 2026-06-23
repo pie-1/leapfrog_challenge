@@ -1,7 +1,12 @@
 import { motion } from 'framer-motion';
-import SectionWrapper from '../common/SectionWrapper';
+import { useInView } from 'react-intersection-observer';
 
 const AboutSection = () => {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
   const features = [
     { icon: '🎨', title: '50+ Coloring Pages', desc: 'From animals to space, we have it all!' },
     { icon: '🌈', title: '20+ Vibrant Colors', desc: 'Pick your favorite and start creating.' },
@@ -12,14 +17,16 @@ const AboutSection = () => {
   ];
 
   return (
-    <SectionWrapper className="py-16 md:py-20 bg-gradient-to-br from-pastel-pink/10 via-pastel-yellow/10 to-pastel-sky/10">
+    <section
+      ref={ref}
+      className="py-16 md:py-20 bg-gradient-to-br from-pastel-pink/10 via-pastel-yellow/10 to-pastel-sky/10"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-800">
               🎨 About ColorMe
@@ -34,9 +41,8 @@ const AboutSection = () => {
           {/* Left - Story */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
             className="bg-white rounded-2xl p-6 md:p-8 shadow-lg"
           >
             <div className="text-5xl mb-4">📖</div>
@@ -55,9 +61,8 @@ const AboutSection = () => {
           {/* Right - Mission */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
             className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-6 md:p-8 shadow-lg"
           >
             <div className="text-5xl mb-4">🌟</div>
@@ -84,9 +89,8 @@ const AboutSection = () => {
         {/* Features Grid */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.3 }}
-          viewport={{ once: true }}
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-10"
         >
           {features.map((feature, index) => (
@@ -105,9 +109,8 @@ const AboutSection = () => {
         {/* Call to Action */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.5 }}
-          viewport={{ once: true }}
           className="text-center mt-10"
         >
           <p className="text-gray-500 text-lg">
@@ -121,7 +124,7 @@ const AboutSection = () => {
           </a>
         </motion.div>
       </div>
-    </SectionWrapper>
+    </section>
   );
 };
 

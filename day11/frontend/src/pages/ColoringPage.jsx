@@ -26,10 +26,9 @@ const ColoringPage = () => {
     const loadPage = async () => {
       setLoading(true);
       
-      // 1. FIRST: Check if it's a built-in template
+      // 1. Check built-in templates
       const template = getTemplateById(id);
       if (template) {
-        // Convert template to page format
         setPage({
           id: template.id,
           name: template.name,
@@ -44,21 +43,16 @@ const ColoringPage = () => {
         return;
       }
 
-      // 2. SECOND: Try fetching from backend (uploaded pages)
+      // 2. Fetch from backend
       try {
         const response = await fetch(`http://localhost:5000/api/pages/${id}`);
         if (response.ok) {
           const data = await response.json();
-          if (data) {
-            setPage({
-              ...data,
-              id: data._id,
-              imageData: data.imageData,
-              isBuiltIn: false
-            });
-          } else {
-            navigate('/');
-          }
+          setPage({
+            ...data,
+            id: data._id,
+            isBuiltIn: false
+          });
         } else {
           navigate('/');
         }
@@ -138,7 +132,6 @@ const ColoringPage = () => {
     );
   }
 
-  // Get the current page data (for built-in, use imageData)
   const totalPages = page?.pages?.length || 1;
   const currentPageData = page?.pages?.[currentPage] || { preview: page.imageData };
 
@@ -209,7 +202,6 @@ const ColoringPage = () => {
             <Canvas
               ref={canvasRef}
               pageData={currentPageData}
-              totalPages={totalPages}
               selectedColor={selectedColor}
               brushSize={brushSize}
               tool={tool}

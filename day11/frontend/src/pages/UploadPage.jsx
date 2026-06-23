@@ -32,8 +32,7 @@ const UploadPage = () => {
       if (data.success) {
         setMessage(`✅ ${data.message}`);
         setTimeout(() => {
-          // Navigate with timestamp to force refresh in gallery
-          navigate('/gallery?t=' + Date.now());
+          navigate('/gallery');
         }, 1500);
       } else {
         setMessage('❌ ' + (data.error || 'Upload failed'));
@@ -79,8 +78,8 @@ const UploadPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-2xl p-8 shadow-xl"
         >
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">📤 Upload PDF</h1>
-          <p className="text-gray-500 mb-6">Upload a PDF coloring book and color each page</p>
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">📤 Upload</h1>
+          <p className="text-gray-500 mb-6">Upload a PDF or image to create a coloring page</p>
           
           <div
             className={`border-2 border-dashed rounded-2xl p-12 text-center transition-all ${
@@ -110,11 +109,11 @@ const UploadPage = () => {
             ) : (
               <>
                 <p className="text-gray-400 mb-4">
-                  Drop your PDF here or click to browse
+                  Drop your PDF or image here, or click to browse
                 </p>
                 <input
                   type="file"
-                  accept=".pdf"
+                  accept=".pdf,.png,.jpg,.jpeg,.svg"
                   onChange={handleUpload}
                   className="hidden"
                   id="file-input"
@@ -124,7 +123,7 @@ const UploadPage = () => {
                   htmlFor="file-input"
                   className="inline-block px-6 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full cursor-pointer hover:scale-105 transition"
                 >
-                  {uploading ? 'Uploading...' : 'Choose PDF'}
+                  {uploading ? 'Uploading...' : 'Choose File'}
                 </label>
               </>
             )}

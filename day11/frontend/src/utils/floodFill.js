@@ -1,87 +1,44 @@
-/**
- * Scanline flood fill - much faster and more reliable than stack-based
- * Works better on anti-aliased edges
- */
 export const floodFill = (ctx, startX, startY, fillColor, tolerance = 50) => {
   const canvas = ctx.canvas;
   const w = canvas.width;
   const h = canvas.height;
 
-  // Get image data
   const imageData = ctx.getImageData(0, 0, w, h);
   const data = imageData.data;
 
-  // Convert colors
   const fillRGB = hexToRgb(fillColor);
   const startIdx = (startY * w + startX) * 4;
   const targetRGB = [data[startIdx], data[startIdx + 1], data[startIdx + 2]];
 
-  // Skip if clicking on white background
-  if (targetRGB[0] > 240 && targetRGB[1] > 240 && targetRGB[2] > 240) return 0;
+  // Don't fill if it's already the target color
   if (colorsMatch(targetRGB, fillRGB, 0)) return 0;
 
-  const visited = new Uint8Array(w * h);
-  const stack = [];
+  const stack = [[startX, startY]];
+  const visited = new Set();
   let filledPixels = 0;
-
-  // Start from the clicked point
-  stack.push([startX, startY]);
 
   while (stack.length > 0) {
     const [px, py] = stack.pop();
-    const key = py * w + px;
+    const key = `${px},${py}`;
 
-    if (visited[key]) continue;
+    if (visited.has(key)) continue;
     if (px < 0 || px >= w || py < 0 || py >= h) continue;
 
-    // Find the left edge of the scanline
-    let left = px;
-    while (left > 0) {
-      const idx = (py * w + (left - 1)) * 4;
-      const rgb = [data[idx], data[idx + 1], data[idx + 2]];
-      if (!colorsMatch(rgb, targetRGB, tolerance)) break;
-      left--;
-    }
+    const idx = (py * w + px) * 4;
+    const currentRGB = [data[idx], data[idx + 1], data[idx + 2]];
 
-    // Find the right edge of the scanline
-    let right = px;
-    while (right < w - 1) {
-      const idx = (py * w + (right + 1)) * 4;
-      const rgb = [data[idx], data[idx + 1], data[idx + 2]];
-      if (!colorsMatch(rgb, targetRGB, tolerance)) break;
-      right++;
-    }
+    if (!colorsMatch(currentRGB, targetRGB, tolerance)) continue;
 
-    // Fill the scanline
-    for (let x = left; x <= right; x++) {
-      const idx = (py * w + x) * 4;
-      data[idx] = fillRGB[0];
-      data[idx + 1] = fillRGB[1];
-      data[idx + 2] = fillRGB[2];
-      data[idx + 3] = 255;
-      visited[py * w + x] = 1;
-      filledPixels++;
-    }
+    visited.add(key);
 
-    // Check rows above and below for new scanlines
-    for (let y = py - 1; y <= py + 1; y += 2) {
-      if (y < 0 || y >= h) continue;
-      
-      let x = left;
-      while (x <= right) {
-        // Skip already visited
-        while (x <= right && visited[y * w + x]) x++;
-        if (x > right) break;
+    data[idx] = fillRGB[0];
+    data[idx + 1] = fillRGB[1];
+    data[idx + 2] = fillRGB[2];
+    data[idx + 3] = 255;
 
-        // Find start of new scanline
-        const idx = (y * w + x) * 4;
-        const rgb = [data[idx], data[idx + 1], data[idx + 2]];
-        if (colorsMatch(rgb, targetRGB, tolerance)) {
-          stack.push([x, y]);
-        }
-        x++;
-      }
-    }
+    filledPixels++;
+
+    stack.push([px + 1, py], [px - 1, py], [px, py + 1], [px, py - 1]);
   }
 
   ctx.putImageData(imageData, 0, 0);

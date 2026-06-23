@@ -1,21 +1,9 @@
 import { motion } from 'framer-motion';
 
 const colors = [
-  '#FF6B6B', // Bright Red
-  '#FF9F43', // Orange
-  '#FECA57', // Yellow
-  '#48DBFB', // Sky Blue
-  '#0ABDE3', // Deep Blue
-  '#10AC84', // Green
-  '#5F27CD', // Purple
-  '#FF6FB7', // Pink
-  '#FFFFFF', // White
-  '#2D3436', // Black
-  '#FD79A8', // Light Pink
-  '#FDCB6E', // Gold
-  '#6C5CE7', // Indigo
-  '#00B894', // Mint Green
-  '#E17055', // Terracotta
+  '#FF6B6B', '#FF9F43', '#FECA57', '#48DBFB', '#0ABDE3',
+  '#10AC84', '#5F27CD', '#FF6FB7', '#FFFFFF', '#2D3436',
+  '#FD79A8', '#FDCB6E', '#6C5CE7', '#00B894', '#E17055'
 ];
 
 const ColorPalette = ({ selectedColor, onColorSelect }) => {
@@ -41,12 +29,10 @@ const ColorPalette = ({ selectedColor, onColorSelect }) => {
                 : 'border-transparent hover:border-gray-300'
             }`}
             style={{ backgroundColor: color }}
-            title={color}
           />
         ))}
       </div>
 
-      {/* Custom color picker */}
       <div className="mt-4 flex items-center gap-2">
         <label className="text-xs text-gray-400">Custom</label>
         <input
