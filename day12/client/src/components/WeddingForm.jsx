@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { weddingService } from '../features/weddings/wedding.service';
 
-export default function WeddingForm({ onSuccess }) {
+export default function WeddingForm({ onSuccess, editingWedding, onCancel }) {
   const [formData, setFormData] = useState({
     title: '',
     date: '',
@@ -12,6 +12,22 @@ export default function WeddingForm({ onSuccess }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Populate form when editing
+  useEffect(() => {
+    if (editingWedding) {
+      setFormData({
+        title: editingWedding.title || '',
+        date: editingWedding.date ? new Date(editingWedding.date).toISOString().split('T')[0] : '',
+        venue: editingWedding.venue || '',
+        description: editingWedding.description || '',
+        budget: {
+          total: editingWedding.budget?.total || 0,
+          spent: editingWedding.budget?.spent || 0,
+        },
+      });
+    }
+  }, [editingWedding]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,21 +43,28 @@ export default function WeddingForm({ onSuccess }) {
     setError('');
 
     try {
-      // Convert date string to Date object
       const weddingData = {
         ...formData,
         date: new Date(formData.date),
         budget: {
           total: parseFloat(formData.budget?.total) || 0,
-          spent: 0,
+          spent: parseFloat(formData.budget?.spent) || 0,
         },
       };
 
-      const result = await weddingService.create(weddingData);
+      let result;
+      if (editingWedding) {
+        // Update existing wedding
+        result = await weddingService.update(editingWedding._id, weddingData);
+      } else {
+        // Create new wedding
+        result = await weddingService.create(weddingData);
+      }
+
       setFormData({ title: '', date: '', venue: '', description: '', budget: { total: 0, spent: 0 } });
       if (onSuccess) onSuccess(result);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create wedding');
+      setError(err.response?.data?.message || 'Failed to save wedding');
     } finally {
       setLoading(false);
     }
@@ -53,7 +76,9 @@ export default function WeddingForm({ onSuccess }) {
       animate={{ opacity: 1, y: 0 }}
       className="bg-white p-6 rounded-2xl shadow-lg max-w-2xl mx-auto"
     >
-      <h2 className="text-2xl font-serif text-gray-800 mb-4">Plan Your Wedding</h2>
+      <h2 className="text-2xl font-serif text-gray-800 mb-4">
+        {editingWedding ? 'Edit Wedding' : 'Plan Your Wedding'}
+      </h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -137,13 +162,24 @@ export default function WeddingForm({ onSuccess }) {
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-rose-600 text-white py-3 rounded-lg hover:bg-rose-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? 'Creating...' : 'Create Wedding'}
-        </button>
+        <div className="flex gap-3">
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex-1 bg-rose-600 text-white py-3 rounded-lg hover:bg-rose-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Saving...' : editingWedding ? 'Update Wedding' : 'Create Wedding'}
+          </button>
+          {onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </form>
     </motion.div>
   );

@@ -3,10 +3,13 @@ import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import BackToTop from "./components/BackToTop";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import WeddingDetails from "./pages/WeddingDetails";
+import GuestList from "./pages/GuestList"; // ✅ NEW
 
 function App() {
   return (
@@ -27,10 +30,27 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              {/* Placeholder routes for planner, budget, etc. – can be added later */}
+              <Route
+                path="/wedding/:id"
+                element={
+                  <ProtectedRoute>
+                    <WeddingDetails />
+                  </ProtectedRoute>
+                }
+              />
+              {/* ✅ NEW: Guest List Route */}
+              <Route
+                path="/guests"
+                element={
+                  <ProtectedRoute>
+                    <GuestList />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </main>
           <Footer />
+          <BackToTop />
         </div>
       </AuthProvider>
     </BrowserRouter>

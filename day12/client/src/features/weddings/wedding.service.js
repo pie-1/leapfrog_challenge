@@ -30,4 +30,58 @@ export const weddingService = {
     const response = await api.delete(`/weddings/${id}`);
     return response.data;
   },
+
+  // Event Management
+  addEvent: async (weddingId, eventData) => {
+    const wedding = await weddingService.getById(weddingId);
+    const updatedEvents = [...(wedding.events || []), eventData];
+    const response = await api.put(`/weddings/${weddingId}`, {
+      ...wedding,
+      events: updatedEvents,
+    });
+    return response.data;
+  },
+
+  removeEvent: async (weddingId, eventIndex) => {
+    const wedding = await weddingService.getById(weddingId);
+    const updatedEvents = wedding.events.filter((_, index) => index !== eventIndex);
+    const response = await api.put(`/weddings/${weddingId}`, {
+      ...wedding,
+      events: updatedEvents,
+    });
+    return response.data;
+  },
+
+  // ✅ NEW: Guest Management
+  addGuest: async (weddingId, guestData) => {
+    const wedding = await weddingService.getById(weddingId);
+    const updatedGuests = [...(wedding.guests || []), guestData];
+    const response = await api.put(`/weddings/${weddingId}`, {
+      ...wedding,
+      guests: updatedGuests,
+    });
+    return response.data;
+  },
+
+  updateGuest: async (weddingId, guestIndex, guestData) => {
+    const wedding = await weddingService.getById(weddingId);
+    const updatedGuests = wedding.guests.map((guest, index) => 
+      index === guestIndex ? { ...guest, ...guestData } : guest
+    );
+    const response = await api.put(`/weddings/${weddingId}`, {
+      ...wedding,
+      guests: updatedGuests,
+    });
+    return response.data;
+  },
+
+  removeGuest: async (weddingId, guestIndex) => {
+    const wedding = await weddingService.getById(weddingId);
+    const updatedGuests = wedding.guests.filter((_, index) => index !== guestIndex);
+    const response = await api.put(`/weddings/${weddingId}`, {
+      ...wedding,
+      guests: updatedGuests,
+    });
+    return response.data;
+  },
 };
