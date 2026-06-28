@@ -1,6 +1,56 @@
 import api from '../../utils/api';
 
 export const weddingService = {
+
+
+   // ✅ Budget Management
+  addExpense: async (weddingId, expenseData) => {
+    const wedding = await weddingService.getById(weddingId);
+    const updatedExpenses = [...(wedding.budget?.expenses || []), expenseData];
+    const totalSpent = updatedExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const response = await api.put(`/weddings/${weddingId}`, {
+      ...wedding,
+      budget: {
+        ...wedding.budget,
+        expenses: updatedExpenses,
+        spent: totalSpent,
+      },
+    });
+    return response.data;
+  },
+
+  removeExpense: async (weddingId, expenseIndex) => {
+    const wedding = await weddingService.getById(weddingId);
+    const updatedExpenses = wedding.budget?.expenses.filter((_, index) => index !== expenseIndex) || [];
+    const totalSpent = updatedExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const response = await api.put(`/weddings/${weddingId}`, {
+      ...wedding,
+      budget: {
+        ...wedding.budget,
+        expenses: updatedExpenses,
+        spent: totalSpent,
+      },
+    });
+    return response.data;
+  },
+
+  updateExpense: async (weddingId, expenseIndex, expenseData) => {
+    const wedding = await weddingService.getById(weddingId);
+    const updatedExpenses = wedding.budget?.expenses.map((expense, index) =>
+      index === expenseIndex ? { ...expense, ...expenseData } : expense
+    ) || [];
+    const totalSpent = updatedExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const response = await api.put(`/weddings/${weddingId}`, {
+      ...wedding,
+      budget: {
+        ...wedding.budget,
+        expenses: updatedExpenses,
+        spent: totalSpent,
+      },
+    });
+    return response.data;
+  },
+  
   // Create a new wedding
   create: async (weddingData) => {
     const response = await api.post('/weddings', weddingData);
