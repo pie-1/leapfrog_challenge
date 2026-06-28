@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
@@ -9,7 +9,11 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import WeddingDetails from "./pages/WeddingDetails";
-import GuestList from "./pages/GuestList"; // ✅ NEW
+import GuestList from "./pages/GuestList";
+import Planner from "./pages/Planner";
+import Budget from "./pages/Budget";
+import Checklist from "./pages/Checklist";
+import Vendors from "./pages/Vendors";
 
 function App() {
   return (
@@ -22,6 +26,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              
               <Route
                 path="/dashboard"
                 element={
@@ -30,6 +35,43 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              
+              <Route
+                path="/planner"
+                element={
+                  <ProtectedRoute>
+                    <Planner />
+                  </ProtectedRoute>
+                }
+              />
+              
+              <Route
+                path="/budget"
+                element={
+                  <ProtectedRoute>
+                    <Budget />
+                  </ProtectedRoute>
+                }
+              />
+              
+              <Route
+                path="/checklist"
+                element={
+                  <ProtectedRoute>
+                    <Checklist />
+                  </ProtectedRoute>
+                }
+              />
+              
+              <Route
+                path="/vendors"
+                element={
+                  <ProtectedRoute>
+                    <Vendors />
+                  </ProtectedRoute>
+                }
+              />
+              
               <Route
                 path="/wedding/:id"
                 element={
@@ -38,7 +80,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              {/* ✅ NEW: Guest List Route */}
+              
               <Route
                 path="/guests"
                 element={
@@ -47,6 +89,9 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              
+              {/* Catch all - redirect to dashboard */}
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </main>
           <Footer />

@@ -18,9 +18,13 @@ connectDB();
 
 // Import routes
 const weddingRoutes = require('./modules/wedding/wedding.routes');
+const vendorRoutes = require('./modules/vendor/vendor.routes');
+const aiRoutes = require('./modules/ai/ai.routes');
 
 // Routes
 app.use('/api/weddings', weddingRoutes);
+app.use('/api/vendors', vendorRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

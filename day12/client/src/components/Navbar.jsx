@@ -27,15 +27,18 @@ export default function Navbar() {
     await signOut(auth);
     navigate("/");
     setIsOpen(false);
+    setDropdownOpen(false);
   };
 
-  const handleNavClick = () => setIsOpen(false);
+  const handleNavClick = () => {
+    setIsOpen(false);
+    setDropdownOpen(false);
+  };
 
   return (
     <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-
           {/* Logo */}
           <Link
             to="/"
@@ -96,6 +99,7 @@ export default function Navbar() {
                     key={link.path}
                     to={link.path}
                     className="text-gray-700 hover:text-rose-600 transition"
+                    onClick={handleNavClick}
                   >
                     {link.name}
                   </Link>
