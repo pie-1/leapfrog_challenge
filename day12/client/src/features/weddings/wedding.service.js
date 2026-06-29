@@ -116,20 +116,21 @@ export const weddingService = {
     return response.data;
   },
 
-  updateExpense: async (weddingId, expenseIndex, expenseData) => {
-    const wedding = await weddingService.getById(weddingId);
-    const updatedExpenses = wedding.budget?.expenses.map((expense, index) =>
-      index === expenseIndex ? { ...expense, ...expenseData } : expense
-    ) || [];
-    const totalSpent = updatedExpenses.reduce((sum, e) => sum + e.amount, 0);
-    const response = await api.put(`/weddings/${weddingId}`, {
-      ...wedding,
-      budget: {
-        ...wedding.budget,
-        expenses: updatedExpenses,
-        spent: totalSpent,
-      },
-    });
-    return response.data;
-  },
+
+updateExpense: async (weddingId, expenseIndex, expenseData) => {
+  const wedding = await weddingService.getById(weddingId);
+  const updatedExpenses = wedding.budget?.expenses.map((expense, index) =>
+    index === expenseIndex ? { ...expense, ...expenseData } : expense
+  ) || [];
+  const totalSpent = updatedExpenses.reduce((sum, e) => sum + e.amount, 0);
+  const response = await api.put(`/weddings/${weddingId}`, {
+    ...wedding,
+    budget: {
+      ...wedding.budget,
+      expenses: updatedExpenses,
+      spent: totalSpent,
+    },
+  });
+  return response.data;
+}
 };

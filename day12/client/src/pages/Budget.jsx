@@ -26,10 +26,11 @@ export default function Budget() {
   const [showForm, setShowForm] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     fetchWeddings();
-  }, []);
+  }, [refreshKey]);
 
   const fetchWeddings = async () => {
     try {
@@ -50,11 +51,11 @@ export default function Budget() {
       const updated = await weddingService.addExpense(selectedWedding._id, expenseData);
       setSelectedWedding(updated);
       setShowForm(false);
-      // Refresh wedding list
-      const data = await weddingService.getAll();
-      setWeddings(data);
+      setRefreshKey(prev => prev + 1);
+      alert('Expense added successfully! 💰');
     } catch (error) {
       console.error('Failed to add expense:', error);
+      alert('Failed to add expense. Please try again.');
     }
   };
 
@@ -63,19 +64,38 @@ export default function Budget() {
       try {
         const updated = await weddingService.removeExpense(selectedWedding._id, index);
         setSelectedWedding(updated);
-        const data = await weddingService.getAll();
-        setWeddings(data);
+        setRefreshKey(prev => prev + 1);
       } catch (error) {
         console.error('Failed to remove expense:', error);
+        alert('Failed to remove expense. Please try again.');
       }
     }
   };
 
-  const getCategoryTotal = (category) => {
-    if (!selectedWedding?.budget?.expenses) return 0;
-    return selectedWedding.budget.expenses
-      .filter(e => e.category === category)
-      .reduce((sum, e) => sum + e.amount, 0);
+  const handleEditExpense = (index) => {
+    const expense = selectedWedding.budget?.expenses[index];
+    setEditingExpense(expense);
+    setEditingIndex(index);
+    setShowForm(true);
+  };
+
+  const handleUpdateExpense = async (expenseData) => {
+    try {
+      const updated = await weddingService.updateExpense(
+        selectedWedding._id, 
+        editingIndex, 
+        expenseData
+      );
+      setSelectedWedding(updated);
+      setShowForm(false);
+      setEditingExpense(null);
+      setEditingIndex(null);
+      setRefreshKey(prev => prev + 1);
+      alert('Expense updated successfully! ✏️');
+    } catch (error) {
+      console.error('Failed to update expense:', error);
+      alert('Failed to update expense. Please try again.');
+    }
   };
 
   if (loading) {
@@ -97,6 +117,9 @@ export default function Budget() {
           <CurrencyRupeeIcon className="w-16 h-16 mx-auto text-gray-300 mb-4" />
           <h1 className="text-2xl font-serif text-gray-800">No weddings yet</h1>
           <p className="text-gray-500 mt-2">Plan your wedding to start tracking budget!</p>
+          <Link to="/dashboard" className="inline-block mt-4 bg-rose-600 text-white px-6 py-2 rounded-full hover:bg-rose-700 transition">
+            Go to Dashboard
+          </Link>
         </div>
       </div>
     );
@@ -119,6 +142,9 @@ export default function Budget() {
             Back to Dashboard
           </Link>
           <h1 className="text-3xl font-serif text-gray-800">Budget Tracker</h1>
+          <p className="text-gray-500">
+            {selectedWedding?.title} • {selectedWedding?.budget?.expenses?.length || 0} expenses
+          </p>
         </div>
         <div className="flex gap-3">
           {weddings.length > 1 && (
@@ -136,7 +162,11 @@ export default function Budget() {
             </select>
           )}
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => {
+              setEditingExpense(null);
+              setEditingIndex(null);
+              setShowForm(!showForm);
+            }}
             className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition flex items-center gap-2"
           >
             <PlusIcon className="w-4 h-4" />
@@ -147,6 +177,21 @@ export default function Budget() {
 
       {selectedWedding && (
         <>
+          {/* Add/Edit Expense Form */}
+          {showForm && (
+            <div className="mb-6">
+              <BudgetForm 
+                onAdd={editingExpense ? handleUpdateExpense : handleAddExpense}
+                onCancel={() => {
+                  setShowForm(false);
+                  setEditingExpense(null);
+                  setEditingIndex(null);
+                }}
+                editingExpense={editingExpense}
+              />
+            </div>
+          )}
+
           {/* Budget Summary */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -185,15 +230,6 @@ export default function Budget() {
               </span>
             </div>
 
-            {showForm && (
-              <div className="mb-6">
-                <BudgetForm 
-                  onAdd={handleAddExpense} 
-                  onCancel={() => setShowForm(false)} 
-                />
-              </div>
-            )}
-
             {selectedWedding.budget?.expenses && selectedWedding.budget.expenses.length > 0 ? (
               <div className="space-y-3">
                 {selectedWedding.budget.expenses.map((expense, index) => (
@@ -212,7 +248,7 @@ export default function Budget() {
                         </span>
                         {expense.paid && (
                           <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                            Paid
+                            ✓ Paid
                           </span>
                         )}
                       </div>
@@ -221,7 +257,7 @@ export default function Budget() {
                       )}
                       {expense.date && (
                         <p className="text-xs text-gray-400 mt-1">
-                          {new Date(expense.date).toLocaleDateString('en-IN', {
+                          📅 {new Date(expense.date).toLocaleDateString('en-IN', {
                             day: 'numeric',
                             month: 'short',
                             year: 'numeric'
@@ -234,6 +270,12 @@ export default function Budget() {
                         ₹{expense.amount.toLocaleString()}
                       </span>
                       <button
+                        onClick={() => handleEditExpense(index)}
+                        className="text-blue-400 hover:text-blue-600 transition"
+                      >
+                        <PencilIcon className="w-4 h-4" />
+                      </button>
+                      <button
                         onClick={() => handleRemoveExpense(index)}
                         className="text-red-400 hover:text-red-600 transition"
                       >
@@ -244,11 +286,18 @@ export default function Budget() {
                 ))}
               </div>
             ) : (
-              <EmptyState
-                icon={CurrencyRupeeIcon}
-                title="No expenses yet"
-                message="Start tracking your wedding spending!"
-              />
+              <div className="text-center py-12 text-gray-500">
+                <CurrencyRupeeIcon className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                <p className="text-lg">No expenses yet</p>
+                <p className="text-sm">Click "Add Expense" to start tracking your wedding spending!</p>
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="mt-4 bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition inline-flex items-center gap-2"
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  Add Your First Expense
+                </button>
+              </div>
             )}
           </div>
         </>

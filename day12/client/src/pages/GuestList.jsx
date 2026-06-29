@@ -10,8 +10,10 @@ import {
   ClockIcon,
   ArrowLeftIcon,
   MagnifyingGlassIcon,
+  PlusIcon,
 } from '@heroicons/react/24/outline';
 import { weddingService } from '../features/weddings/wedding.service';
+import GuestForm from '../components/GuestForm';
 
 function getRsvpBadge(status) {
   const configs = {
@@ -31,18 +33,20 @@ function getRsvpBadge(status) {
 
 export default function GuestList() {
   const [allGuests, setAllGuests] = useState([]);
+  const [weddings, setWeddings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRsvp, setFilterRsvp] = useState('all');
-
-  useEffect(() => {
-    fetchAllGuests();
-  }, []);
+  const [showGuestForm, setShowGuestForm] = useState(false);
+  const [selectedWeddingId, setSelectedWeddingId] = useState('');
 
   const fetchAllGuests = async () => {
     try {
-      const weddings = await weddingService.getAll();
-      const guests = weddings.flatMap(wedding => 
+      setLoading(true);
+      const weddingsData = await weddingService.getAll();
+      setWeddings(weddingsData);
+      
+      const guests = weddingsData.flatMap(wedding => 
         (wedding.guests || []).map(guest => ({
           ...guest,
           weddingId: wedding._id,
@@ -51,10 +55,30 @@ export default function GuestList() {
         }))
       );
       setAllGuests(guests);
+      
+      if (weddingsData.length > 0 && !selectedWeddingId) {
+        setSelectedWeddingId(weddingsData[0]._id);
+      }
     } catch (error) {
       console.error('Failed to fetch guests:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllGuests();
+  }, []);
+
+  const handleAddGuest = async (guestData) => {
+    try {
+      await weddingService.addGuest(selectedWeddingId, guestData);
+      await fetchAllGuests(); // Refresh the list
+      setShowGuestForm(false);
+      alert('Guest added successfully! 🎉');
+    } catch (error) {
+      console.error('Failed to add guest:', error);
+      alert('Failed to add guest. Please try again.');
     }
   };
 
@@ -101,6 +125,15 @@ export default function GuestList() {
           </p>
         </div>
         <div className="flex gap-3">
+          {weddings.length > 0 && (
+            <button
+              onClick={() => setShowGuestForm(true)}
+              className="bg-amber-600 text-white px-6 py-2 rounded-full hover:bg-amber-700 transition shadow-lg shadow-amber-200 flex items-center gap-2"
+            >
+              <PlusIcon className="w-4 h-4" />
+              Add Guest
+            </button>
+          )}
           <Link
             to="/dashboard"
             className="bg-rose-600 text-white px-6 py-2 rounded-full hover:bg-rose-700 transition shadow-lg shadow-rose-200"
@@ -109,6 +142,36 @@ export default function GuestList() {
           </Link>
         </div>
       </div>
+
+      {/* Add Guest Form */}
+      {showGuestForm && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-4">
+            <div className="flex flex-wrap items-center gap-4 mb-4">
+              <label className="text-sm font-medium text-gray-700">
+                Select Wedding:
+              </label>
+              <select
+                value={selectedWeddingId}
+                onChange={(e) => setSelectedWeddingId(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
+              >
+                {weddings.map(w => (
+                  <option key={w._id} value={w._id}>{w.title}</option>
+                ))}
+              </select>
+            </div>
+            <GuestForm
+              onAdd={handleAddGuest}
+              onCancel={() => setShowGuestForm(false)}
+            />
+          </div>
+        </motion.div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
