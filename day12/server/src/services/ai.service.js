@@ -1,28 +1,67 @@
 const OpenAI = require('openai');
+require('dotenv').config();
 
 class AIService {
   constructor() {
+    // Debug: Check if API key exists
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    console.log('🔑 OPENROUTER_API_KEY exists?', !!apiKey);
+    console.log('🔑 API Key length:', apiKey?.length || 0);
+    console.log('🔑 API Key first 10 chars:', apiKey?.substring(0, 10) || 'N/A');
+
+    if (!apiKey) {
+      console.error('❌ OPENROUTER_API_KEY is missing in .env file!');
+      console.error('Please add: OPENROUTER_API_KEY=sk-or-v1-xxxxxxxxxxxx');
+    }
+
     this.client = new OpenAI({
       baseURL: 'https://openrouter.ai/api/v1',
-      apiKey: process.env.OPENROUTER_API_KEY,
+      apiKey: apiKey || 'dummy-key', // Fallback to show error
       defaultHeaders: {
         'HTTP-Referer': process.env.APP_URL || 'http://localhost:5000',
         'X-Title': 'Wedding Planner AI',
       },
     });
     
- this.model = 'meta-llama/llama-3.3-70b-instruct:free';
-    // Alternative models:
-    // - 'x-ai/grok-4.3:free' (newer)
-    // - 'x-ai/grok-4.1:free' (older)
-    // - 'google/gemini-2.0-flash-exp:free' (Google's free model)
-    // - 'meta-llama/llama-4:free' (Meta's free model)
+    // Use free models (try multiple if one fails)
+    this.models = [
+      'meta-llama/llama-3.3-70b-instruct:free',
+      'google/gemma-4-26b-a4b:free',
+      'nvidia/nemotron-3-super:free',
+      'x-ai/grok-4.1-fast:free',
+    ];
+    this.currentModelIndex = 0;
+  }
+
+  get model() {
+    return this.models[this.currentModelIndex];
   }
 
   /**
-   * Get vendor recommendations using Grok
+   * Try next model if current fails
+   */
+  switchToNextModel() {
+    if (this.currentModelIndex < this.models.length - 1) {
+      this.currentModelIndex++;
+      console.log(`🔄 Switching to model: ${this.model}`);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Get vendor recommendations using AI
    */
   async getVendorRecommendations(preferences, vendors) {
+    // If no vendors, return empty
+    if (!vendors || vendors.length === 0) {
+      return {
+        recommendations: [],
+        summary: 'No vendors available for recommendations.',
+        budgetAdvice: 'Add vendors to get AI recommendations.'
+      };
+    }
+
     try {
       const prompt = this.buildRecommendationPrompt(preferences, vendors);
       
@@ -59,12 +98,17 @@ class AIService {
         max_tokens: 2000,
       });
 
-      // Parse JSON response
       const content = response.choices[0].message.content;
       return this.parseAIResponse(content);
     } catch (error) {
-      console.error('AI Recommendation Error:', error);
-      // Fallback to rule-based recommendations
+      console.error('AI Recommendation Error:', error.message);
+      
+      // Try switching to next model
+      if (this.switchToNextModel()) {
+        return this.getVendorRecommendations(preferences, vendors);
+      }
+      
+      // Fallback to rule-based
       return this.getFallbackRecommendations(preferences, vendors);
     }
   }
@@ -73,13 +117,13 @@ class AIService {
    * Build prompt for vendor recommendations
    */
   buildRecommendationPrompt(preferences, vendors) {
-    const vendorList = vendors.map(v => ({
+    const vendorList = vendors.slice(0, 20).map(v => ({
       name: v.businessName,
       category: v.category,
       city: v.city,
-      startingPrice: v.pricing.startingPrice,
-      rating: v.rating,
-      description: v.description.substring(0, 100),
+      startingPrice: v.pricing?.startingPrice || 'Not specified',
+      rating: v.rating || 0,
+      description: (v.description || '').substring(0, 100),
     }));
 
     return `
@@ -91,7 +135,7 @@ class AIService {
       - Event Type: ${preferences.eventType || 'Not specified'}
       - Category: ${preferences.category || 'All'}
 
-      Available Vendors:
+      Available Vendors (${vendorList.length} total):
       ${JSON.stringify(vendorList, null, 2)}
 
       Based on the preferences above, recommend the best vendors from the available list.
@@ -100,7 +144,6 @@ class AIService {
       2. Location match
       3. Category match
       4. Rating and reputation
-      5. Capacity for guests
 
       Provide specific reasoning for each recommendation.
     `;
@@ -111,12 +154,10 @@ class AIService {
    */
   parseAIResponse(content) {
     try {
-      // Try to extract JSON from response
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]);
       }
-      // If no JSON, return plain text
       return { recommendations: [], summary: content, budgetAdvice: '' };
     } catch (error) {
       console.error('Failed to parse AI response:', error);
@@ -125,39 +166,29 @@ class AIService {
   }
 
   /**
-   * Fallback: Rule-based recommendations (if AI fails)
+   * Fallback: Rule-based recommendations
    */
   getFallbackRecommendations(preferences, vendors) {
-    // Simple scoring algorithm
     const scored = vendors.map(vendor => {
       let score = 0;
       const reasons = [];
 
-      // Budget match (30%)
-      if (vendor.pricing.startingPrice <= preferences.budget) {
+      if (vendor.pricing?.startingPrice <= (preferences.budget || Infinity)) {
         score += 30;
         reasons.push('Within budget');
       }
 
-      // Location match (20%)
-      if (vendor.city.toLowerCase() === preferences.location?.toLowerCase()) {
+      if (vendor.city?.toLowerCase() === preferences.location?.toLowerCase()) {
         score += 20;
         reasons.push('Local vendor');
       }
 
-      // Rating (20%)
-      if (vendor.rating >= 4.5) score += 20;
-      else if (vendor.rating >= 4.0) score += 15;
-      else if (vendor.rating >= 3.5) score += 10;
-      reasons.push(`${vendor.rating}★ rating`);
+      if (vendor.rating >= 4.5) { score += 20; reasons.push(`${vendor.rating}★ rating`); }
+      else if (vendor.rating >= 4.0) { score += 15; reasons.push(`${vendor.rating}★ rating`); }
+      else if (vendor.rating >= 3.5) { score += 10; reasons.push(`${vendor.rating}★ rating`); }
 
-      // Availability (15%)
-      if (vendor.available) {
-        score += 15;
-        reasons.push('Available');
-      }
+      if (vendor.available !== false) { score += 15; reasons.push('Available'); }
 
-      // Category match (15%)
       if (vendor.category === preferences.category || preferences.category === 'All') {
         score += 15;
         reasons.push(`Specializes in ${vendor.category}`);
@@ -167,10 +198,9 @@ class AIService {
         vendorName: vendor.businessName,
         category: vendor.category,
         matchScore: score,
-        reasoning: reasons.join(', '),
-        estimatedPrice: vendor.pricing.startingPrice,
-        whyItWorks: `Matches your ${preferences.category} needs`,
-        _vendor: vendor // Keep reference for display
+        reasoning: reasons.join(', ') || 'Good match',
+        estimatedPrice: vendor.pricing?.startingPrice || 0,
+        whyItWorks: `Matches your ${preferences.category || 'wedding'} needs`
       };
     });
 
@@ -182,14 +212,14 @@ class AIService {
   }
 
   /**
-   * Budget optimization using Grok
+   * Budget optimization using AI
    */
   async optimizeBudgetWithAI(preferences) {
     try {
       const prompt = `
         Wedding Budget Optimization:
-        - Total Budget: ₹${preferences.totalBudget}
-        - Guests: ${preferences.guests}
+        - Total Budget: ₹${preferences.totalBudget || 500000}
+        - Guests: ${preferences.guests || 200}
         - Events: ${preferences.events?.join(', ') || 'Not specified'}
         - Location: ${preferences.location || 'Not specified'}
 
@@ -204,8 +234,7 @@ class AIService {
           "allocation": {
             "Venue": 200000,
             "Catering": 150000,
-            "Photography": 100000,
-            ...
+            "Photography": 100000
           },
           "totalEstimated": 500000,
           "savingsTips": ["Tip 1", "Tip 2"],
@@ -219,7 +248,7 @@ class AIService {
         messages: [
           {
             role: 'system',
-            content: 'You are a wedding budget expert. Provide realistic cost breakdowns for Indian weddings.'
+            content: 'You are a wedding budget expert. Provide realistic cost breakdowns for Indian weddings. Response must be valid JSON.'
           },
           {
             role: 'user',
@@ -237,7 +266,12 @@ class AIService {
       }
       return this.getFallbackBudgetOptimization(preferences);
     } catch (error) {
-      console.error('AI Budget Optimization Error:', error);
+      console.error('AI Budget Optimization Error:', error.message);
+      
+      if (this.switchToNextModel()) {
+        return this.optimizeBudgetWithAI(preferences);
+      }
+      
       return this.getFallbackBudgetOptimization(preferences);
     }
   }
@@ -249,7 +283,6 @@ class AIService {
     const totalBudget = preferences.totalBudget || 500000;
     const guests = preferences.guests || 200;
 
-    // Typical Indian wedding budget allocation (%)
     const allocation = {
       'Venue': Math.round(totalBudget * 0.25),
       'Catering': Math.round(totalBudget * 0.20),
@@ -279,7 +312,7 @@ class AIService {
   }
 
   /**
-   * Get wedding timeline using Grok
+   * Get wedding timeline using AI
    */
   async getWeddingTimeline(preferences) {
     try {
@@ -318,13 +351,49 @@ class AIService {
 
       return response.choices[0].message.content;
     } catch (error) {
-      console.error('AI Timeline Error:', error);
-      return 'Failed to generate timeline. Please try again.';
+      console.error('AI Timeline Error:', error.message);
+      
+      if (this.switchToNextModel()) {
+        return this.getWeddingTimeline(preferences);
+      }
+      
+      return `📅 Wedding Timeline
+
+Based on your preferences, here's a suggested timeline:
+
+1. 6-12 Months Before:
+   - Book venue
+   - Finalize budget
+   - Create guest list
+   - Hire key vendors
+
+2. 3 Months Before:
+   - Send invitations
+   - Finalize menu
+   - Book transportation
+   - Plan wedding events
+
+3. 1 Month Before:
+   - Finalize seating arrangements
+   - Confirm all vendors
+   - Do wedding rehearsal
+   - Final dress fitting
+
+4. 1 Week Before:
+   - Pack for wedding
+   - Finalize playlists
+   - Delegate tasks
+   - Relax and enjoy
+
+5. Wedding Day:
+   - Follow the schedule
+   - Enjoy your special day!
+      `;
     }
   }
 
   /**
-   * Get vendor matching with Grok
+   * Get vendor matching with AI
    */
   async getVendorMatching(weddingDetails, vendors) {
     try {
@@ -332,17 +401,17 @@ class AIService {
         Wedding Details:
         ${JSON.stringify(weddingDetails, null, 2)}
 
-        Available Vendors:
-        ${JSON.stringify(vendors.map(v => ({
+        Available Vendors (${vendors.length} total):
+        ${JSON.stringify(vendors.slice(0, 20).map(v => ({
           name: v.businessName,
           category: v.category,
           city: v.city,
-          price: v.pricing.startingPrice,
-          rating: v.rating,
-          features: v.features
+          price: v.pricing?.startingPrice || 0,
+          rating: v.rating || 0,
+          features: v.features || []
         })), null, 2)}
 
-        Match each wedding event with the best vendor from the available list.
+        Match the wedding with the best vendors from the available list.
         Provide specific vendor recommendations for each event type.
       `;
 
@@ -364,8 +433,13 @@ class AIService {
 
       return response.choices[0].message.content;
     } catch (error) {
-      console.error('AI Vendor Matching Error:', error);
-      return 'Failed to match vendors. Please try again.';
+      console.error('AI Vendor Matching Error:', error.message);
+      
+      if (this.switchToNextModel()) {
+        return this.getVendorMatching(weddingDetails, vendors);
+      }
+      
+      return 'Please add vendors to get AI matching recommendations.';
     }
   }
 }

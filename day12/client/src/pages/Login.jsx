@@ -10,15 +10,19 @@ export default function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/dashboard");
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+    const token = await userCredential.user.getIdToken();
+    console.log("Firebase ID Token:", token);
+
+    navigate("/dashboard");
+  } catch (err) {
+    setError(err.message);
+  }
+};
 
   return (
     <motion.div
