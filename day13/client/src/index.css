@@ -1,17 +1,141 @@
 @import "tailwindcss";
 
 @theme {
-  /* Your custom theme here if needed */
+  --font-family-fredoka: "Fredoka", sans-serif;
 }
 
 @layer base {
   body {
-    @apply bg-gradient-to-b from-slate-900 to-slate-800 min-h-screen;
+    @apply bg-gradient-to-b from-slate-900 to-slate-800 min-h-screen font-sans antialiased;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-800/50 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gradient-to-b from-purple-500 to-pink-500 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gradient-to-b from-purple-600 to-pink-600;
   }
 }
 
 @layer components {
   .game-canvas {
-    @apply rounded-2xl shadow-2xl border-4 border-slate-700;
+    @apply rounded-2xl shadow-2xl border-2 border-white/10;
+  }
+
+  /* Glass morphism cards */
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+
+  /* Animated gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 bg-clip-text text-transparent;
+  }
+
+  /* Bounce animation for game elements */
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0.8) translateY(-20px);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.05) translateY(5px);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-bounce-in {
+    animation: bounce-in 0.5s ease-out forwards;
+  }
+
+  /* Pulse animation for notifications */
+  @keyframes pulse-soft {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+
+  /* Floating animation for decorative elements */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Shimmer effect for loading states */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Mobile responsiveness improvements */
+  @media (max-width: 640px) {
+    .game-canvas {
+      @apply rounded-xl;
+    }
+  }
+
+  /* Touch-friendly button sizes */
+  @media (hover: none) {
+    button, 
+    [role="button"],
+    .cursor-pointer {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    @apply bg-white;
+  }
+  .game-canvas {
+    @apply border-2 border-gray-300 shadow-none;
   }
 }
