@@ -7,41 +7,55 @@ export const useSound = () => {
     score: null,
     die: null
   });
+  const audioContextRef = useRef(null);
 
   // Load sounds from public folder
   useEffect(() => {
     const loadSounds = async () => {
       try {
-        const soundFiles = {
-          flap: '/sounds/flap.mp3',
-          score: '/sounds/score.mp3',
-          die: '/sounds/die.mp3'
-        };
+        // Create audio elements with proper paths
+        const flapAudio = new Audio('/sounds/flap.mp3');
+        const scoreAudio = new Audio('/sounds/score.mp3');
+        const dieAudio = new Audio('/sounds/die.mp3');
 
-        const loadSound = (url) => {
-          return new Promise((resolve, reject) => {
-            const audio = new Audio(url);
-            audio.addEventListener('canplaythrough', () => resolve(audio));
-            audio.addEventListener('error', reject);
-            audio.load();
-          });
-        };
+        // Set preload
+        flapAudio.preload = 'auto';
+        scoreAudio.preload = 'auto';
+        dieAudio.preload = 'auto';
 
-        const [flapAudio, scoreAudio, dieAudio] = await Promise.all([
-          loadSound(soundFiles.flap),
-          loadSound(soundFiles.score),
-          loadSound(soundFiles.die)
-        ]);
+        // Load sounds with promises
+        const loadPromises = [
+          new Promise((resolve) => {
+            flapAudio.addEventListener('canplaythrough', resolve, { once: true });
+            flapAudio.load();
+          }),
+          new Promise((resolve) => {
+            scoreAudio.addEventListener('canplaythrough', resolve, { once: true });
+            scoreAudio.load();
+          }),
+          new Promise((resolve) => {
+            dieAudio.addEventListener('canplaythrough', resolve, { once: true });
+            dieAudio.load();
+          })
+        ];
+
+        // Timeout for loading (3 seconds)
+        const timeoutPromise = new Promise((resolve) => {
+          setTimeout(resolve, 3000);
+        });
+
+        await Promise.race([Promise.all(loadPromises), timeoutPromise]);
 
         soundsRef.current = {
           flap: flapAudio,
           score: scoreAudio,
           die: dieAudio
         };
+        
         setSoundsLoaded(true);
         console.log('✅ Sounds loaded successfully');
       } catch (error) {
-        console.warn('⚠️ Failed to load sound files, using fallback:', error);
+        console.warn('⚠️ Failed to load sounds:', error);
         // Fallback: create audio context sounds
         createFallbackSounds();
         setSoundsLoaded(true);
@@ -49,49 +63,74 @@ export const useSound = () => {
     };
 
     const createFallbackSounds = () => {
-      // Create fallback using Web Audio API
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      
-      const createBeep = (frequency, duration, type = 'sine') => {
-        return {
-          play: () => {
-            try {
-              const osc = audioContext.createOscillator();
-              const gain = audioContext.createGain();
-              osc.type = type;
-              osc.frequency.setValueAtTime(frequency, audioContext.currentTime);
-              gain.gain.setValueAtTime(0.15, audioContext.currentTime);
-              gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
-              osc.connect(gain);
-              gain.connect(audioContext.destination);
-              osc.start();
-              osc.stop(audioContext.currentTime + duration);
-            } catch (e) {
-              console.warn('Fallback sound failed:', e);
+      try {
+        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+        
+        const createBeep = (frequency, duration, type = 'sine', volume = 0.15) => {
+          return {
+            play: () => {
+              try {
+                const ctx = audioContextRef.current;
+                if (ctx.state === 'suspended') {
+                  ctx.resume();
+                }
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+                gain.gain.setValueAtTime(volume, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+              } catch (e) {
+                console.warn('Fallback sound failed:', e);
+              }
             }
-          }
+          };
         };
-      };
 
-      soundsRef.current = {
-        flap: { play: () => createBeep(720, 0.12).play() },
-        score: { play: () => createBeep(880, 0.15).play() },
-        die: { play: () => createBeep(200, 0.3).play() }
-      };
+        soundsRef.current = {
+          flap: { play: () => createBeep(720, 0.12, 'sine', 0.18).play() },
+          score: { play: () => createBeep(880, 0.15, 'square', 0.10).play() },
+          die: { play: () => createBeep(200, 0.3, 'sawtooth', 0.15).play() }
+        };
+        console.log('🔊 Using fallback sounds');
+      } catch (error) {
+        console.warn('⚠️ Failed to create fallback sounds');
+        // Silent fallback
+        soundsRef.current = {
+          flap: { play: () => {} },
+          score: { play: () => {} },
+          die: { play: () => {} }
+        };
+      }
     };
 
     loadSounds();
+
+    return () => {
+      // Cleanup
+      Object.values(soundsRef.current).forEach(sound => {
+        if (sound instanceof Audio) {
+          sound.pause();
+          sound.src = '';
+        }
+      });
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+    };
   }, []);
 
   const playSound = useCallback((type) => {
     if (!soundsLoaded) {
-      console.warn('Sounds not loaded yet');
       return;
     }
 
     const sound = soundsRef.current[type];
     if (!sound) {
-      console.warn(`Sound type "${type}" not found`);
       return;
     }
 
@@ -100,9 +139,15 @@ export const useSound = () => {
       if (sound instanceof Audio) {
         // Reset and play
         sound.currentTime = 0;
-        sound.play().catch(error => {
-          console.warn(`Failed to play ${type}:`, error);
-        });
+        const playPromise = sound.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            // Autoplay was prevented - user needs to interact first
+            if (error.name === 'NotAllowedError') {
+              console.debug('Sound play prevented, waiting for user interaction');
+            }
+          });
+        }
       } 
       // For fallback sounds
       else if (typeof sound.play === 'function') {

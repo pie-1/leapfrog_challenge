@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { GAME_CONFIG } from '../constants/gameConfig';
-import { useSound } from '../hooks/useSound';
-import { useGame } from '../context/GameContext';
-import GameOver from './GameOver';
-import Score from './Score';
-import VehicleSelector from './VehicleSelector';
-import VehicleCustomizer from './VehicleCustomizer';
-import MultiplayerMode from './MultiplayerMode';
-import GameCanvas from './game/GameCanvas';
-import { GameLogic } from './game/GameLogic';
-import { PipeManager } from './game/PipeManager';
+import { GAME_CONFIG } from '../../constants/gameConfig'; // Fixed path
+import { useSound } from '../../hooks/useSound'; // Fixed path
+import { useGame } from '../../context/GameContext'; // Fixed path
+import GameOver from '../GameOver';
+import Score from '../Score';
+import VehicleSelector from '../VehicleSelector';
+import VehicleCustomizer from '../VehicleCustomizer';
+import MultiplayerMode from '../MultiplayerMode';
+import GameCanvas from './GameCanvas';
+import { GameLogic } from './GameLogic';
+import { PipeManager } from './PipeManager';
 
 const FONT = '"Fredoka", sans-serif';
 
@@ -179,11 +179,9 @@ const Game = () => {
 
     const handleCanvasClick = () => flap();
     window.addEventListener('keydown', handleKeyPress);
-    document.addEventListener('click', handleCanvasClick);
-
+    
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
-      document.removeEventListener('click', handleCanvasClick);
     };
   }, [flap]);
 

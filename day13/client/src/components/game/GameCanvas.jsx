@@ -1,3 +1,4 @@
+// src/components/game/GameCanvas.jsx
 import React, { useEffect, useRef } from 'react';
 import { drawSky, drawClouds, drawGround, drawPipes, drawVehicle, drawUI } from './Renderers';
 
@@ -26,7 +27,7 @@ const GameCanvas = ({
     drawGround(ctx, gameState.frameCounter);
     
     // Draw vehicles
-    drawVehicle(ctx, gameState.bird, vehicle, vehicleColor, gameState.isInvincible, gameState.frameCounter);
+    drawVehicle(ctx, gameState.bird, vehicle, vehicleColor, gameState.isInvincible, gameState.frameCounter, false);
     
     if (isMultiplayer && multiplayerState) {
       drawVehicle(ctx, multiplayerState.bird, vehicle, '#4ECDC4', false, gameState.frameCounter, true);
