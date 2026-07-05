@@ -18,12 +18,15 @@ router.get('/', async (req, res) => {
     if (search) {
       filter.$or = [
         { 'serviceType': { $regex: search, $options: 'i' } },
+        { 'specialization': { $regex: search, $options: 'i' } },
       ];
     }
 
-    const providers = await ServiceProvider.find(filter).populate('userId', 'name email phone rating');
+    const providers = await ServiceProvider.find(filter)
+      .populate('userId', 'name email phone address');
     res.json(providers);
   } catch (error) {
+    console.error('Get providers error:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -31,12 +34,14 @@ router.get('/', async (req, res) => {
 // Get provider by ID
 router.get('/:id', async (req, res) => {
   try {
-    const provider = await ServiceProvider.findById(req.params.id).populate('userId', 'name email phone');
+    const provider = await ServiceProvider.findById(req.params.id)
+      .populate('userId', 'name email phone address');
     if (!provider) {
       return res.status(404).json({ error: 'Provider not found' });
     }
     res.json(provider);
   } catch (error) {
+    console.error('Get provider error:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -44,7 +49,18 @@ router.get('/:id', async (req, res) => {
 // Register as provider
 router.post('/register', protect, async (req, res) => {
   try {
-    const { serviceType, experience, description, hourlyRate, documents } = req.body;
+    const { 
+      serviceType, 
+      specialization, 
+      experience, 
+      description, 
+      about,
+      hourlyRate, 
+      tools, 
+      certifications,
+      availability,
+      location,
+    } = req.body;
 
     // Check if user already has a provider profile
     const existing = await ServiceProvider.findOne({ userId: req.userId });
@@ -59,10 +75,23 @@ router.post('/register', protect, async (req, res) => {
     const provider = await ServiceProvider.create({
       userId: req.userId,
       serviceType,
-      experience,
-      description,
-      hourlyRate,
-      documents,
+      specialization: specialization || '',
+      experience: parseInt(experience) || 0,
+      description: description || '',
+      about: about || '',
+      hourlyRate: parseInt(hourlyRate) || 0,
+      tools: tools || [],
+      certifications: certifications || [],
+      availability: availability || {
+        monday: { start: '09:00', end: '17:00' },
+        tuesday: { start: '09:00', end: '17:00' },
+        wednesday: { start: '09:00', end: '17:00' },
+        thursday: { start: '09:00', end: '17:00' },
+        friday: { start: '09:00', end: '17:00' },
+        saturday: { start: '09:00', end: '17:00' },
+        sunday: { start: '09:00', end: '17:00' },
+      },
+      location: location || {},
     });
 
     res.status(201).json({
@@ -71,6 +100,7 @@ router.post('/register', protect, async (req, res) => {
       provider,
     });
   } catch (error) {
+    console.error('Provider registration error:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -88,6 +118,7 @@ router.put('/:id', protect, async (req, res) => {
     }
     res.json(provider);
   } catch (error) {
+    console.error('Update provider error:', error);
     res.status(500).json({ error: error.message });
   }
 });

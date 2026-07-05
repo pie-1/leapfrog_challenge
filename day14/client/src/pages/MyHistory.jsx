@@ -1,60 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Clock, CheckCircle, XCircle, Calendar, Eye, RefreshCw, Star } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, Calendar, Eye, RefreshCw, Star, AlertCircle } from 'lucide-react';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
+import API from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 
 const MyHistory = () => {
-  const [filter, setFilter] = useState('all'); // all, completed, cancelled, pending
+  const { user } = useAuth();
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [filter, setFilter] = useState('all');
 
-  // Mock data - replace with API call
-  const bookings = [
-    {
-      id: 1,
-      service: 'Plumbing',
-      provider: 'Rajesh Sharma',
-      date: '2026-07-03',
-      time: '10:00 AM',
-      amount: 1200,
-      status: 'completed',
-      rating: 5,
-      address: 'Kathmandu',
-    },
-    {
-      id: 2,
-      service: 'Electrician',
-      provider: 'Sita Gurung',
-      date: '2026-06-28',
-      time: '2:00 PM',
-      amount: 750,
-      status: 'completed',
-      rating: 4,
-      address: 'Lalitpur',
-    },
-    {
-      id: 3,
-      service: 'Cleaning',
-      provider: 'Kumar Tamang',
-      date: '2026-06-25',
-      time: '9:00 AM',
-      amount: 1500,
-      status: 'cancelled',
-      rating: null,
-      address: 'Bhaktapur',
-    },
-    {
-      id: 4,
-      service: 'Cooking',
-      provider: 'Maya Rai',
-      date: '2026-07-05',
-      time: '11:00 AM',
-      amount: 900,
-      status: 'pending',
-      rating: null,
-      address: 'Kathmandu',
-    },
-  ];
+  useEffect(() => {
+    fetchBookings();
+  }, []);
+
+  const fetchBookings = async () => {
+    try {
+      setLoading(true);
+      const response = await API.get('/bookings/my-bookings');
+      setBookings(response.data);
+    } catch (err) {
+      console.error('Error fetching bookings:', err);
+      setError('Failed to load bookings. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredBookings = bookings.filter((b) => {
     if (filter === 'all') return true;
@@ -69,10 +44,37 @@ const MyHistory = () => {
         return { label: 'Cancelled', color: 'text-[#E74C3C] bg-[#E74C3C]/10', icon: XCircle };
       case 'pending':
         return { label: 'Pending', color: 'text-[#F3B85E] bg-[#F3B85E]/10', icon: Clock };
+      case 'accepted':
+        return { label: 'Accepted', color: 'text-[#3498DB] bg-[#3498DB]/10', icon: Clock };
+      case 'in-progress':
+        return { label: 'In Progress', color: 'text-[#9B59B6] bg-[#9B59B6]/10', icon: Clock };
       default:
-        return { label: 'Unknown', color: 'text-[#6B6558] bg-[#6B6558]/10', icon: Clock };
+        return { label: status, color: 'text-[#6B6558] bg-[#6B6558]/10', icon: Clock };
     }
   };
+
+  // Calculate summary
+  const totalSpent = bookings
+    .filter(b => b.status === 'completed')
+    .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+
+  const completedCount = bookings.filter(b => b.status === 'completed').length;
+  const pendingCount = bookings.filter(b => b.status === 'pending' || b.status === 'accepted').length;
+  const avgRating = bookings
+    .filter(b => b.rating)
+    .reduce((sum, b) => sum + b.rating, 0) / (bookings.filter(b => b.rating).length || 1);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#FBFAF6] font-['Inter']">
+        <Navbar />
+        <div className="pt-32 flex justify-center items-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#E8A33D]" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FBFAF6] font-['Inter']">
@@ -96,29 +98,42 @@ const MyHistory = () => {
             </div>
             <div className="flex items-center gap-3">
               <span className="text-sm text-[#6B6558] font-medium">Filter:</span>
-              <div className="flex gap-1.5">
-                {['all', 'completed', 'pending', 'cancelled'].map((f) => (
+              <div className="flex gap-1.5 flex-wrap">
+                {['all', 'pending', 'accepted', 'in-progress', 'completed', 'cancelled'].map((f) => (
                   <button
                     key={f}
                     onClick={() => setFilter(f)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors capitalize ${
                       filter === f
                         ? 'bg-[#1F3D2B] text-white'
                         : 'bg-white border border-[#E4DFD1] text-[#6B6558] hover:border-[#1F3D2B]'
                     }`}
                   >
-                    {f.charAt(0).toUpperCase() + f.slice(1)}
+                    {f === 'in-progress' ? 'In Progress' : f}
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
+          {/* Error State */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center gap-3 text-red-600">
+              <AlertCircle size={20} />
+              <span>{error}</span>
+              <button onClick={fetchBookings} className="ml-auto text-sm font-medium hover:underline">
+                Retry
+              </button>
+            </div>
+          )}
+
           {/* Bookings List */}
           {filteredBookings.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-2xl border border-[#E4DFD1]">
               <div className="text-4xl mb-4">📋</div>
-              <p className="text-[#6B6558]">No bookings found</p>
+              <p className="text-[#6B6558]">
+                {filter !== 'all' ? `No ${filter} bookings found` : 'No bookings yet'}
+              </p>
               <Link to="/providers" className="inline-block mt-4 text-[#E8A33D] hover:underline">
                 Find a service →
               </Link>
@@ -129,7 +144,7 @@ const MyHistory = () => {
                 const StatusBadge = getStatusBadge(booking.status);
                 return (
                   <motion.div
-                    key={booking.id}
+                    key={booking._id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-white rounded-2xl border border-[#E4DFD1] p-6 hover:shadow-[0_4px_16px_-8px_rgba(20,37,26,0.12)] transition-all"
@@ -139,7 +154,7 @@ const MyHistory = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-3 flex-wrap">
                           <h3 className="font-semibold text-[#1C1B18] text-lg">
-                            {booking.service}
+                            {booking.serviceType || booking.service}
                           </h3>
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${StatusBadge.color}`}>
                             <StatusBadge.icon size={12} />
@@ -147,7 +162,7 @@ const MyHistory = () => {
                           </span>
                         </div>
                         <p className="text-[#6B6558] text-sm mt-1">
-                          {booking.provider} • {booking.address}
+                          {booking.providerId?.userId?.name || booking.providerName || 'Provider'} • {booking.address}
                         </p>
                         <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-[#6B6558]">
                           <span className="flex items-center gap-1.5">
@@ -158,9 +173,11 @@ const MyHistory = () => {
                             <Clock size={14} />
                             {booking.time}
                           </span>
-                          <span className="font-semibold text-[#1F3D2B]">
-                            ₹{booking.amount}
-                          </span>
+                          {booking.totalAmount && (
+                            <span className="font-semibold text-[#1F3D2B]">
+                              ₹{booking.totalAmount}
+                            </span>
+                          )}
                           {booking.rating && (
                             <span className="flex items-center gap-1 text-[#F3B85E]">
                               <Star size={14} className="fill-[#F3B85E]" />
@@ -189,27 +206,29 @@ const MyHistory = () => {
           )}
 
           {/* Payment Summary */}
-          <div className="mt-8 bg-white rounded-2xl border border-[#E4DFD1] p-6">
-            <h3 className="font-semibold text-[#1C1B18] mb-3">Payment Summary</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <p className="text-xs text-[#6B6558] font-['IBM_Plex_Mono'] uppercase tracking-wider">Total Spent</p>
-                <p className="text-2xl font-bold text-[#1F3D2B] font-['Space_Grotesk']">₹4,350</p>
-              </div>
-              <div>
-                <p className="text-xs text-[#6B6558] font-['IBM_Plex_Mono'] uppercase tracking-wider">Completed</p>
-                <p className="text-2xl font-bold text-[#2ECC71] font-['Space_Grotesk']">2</p>
-              </div>
-              <div>
-                <p className="text-xs text-[#6B6558] font-['IBM_Plex_Mono'] uppercase tracking-wider">Pending</p>
-                <p className="text-2xl font-bold text-[#F3B85E] font-['Space_Grotesk']">1</p>
-              </div>
-              <div>
-                <p className="text-xs text-[#6B6558] font-['IBM_Plex_Mono'] uppercase tracking-wider">Avg. Rating</p>
-                <p className="text-2xl font-bold text-[#E8A33D] font-['Space_Grotesk']">4.5 ★</p>
+          {bookings.length > 0 && (
+            <div className="mt-8 bg-white rounded-2xl border border-[#E4DFD1] p-6">
+              <h3 className="font-semibold text-[#1C1B18] mb-3">Payment Summary</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                  <p className="text-xs text-[#6B6558] font-['IBM_Plex_Mono'] uppercase tracking-wider">Total Spent</p>
+                  <p className="text-2xl font-bold text-[#1F3D2B] font-['Space_Grotesk']">₹{totalSpent}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-[#6B6558] font-['IBM_Plex_Mono'] uppercase tracking-wider">Completed</p>
+                  <p className="text-2xl font-bold text-[#2ECC71] font-['Space_Grotesk']">{completedCount}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-[#6B6558] font-['IBM_Plex_Mono'] uppercase tracking-wider">Pending</p>
+                  <p className="text-2xl font-bold text-[#F3B85E] font-['Space_Grotesk']">{pendingCount}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-[#6B6558] font-['IBM_Plex_Mono'] uppercase tracking-wider">Avg. Rating</p>
+                  <p className="text-2xl font-bold text-[#E8A33D] font-['Space_Grotesk']">{avgRating.toFixed(1)} ★</p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </motion.div>
       </div>
 
