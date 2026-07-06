@@ -9,21 +9,24 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const { category, search, lat, lng } = req.query;
-    let filter = {};
+    let filter = { isActive: true };
 
     if (category) {
-      filter.serviceType = category;
+      filter.serviceType = { $regex: category, $options: 'i' };
     }
 
     if (search) {
       filter.$or = [
         { 'serviceType': { $regex: search, $options: 'i' } },
         { 'specialization': { $regex: search, $options: 'i' } },
+        { 'userId.name': { $regex: search, $options: 'i' } },
       ];
     }
 
     const providers = await ServiceProvider.find(filter)
-      .populate('userId', 'name email phone address');
+      .populate('userId', 'name email phone address rating')
+      .sort({ rating: -1 });
+
     res.json(providers);
   } catch (error) {
     console.error('Get providers error:', error);
@@ -35,7 +38,8 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const provider = await ServiceProvider.findById(req.params.id)
-      .populate('userId', 'name email phone address');
+      .populate('userId', 'name email phone address rating');
+    
     if (!provider) {
       return res.status(404).json({ error: 'Provider not found' });
     }
@@ -45,6 +49,68 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// Get nearby providers (with distance calculation)
+router.get('/nearby', async (req, res) => {
+  try {
+    const { lat, lng, category, limit = 10 } = req.query;
+    let filter = { isActive: true };
+
+    if (category && category !== 'all') {
+      filter.serviceType = { $regex: category, $options: 'i' };
+    }
+
+    // Find providers with location data
+    let providers = await ServiceProvider.find({
+      ...filter,
+      'location.lat': { $exists: true, $ne: null },
+      'location.lng': { $exists: true, $ne: null },
+    })
+    .populate('userId', 'name email phone address rating')
+    .limit(50);
+
+    // Calculate distance if user location provided
+    let providersWithDistance = providers;
+    if (lat && lng) {
+      providersWithDistance = providers.map(provider => {
+        const distance = calculateDistance(
+          parseFloat(lat),
+          parseFloat(lng),
+          provider.location?.lat || 0,
+          provider.location?.lng || 0
+        );
+        return {
+          ...provider.toObject(),
+          distance: parseFloat(distance.toFixed(2)),
+        };
+      });
+      // Sort by distance (closest first)
+      providersWithDistance.sort((a, b) => a.distance - b.distance);
+    }
+
+    // Limit results
+    const limitedProviders = providersWithDistance.slice(0, parseInt(limit));
+
+    console.log(`✅ Found ${limitedProviders.length} nearby providers`);
+    res.json(limitedProviders);
+  } catch (error) {
+    console.error('❌ Error fetching nearby providers:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Haversine formula to calculate distance between two coordinates
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth's radius in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
 
 // Register as provider
 router.post('/register', protect, async (req, res) => {

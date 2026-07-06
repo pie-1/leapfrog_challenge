@@ -8,6 +8,11 @@ import MyHistory from './pages/MyHistory';
 import PostJob from './pages/PostJob';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ProviderDashboard from './pages/ProviderDashboard';
+import NearMe from './pages/NearMe';
+import ProviderJobs from './pages/ProviderJobs';
+import JobBids from './pages/JobBids';
+
 
 function App() {
   return (
@@ -21,6 +26,12 @@ function App() {
         <Route path="/post-job" element={<PostJob />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/provider/dashboard" element={<ProviderDashboard />} />
+        <Route path="/near-me" element={<NearMe />} />
+        <Route path="/job/:id/bids" element={<JobBids />} />      
+        <Route path="/provider/jobs" element={<ProviderJobs />} />
+        
+
       </Routes>
     </AuthProvider>
   );

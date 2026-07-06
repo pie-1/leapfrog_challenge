@@ -29,9 +29,9 @@ const serviceProviderSchema = new mongoose.Schema({
     certificate: { type: String },
   },
   location: {
-    lat: Number,
-    lng: Number,
-    address: String,
+    lat: { type: Number },
+    lng: { type: Number },
+    address: { type: String },
   },
   isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },

@@ -142,4 +142,26 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
+// Get available jobs (for providers to bid on)
+router.get('/available-jobs', async (req, res) => {
+  try {
+    // Find jobs that are pending and don't have a provider assigned
+    const jobs = await Booking.find({ 
+      status: 'pending',
+      $or: [
+        { providerId: { $exists: false } },
+        { providerId: null }
+      ]
+    })
+    .populate('customerId', 'name phone')
+    .sort({ createdAt: -1 });
+
+    console.log(`✅ Found ${jobs.length} available jobs`);
+    res.json(jobs);
+  } catch (error) {
+    console.error('❌ Error fetching available jobs:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
