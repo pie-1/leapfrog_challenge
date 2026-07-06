@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, MapPin, ShieldCheck, Clock, Calendar, Phone, Mail, ThumbsUp, MessageCircle, Briefcase, Wrench } from 'lucide-react';
 import Navbar from '../components/common/Navbar';
@@ -8,6 +8,7 @@ import API from '../utils/api';
 
 const ProviderProfile = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [provider, setProvider] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,17 +17,23 @@ const ProviderProfile = () => {
     const fetchProvider = async () => {
       try {
         setLoading(true);
+        setError(null);
         const response = await API.get(`/providers/${id}`);
         setProvider(response.data);
       } catch (err) {
         console.error('Error fetching provider:', err);
-        setError('Failed to load provider details');
+        setError('Provider not found or unable to load');
+        if (err.response?.status === 404) {
+          setTimeout(() => navigate('/providers'), 2000);
+        }
       } finally {
         setLoading(false);
       }
     };
-    fetchProvider();
-  }, [id]);
+    if (id) {
+      fetchProvider();
+    }
+  }, [id, navigate]);
 
   if (loading) {
     return (
@@ -44,6 +51,7 @@ const ProviderProfile = () => {
       <div className="min-h-screen bg-[#FBFAF6]">
         <Navbar />
         <div className="pt-32 text-center">
+          <div className="text-6xl mb-4">🔍</div>
           <p className="text-[#6B6558]">{error || 'Professional not found'}</p>
           <Link to="/providers" className="text-[#E8A33D] hover:underline">Back to search</Link>
         </div>

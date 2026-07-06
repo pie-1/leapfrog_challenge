@@ -5,30 +5,80 @@ import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
+// ============================================
+// SPECIFIC ROUTES (must come before /:id)
+// ============================================
+
+// Get available jobs (for providers to bid on)
+router.get('/available-jobs', async (req, res) => {
+  try {
+    const jobs = await Booking.find({
+      status: 'pending',
+      $or: [{ providerId: { $exists: false } }, { providerId: null }],
+    })
+      .populate('customerId', 'name phone')
+      .sort({ createdAt: -1 });
+
+    console.log(`✅ Found ${jobs.length} available jobs`);
+    res.json(jobs);
+  } catch (error) {
+    console.error('❌ Error fetching available jobs:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get my bookings (customer)
+router.get('/my-bookings', protect, async (req, res) => {
+  try {
+    const bookings = await Booking.find({ customerId: req.userId })
+      .populate('customerId', 'name phone')
+      .sort({ createdAt: -1 });
+    res.json(bookings);
+  } catch (error) {
+    console.error('Error fetching my bookings:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get provider bookings (for provider dashboard)
+router.get('/provider-bookings', protect, async (req, res) => {
+  try {
+    // Find the provider profile for this user
+    const provider = await ServiceProvider.findOne({ userId: req.userId });
+    if (!provider) {
+      return res.status(404).json({ error: 'Provider profile not found' });
+    }
+
+    const bookings = await Booking.find({ providerId: provider._id })
+      .populate('customerId', 'name phone')
+      .sort({ createdAt: -1 });
+
+    console.log(`✅ Found ${bookings.length} bookings for provider`);
+    res.json(bookings);
+  } catch (error) {
+    console.error('Error fetching provider bookings:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ============================================
+// DYNAMIC ROUTES (with :id)
+// ============================================
+
 // Create booking (Post a job)
 router.post('/', protect, async (req, res) => {
   try {
-    const { 
-      serviceType, 
-      date, 
-      time, 
-      address, 
-      description, 
-      totalAmount,
-      providerId 
-    } = req.body;
+    const { serviceType, date, time, address, description, totalAmount, providerId } = req.body;
 
     console.log('📝 Booking request body:', req.body);
     console.log('👤 User ID:', req.userId);
 
-    // Validate required fields
     if (!serviceType || !date || !time || !address) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: serviceType, date, time, and address are required' 
+      return res.status(400).json({
+        error: 'Missing required fields: serviceType, date, time, and address are required',
       });
     }
 
-    // Create booking
     const bookingData = {
       customerId: req.userId,
       serviceType,
@@ -40,7 +90,6 @@ router.post('/', protect, async (req, res) => {
       status: 'pending',
     };
 
-    // Only add providerId if provided and not 'pending'
     if (providerId && providerId !== 'pending' && providerId !== 'null') {
       bookingData.providerId = providerId;
     }
@@ -61,32 +110,20 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// Get my bookings (customer)
-router.get('/my-bookings', protect, async (req, res) => {
+// Get booking by ID
+router.get('/:id', protect, async (req, res) => {
   try {
-    const bookings = await Booking.find({ customerId: req.userId })
-      .sort({ createdAt: -1 });
-    res.json(bookings);
-  } catch (error) {
-    console.error('Error fetching bookings:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
+    const booking = await Booking.findById(req.params.id)
+      .populate('customerId', 'name phone')
+      .populate('providerId', 'serviceType hourlyRate');
 
-// Get provider bookings
-router.get('/provider-bookings', protect, async (req, res) => {
-  try {
-    const provider = await ServiceProvider.findOne({ userId: req.userId });
-    if (!provider) {
-      return res.status(404).json({ error: 'Provider not found' });
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
     }
 
-    const bookings = await Booking.find({ providerId: provider._id })
-      .populate('customerId', 'name phone')
-      .sort({ createdAt: -1 });
-    res.json(bookings);
+    res.json(booking);
   } catch (error) {
-    console.error('Error fetching provider bookings:', error);
+    console.error('Error fetching booking:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -120,46 +157,6 @@ router.put('/:id/status', protect, async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating booking:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Get booking by ID
-router.get('/:id', protect, async (req, res) => {
-  try {
-    const booking = await Booking.findById(req.params.id)
-      .populate('customerId', 'name phone')
-      .populate('providerId', 'serviceType hourlyRate');
-
-    if (!booking) {
-      return res.status(404).json({ error: 'Booking not found' });
-    }
-
-    res.json(booking);
-  } catch (error) {
-    console.error('Error fetching booking:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Get available jobs (for providers to bid on)
-router.get('/available-jobs', async (req, res) => {
-  try {
-    // Find jobs that are pending and don't have a provider assigned
-    const jobs = await Booking.find({ 
-      status: 'pending',
-      $or: [
-        { providerId: { $exists: false } },
-        { providerId: null }
-      ]
-    })
-    .populate('customerId', 'name phone')
-    .sort({ createdAt: -1 });
-
-    console.log(`✅ Found ${jobs.length} available jobs`);
-    res.json(jobs);
-  } catch (error) {
-    console.error('❌ Error fetching available jobs:', error);
     res.status(500).json({ error: error.message });
   }
 });

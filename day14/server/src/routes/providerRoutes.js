@@ -5,52 +5,11 @@ import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Get all providers (with filters)
-router.get('/', async (req, res) => {
-  try {
-    const { category, search, lat, lng } = req.query;
-    let filter = { isActive: true };
+// ============================================
+// SPECIFIC ROUTES FIRST (before /:id)
+// ============================================
 
-    if (category) {
-      filter.serviceType = { $regex: category, $options: 'i' };
-    }
-
-    if (search) {
-      filter.$or = [
-        { 'serviceType': { $regex: search, $options: 'i' } },
-        { 'specialization': { $regex: search, $options: 'i' } },
-        { 'userId.name': { $regex: search, $options: 'i' } },
-      ];
-    }
-
-    const providers = await ServiceProvider.find(filter)
-      .populate('userId', 'name email phone address rating')
-      .sort({ rating: -1 });
-
-    res.json(providers);
-  } catch (error) {
-    console.error('Get providers error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Get provider by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const provider = await ServiceProvider.findById(req.params.id)
-      .populate('userId', 'name email phone address rating');
-    
-    if (!provider) {
-      return res.status(404).json({ error: 'Provider not found' });
-    }
-    res.json(provider);
-  } catch (error) {
-    console.error('Get provider error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Get nearby providers (with distance calculation)
+// Get nearby providers
 router.get('/nearby', async (req, res) => {
   try {
     const { lat, lng, category, limit = 10 } = req.query;
@@ -84,11 +43,9 @@ router.get('/nearby', async (req, res) => {
           distance: parseFloat(distance.toFixed(2)),
         };
       });
-      // Sort by distance (closest first)
       providersWithDistance.sort((a, b) => a.distance - b.distance);
     }
 
-    // Limit results
     const limitedProviders = providersWithDistance.slice(0, parseInt(limit));
 
     console.log(`✅ Found ${limitedProviders.length} nearby providers`);
@@ -99,18 +56,34 @@ router.get('/nearby', async (req, res) => {
   }
 });
 
-// Haversine formula to calculate distance between two coordinates
-function calculateDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Earth's radius in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c;
-}
+// Get all providers (with filters)
+router.get('/', async (req, res) => {
+  try {
+    const { category, search, lat, lng } = req.query;
+    let filter = { isActive: true };
+
+    if (category) {
+      filter.serviceType = { $regex: category, $options: 'i' };
+    }
+
+    if (search) {
+      filter.$or = [
+        { 'serviceType': { $regex: search, $options: 'i' } },
+        { 'specialization': { $regex: search, $options: 'i' } },
+        { 'userId.name': { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const providers = await ServiceProvider.find(filter)
+      .populate('userId', 'name email phone address rating')
+      .sort({ rating: -1 });
+
+    res.json(providers);
+  } catch (error) {
+    console.error('Get providers error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Register as provider
 router.post('/register', protect, async (req, res) => {
@@ -128,16 +101,13 @@ router.post('/register', protect, async (req, res) => {
       location,
     } = req.body;
 
-    // Check if user already has a provider profile
     const existing = await ServiceProvider.findOne({ userId: req.userId });
     if (existing) {
       return res.status(400).json({ error: 'User already registered as provider' });
     }
 
-    // Update user role
     await User.findByIdAndUpdate(req.userId, { role: 'provider' });
 
-    // Create provider profile
     const provider = await ServiceProvider.create({
       userId: req.userId,
       serviceType,
@@ -188,5 +158,38 @@ router.put('/:id', protect, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// ============================================
+// DYNAMIC ROUTE (with :id) - MUST BE LAST
+// ============================================
+
+// Get provider by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const provider = await ServiceProvider.findById(req.params.id)
+      .populate('userId', 'name email phone address rating');
+    
+    if (!provider) {
+      return res.status(404).json({ error: 'Provider not found' });
+    }
+    res.json(provider);
+  } catch (error) {
+    console.error('Get provider error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Haversine formula to calculate distance between two coordinates
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
 
 export default router;

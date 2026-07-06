@@ -7,6 +7,8 @@ import connectDB from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
 import providerRoutes from './routes/providerRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
+import bidRoutes from './routes/bidRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -15,10 +17,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// Routes - ORDER MATTERS! Specific routes before dynamic ones
 app.use('/api/auth', authRoutes);
 app.use('/api/providers', providerRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/bids', bidRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'ServicePulse API running' });
