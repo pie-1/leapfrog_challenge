@@ -1,0 +1,3 @@
+{"level":"info","message":"Server is running on port 5000","service":"collegebuddy-api","timestamp":"2026-07-08 21:38:24"}
+{"level":"info","message":"Environment: development","service":"collegebuddy-api","timestamp":"2026-07-08 21:38:24"}
+{"level":"info","message":"✅ MongoDB Connected: localhost","service":"collegebuddy-api","timestamp":"2026-07-08 21:38:24"}
